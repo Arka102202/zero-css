@@ -5,30 +5,34 @@ import { addValueToPropNVals, getClassDefinition, getCompleteClassDefinition, pr
 export const layoutClasses = (classParts = [], className = "") => {
 
   // d-[max/min]_{breakpoint}-[block/inline/inline-block/flex/grid/none]
-  // d-[max/min]_{breakpoint}-flex_[row/col]_c_c_[1/10(vw/vh/rem/px)]
-  // d-[max/min]_{breakpoint}-flex_[row/col]_c_c_[1/10(vw/vh/rem/px)]
-  // d-[max/min]_{breakpoint}-grid_c_c
+  // d-[max/min]_[breakpoint]-(flex/grid)&[flexDir:val]&justify:val&align:val&gap:val
   const properties = [];
   const vals = [];
   const valPart = classParts.at(-1);
-  const valParts = valPart.split("_");
-  const len = valParts.length;
-  const hasFlexDir = /^flex_(row|col)/.test(valPart);
+  let type = "";
 
-  for (let i = 0; i < len; i++) {
+  if (!valPart.contains("&")) {
+    addValueToPropNVals(properties, vals, ["display", valPart]);
+  } else {
+    const valParts = valPart.split("&");
+    valParts.forEach(el => {
+      const elParts = el.split(":");
+      const prop = elParts[0];
+      const value = elParts.at(-1);
 
-    const valPart = valParts[i];
-
-    if (i === 0) {
-      addValueToPropNVals(properties, vals, ["display", processValuePart(valPart)]);
-    } else if (len >= 4 && /^(row|col)/.test(valPart)) {
-      addValueToPropNVals(properties, vals, ["flex-direction", processValuePart(valPart, flexDir)]);
-    } else if ((hasFlexDir && i === 2) || (len <= 4 && i === 1)) {
-      addValueToPropNVals(properties, vals, [`justify-${valParts[0] === "flex" ? "content" : "items"}`, processValuePart(valPart, layoutAlignments)]);
-    } else if ((hasFlexDir && i === 3) || (len <= 4 && i === 2)) {
-      addValueToPropNVals(properties, vals, ["align-items", processValuePart(valPart, layoutAlignments)]);
-    } else
-      addValueToPropNVals(properties, vals, ["gap", processValuePart(valPart)]);
+      if (prop === value) {
+        addValueToPropNVals(properties, vals, ["display", processValuePart(el)]);
+        type = el;
+      } else if (prop === "flexDir") {
+        addValueToPropNVals(properties, vals, ["flex-direction", processValuePart(value, null, true)]);
+      } else if (prop === "justify") {
+        addValueToPropNVals(properties, vals, ["justify-" + type === "flex" ? "content" : "items", processValuePart(value, null, true)]);
+      } else if (prop === "align") {
+        addValueToPropNVals(properties, vals, ["align-items", processValuePart(value, null, true)]);
+      } else if (prop === "gap") {
+        addValueToPropNVals(properties, vals, ["gap", processValuePart(value)]);
+      }
+    });
   }
 
   const classToBuild = getClassDefinition(properties, vals, className);
@@ -92,76 +96,40 @@ export const flexClasses = (classParts = [], className) => {
 // grid properties
 export const gridClasses = (classParts = [], className) => {
 
-  // grid-[max/min]_{breakpoint}-col_colCount_r_10/10vw/vh/px/rem/fr
-  // grid-[max/min]_{breakpoint}-col_colCount_r_10/10vw/vh/px/rem/fr_g_10/10(vw/vh/px/rem/fr
-  // grid-[max/min]_{breakpoint}-col_colCount_r_10/10vw/vh/px/rem/fr_cg_10/10(vw/vh/px/rem/fr
-  // grid-[max/min]_{breakpoint}-col_10_20_30_(rem/vw/vh/px/fr)
-  // grid-[max/min]_{breakpoint}-col_span _1_2 or _2
+  // grid-[max/min]_[breakpoint]-(col/row):Width_count&[gap/cGap/rGap]:value
+  // grid-[max/min]_[breakpoint]-(col/row):width1,width2,....
+  // grid-[max/min]_[breakpoint]-(col/row)Span:to_from
 
   // grid-col_(auto-fit/auto-fill)_10(vw/vh/px/rem)
-
-  // grid-[max/min]_{breakpoint}-row_r_10/10vw/vh/px/rem/fr
-  // grid-[max/min]_{breakpoint}-row_10_20_30_(rem/vw/vh/px)
-  // grid-[max/min]_{breakpoint}-row_span _1_2 or _2
 
   const properties = [];
   const vals = [];
   const valPart = classParts.at(-1);
-  const valParts = valPart.split("_");
+  let valParts = valPart.split("&");
 
-  if (valParts[1] !== "span") {
+  if (valParts.length > 0) {
+    valParts.forEach(el => {
+      const elParts = el.split(":");
+      const prop = elParts[0];
+      const value = elParts.at(-1);
 
-    // regex to get the repeat dimension and gap value
-    let regex = /r_(\w+)_(g|gc)_(\w+)/;
-    let match = valPart.match(regex);
-
-    if (match) {
-      if (match[1]) {
-        const formattedVal = processValuePart(match[1]);
-        addValueToPropNVals(properties, vals, [`grid-template-${/^col/.test(valPart) ? "columns" : "rows"}`, `repeat(${processValuePart(valParts[1])}, ${formattedVal})`]);
+      if (/^(col|row)$/.test(prop)) {
+        const valueParts = value.split("_");
+        const width = processValuePart(valueParts[0]);
+        const count = processValuePart(valueParts[1]);
+        addValueToPropNVals(properties, vals, ["grid-template-" + prop === "col" ? "columns" : "rows", `repeat(${count}, ${width})`]);
+      } else if (/gap$/.test(prop.toLowerCase())) {
+        const gapType = prop === "gap" ? "gap" : (prop === "rGap" ? "row-gap" : "column-gap");
+        addValueToPropNVals(properties, vals, [gapType, processValuePart(value)]);
       }
-      if (match[3]) {
-        const formattedVal = processValuePart(match[3]);
-        addValueToPropNVals(properties, vals, [`${match[2] === "g" ? "gap" : "column-gap"}`, `${formattedVal}`]);
-      }
-    } else {
-
-      regex = /col_auto_(fit|fill)_(\w+)/;
-      match = valPart.match(regex);
-
-      if (match && match[2]) {
-        const formattedVal = processValuePart(match[2]);
-        addValueToPropNVals(properties, vals, [`grid-template-columns`, `repeat(auto-${match[1]}, minmax(${formattedVal}, 1fr))`]);
-      } else {
-
-        // Extract values from the input string
-        const numbers = valPart.replace(/^col_/, "").split("_");
-
-        // Convert numbers to the desired format with the appropriate suffix
-        const formattedVal = numbers.map(number => processValuePart(number)).join(' ');
-        addValueToPropNVals(properties, vals, [`grid-template-${/^col/.test(valPart) ? "column" : "row"}s`, `${formattedVal}`]);
-      }
-
-    }
-  } else {
-    const row_col = valParts[0] === "col" ? "column" : "row";
-    let spanVal = "";
-    const part2 = valParts.at(-1), part1 = valParts.at(-2);
-    if (valParts.length === 3) {
-      if (/^v/.test(part2)) {
-        spanVal = `${processValuePart(part2)}`;
-      } else {
-        spanVal = `span ${processValuePart(part2)}`;
-      }
-    } else {
-      spanVal = `${processValuePart(part1)}/${processValuePart(part2)}`;
-    }
-    addValueToPropNVals(properties, vals, [`grid-${row_col}`, spanVal]);
+    })
+  } else if (!valPart.contains("span")) {
+    valParts = valPart.split(":");
+    addValueToPropNVals(properties, vals, ["grid-template-" + valParts[0] === "col" ? "columns" : "rows", valParts[0].split(",").map(el => processValuePart(el)).join(" ")]);
+  } else if (valPart.contains("span")) {
+    valParts = valPart.split(":");
+    addValueToPropNVals(properties, vals, ["grid-" + valParts[0] === "col" ? "column" : "row", valParts[0].split("_").map(el => processValuePart(el)).join("/")]);
   }
-
-  const classToBuild = getClassDefinition(properties, vals, className);
-
-  return getCompleteClassDefinition(2, classToBuild, classParts);
 }
 
 // justify_[Content/items/self]

@@ -44,7 +44,7 @@ export const addValueToPropNVals = (properties = [], vals = [], valsToAdd = [], 
 }
 
 
-export const processValuePart = (val = "", mappingObj = null, breakWordWithDash = false, isFontName = false, breakWord = false) => {
+export const processValuePart = (val = "", mappingObj = null, breakWordWithDash = false, isFontName = false, breakWord = false, breakWordWithSpace = false) => {
 
   const impString = /_imp$/.test(val) ? " !important" : "";
   val = val.replace(/_imp$/, "");
@@ -57,6 +57,8 @@ export const processValuePart = (val = "", mappingObj = null, breakWordWithDash 
       return `var(-${val.replace(/^v/, "").replace(/[A-Z]/g, match => '-' + match.toLowerCase())})${impString}`;
     } else if (breakWordWithDash) {
       return val.replace(/[A-Z]/g, (match) => `-${match.toLowerCase()}`) + impString;
+    } else if (breakWordWithSpace) {
+      return val.replace(/\+/g, " ") + impString;
     } else if (breakWord) {
       return val.replace(/[A-Z]/g, (match) => ` ${match.toLowerCase()}`) + impString;
     } else if (isFontName) {

@@ -18,98 +18,23 @@ It is css library that uses classes to add style to any element.
 
 ### Class name for layout
 
-for the ease of writing I have created some `key:value` mappings for different property values. The `key` should be used to provide the values of the corresponding property.
-
-***If some values are omitted that means that particular value can be used as it is.***
-***If some values are declared here then that has to be in the following manner.***
-
-=> `justify and align`:
-
-``` js
-const layoutAlignments = {
-  c: "center",
-  fs: "flex-start",
-  fe: "flex-end",
-  s: "start",
-  e: "end",
-  left: "left",
-  right: "right",
-  sb: "space-between",
-  sa: "space-around",
-  se: "space-evenly",
-  stretch: "stretch",
-  b: "baseline",
-  fb: "first baseline",
-  lb: "last baseline"
-}
-```
-
-=> `Flex direction`:
-
-``` js
-const flexDir = {
-  rowR: "row-reverse",
-  col: "column",
-  colR: "column-reverse"
-}
-```
-
-=> `Flex wrap`:
-
-``` js
-const flexWrap = {
-  wrapR: "wrap-reverse",
-}
-```
-
-=> `Position`:
-
-``` js
-const position = {
-  rel: "relative",
-  abs: "absolute",
-  fix: "fixed",
-}
-```
-
-=> `side or direction`:
-
-``` js
-const sides = {
-  t: "top",
-  r: "right",
-  b: "bottom",
-  l: "left",
-  top: "top",
-  right: "right",
-  bottom: "bottom",
-  left: "left"
-}
-```
-
 -- **Display Classes**:
 
 - `d-[max/min]_[breakpoint]-(block/inline/inline-block/flex/grid/none)`
-- `d-[max/min]_[breakpoint]-flex_[flexDirection]_justifyVal_alignVal_gapVal`
-- `d-[max/min]_[breakpoint]-grid_justifyVal_alignVal`
+- `d-[max/min]_[breakpoint]-type:(flex/grid)&[flexDir:val]&justify:val&align:val&gap:val`
 
 -- **FLex Classes**:
 
-- `flex_(dir/grow/shrink/wrap)-[max/min]_[breakpoint]-value`
 - `flex-[max/min]_[breakpoint]-{grow_shrink_basis}`
+- `flex_(dir/grow/shrink/wrap)-[max/min]_[breakpoint]-value`
 - `flex_child-[max/min]_[breakpoint]-(even/fixed_wd/auto)`
 
 -- **Grid Classes**:
 
-- `grid-[max/min]_[breakpoint]-col_colCount_r_colWidth_(g/cg)_gapValue`:
-here `r` after the `colCount` is to denote `repeat`-function.
-- `grid-[max/min]_[breakpoint]-col_colWidth1_colWIdth2_....`
-- `grid-[max/min]_[breakpoint]-col_span_(to_from/spanValue)`
-
-- `grid-[max/min]_[breakpoint]-row_colCount_r_colWidth`:
-here `r` after the `colCount` is to denote `repeat`-function.
-- `grid-[max/min]_[breakpoint]-row_colWidth1_colWIdth2_....`
-- `grid-[max/min]_[breakpoint]-row_span_(to_from/spanValue)`
+- `grid-[max/min]_[breakpoint]-(col/row):Width&re:count&[gap/cGap/rGap]:value`
+- `grid-[max/min]_[breakpoint]-(col/row):width1,width2,....`
+- `grid-[max/min]_[breakpoint]-(col/row)Span:(to,from/value)`
+- `grid-col_(auto-fit/auto-fill)_10(vw/vh/px/rem)`
 
 -- **Justify Classes**:
 
@@ -147,3 +72,94 @@ here `r` after the `colCount` is to denote `repeat`-function.
 
 - `center_el-[max/min]_[breakpoint]-(c/t/r/b/l)_(abs/fix)`
 - `align_(left/right/top/bottom)-[max/min]_[breakpoint]-(abs/fix)_value`
+
+### Spacing Classes
+
+-- **Padding and Margin Classes**
+
+- `(p/m)_[x/y/t/r/b/l]-[max/min]_[breakpoint]-value`
+- `(p/m)-[max/min]_[breakpoint]-valueX_valueY`
+
+### Border Classes
+
+-- **Padding and Margin Classes**
+
+- `border_[t/r/b/l]-[max/min]_[breakpoint]-{wd:val&st:va&clr:val}`
+- `border_[t/r/b/l]_[wd/st/clr/off]-[max/min]_[breakpoint]-value`
+
+- `border_rad_[tr/br/bl/tl]_[max/min]_[breakpoint]-value`
+
+- `outline_[t/r/b/l]-[max/min]_[breakpoint]-{wd:val&st:va&clr:val&off:val}`
+- `outline_[t/r/b/l]_[wd/st/clr/off]-[max/min]_[breakpoint]-value`
+
+- `ring_[t/r/b/l]-[max/min]_[breakpoint]-{wd:val&clr:val}`
+
+### Background Classes
+
+-- **Background Classes**
+
+- `bg-[max/min]_[breakpoint]-{clr:val&img:val&pos:val&s:val&re:val&org:val&clip:val&att:val}`
+- `bg_(color/image/position/size/repeat/origin/clip/attachment)-[max/min]_[breakpoint]-value`
+
+### Typography Classes
+
+-- **Font Classes**
+
+- `font-[max/min]_[breakpoint]-{st:val&weight:val&s:val&family:val}`
+
+- `font_family-name-1,name-2,nameDifferent`:
+rule to use font-family name:
+  - `Roboto Condensed` ==> `Roboto+Condensed`.
+  - `sans serif` ==> `sans#serif`.
+
+- `font_[style/weight/size]-[max/min]_[breakpoint]-value`
+
+-- **Letter Classes**
+
+- `letter_space-[max/min]_[breakpoint]-value`
+- `letter_dir-[max/min]_[breakpoint]-value`:
+the values of letter direction are `up`, `down`, `right`, `left`.
+
+-- **Line Classes**
+
+- `line_(height/clamp/break)-[max/min]_[breakpoint]-value`
+
+-- **Text Classes**
+
+- `txt_decor-[max/min]_[breakpoint]-type_color_style_thick`
+- `txt_decor_[type/color/style/thick]-[max/min]_[breakpoint]-value`
+- `txt_underline_offset-[max/min]_[breakpoint]-value`
+- `txt_transform-value`
+
+-- **Font color Class**
+
+- `color-[max/min]_[breakpoint]-value`
+
+-- **Font import Class**
+
+- `@import-value`
+
+### Effect Classes
+
+-- **Filter and backdrop-filter Classes**
+
+- `filter-[max/min]_[breakpoint]-{blur:val&brightness:val&dropShadow:val&....}`
+- `filter_(blur/brightness/contrast/shadow/gray/hue/invert/sat/sepia/dropShadow)-[max/min]_[breakpoint]-value`
+- `bdFilter-[max/min]_[breakpoint]-{blur:val&brightness:val&....}`
+- `bdFilter_(blur/brightness/contrast/shadow/gray/hue/invert/sat/sepia)-[max/min]_[breakpoint]-value`
+
+-- **Mix and Background Blend Classes**
+
+- `(mix/bg)_blend-[max/min]_[breakpoint]-value`
+
+-- **Opacity Classes**
+
+- `opacity-[max/min]_[breakpoint]-value`
+
+-- **Shadow Classes**
+
+- `shadow-[max/min]_[breakpoint]-value`
+
+-- **Text Gradient Classes**
+
+- `text_grad-[max/min]_[breakpoint]-value`
