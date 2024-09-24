@@ -1,4 +1,3 @@
-import { clips, origins, repeats } from "../mappings/_bg.js";
 import { colors } from "../mappings/_clr.js";
 import { addValueToPropNVals, getClassDefinition, getCompleteClassDefinition, processValuePart } from "./_generic.js";
 
@@ -39,11 +38,11 @@ export const bgClasses = (classParts = [], className = "") => {
         const tempVal = eachPart.map(el => processValuePart(el)).join(" ");
         addValueToPropNVals(properties, vals, [prop1stPart + "size", tempVal]);
       } if (prop === "re") {
-        addValueToPropNVals(properties, vals, [prop1stPart + "repeat", processValuePart(value, repeats)]);
+        addValueToPropNVals(properties, vals, [prop1stPart + "repeat", processValuePart(value)]);
       } if (prop === "org") {
-        addValueToPropNVals(properties, vals, [prop1stPart + "origin", processValuePart(value, origins)]);
+        addValueToPropNVals(properties, vals, [prop1stPart + "origin", processValuePart(value)]);
       } if (prop === "clip") {
-        addValueToPropNVals(properties, vals, [prop1stPart + "clip", processValuePart(value, clips)]);
+        addValueToPropNVals(properties, vals, [prop1stPart + "clip", processValuePart(value)]);
       } if (prop === "att") {
         addValueToPropNVals(properties, vals, [prop1stPart + "attachment", processValuePart(value)]);
       }
@@ -65,13 +64,13 @@ export const bgClasses = (classParts = [], className = "") => {
       const eachPart = valPart.split("_");
       value = eachPart.map(el => processValuePart(el)).join(" ");
     } else if (propLastPart === "repeat") {
-      value = processValuePart(valPart, repeats);
+      value = processValuePart(valPart);
     } else if (propLastPart === "origin") {
-      value = processValuePart(valPart, origins);
+      value = processValuePart(valPart);
     } else if (propLastPart === "clip") {
-      value = processValuePart(valPart, clips);
+      value = processValuePart(valPart);
     } else if (propLastPart === "attachment") {
-      value = processValuePart(valPart, repeats);
+      value = processValuePart(valPart);
     }
 
     addValueToPropNVals(properties, vals, [prop1stPart + propLastPart, value]);

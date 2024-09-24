@@ -3,6 +3,7 @@
 - Add multiple bgs and also url as image source for bgs
 - adding liner grad and other gradient as bg values
 - multiple shadow
+- functionality to be able to add image url
 - fix the processValuePart func ==> in the process
 - new classes that needs to be added
 
