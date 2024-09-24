@@ -1,4 +1,3 @@
-import { flexDir, flexWrap, layoutAlignments, sides } from "../mappings/_layout.js";
 import { addValueToPropNVals, getClassDefinition, getCompleteClassDefinition, processValuePart } from "./_generic.js";
 
 // for display along with some basic properties
@@ -11,7 +10,7 @@ export const layoutClasses = (classParts = [], className = "") => {
   const valPart = classParts.at(-1);
   let type = "";
 
-  if (!valPart.contains("&")) {
+  if (!valPart.includes("&")) {
     addValueToPropNVals(properties, vals, ["display", valPart]);
   } else {
     const valParts = valPart.split("&");
@@ -26,7 +25,7 @@ export const layoutClasses = (classParts = [], className = "") => {
       } else if (prop === "flexDir") {
         addValueToPropNVals(properties, vals, ["flex-direction", processValuePart(value, null, true)]);
       } else if (prop === "justify") {
-        addValueToPropNVals(properties, vals, ["justify-" + type === "flex" ? "content" : "items", processValuePart(value, null, true)]);
+        addValueToPropNVals(properties, vals, [`justify-${type === "flex" ? "content" : "items"}`, processValuePart(value, null, true)]);
       } else if (prop === "align") {
         addValueToPropNVals(properties, vals, ["align-items", processValuePart(value, null, true)]);
       } else if (prop === "gap") {
@@ -60,18 +59,17 @@ export const flexClasses = (classParts = [], className) => {
 
   const properties = [];
   const vals = [];
-  let classToBuild = "";
   const valPart = classParts.at(-1);
   const class1stPart = classParts[0];
 
   if (/^flex_dir/.test(class1stPart)) {
-    addValueToPropNVals(properties, vals, ["flex-direction", processValuePart(valPart, flexDir)]);
+    addValueToPropNVals(properties, vals, ["flex-direction", processValuePart(valPart)]);
   } else if (/^flex_grow/.test(class1stPart)) {
-    addValueToPropNVals(properties, vals, ["flex_grow", processValuePart(valPart)]);
+    addValueToPropNVals(properties, vals, ["flex-grow", processValuePart(valPart)]);
   } else if (/^flex_shrink/.test(class1stPart)) {
-    addValueToPropNVals(properties, vals, ["flex_shrink", processValuePart(valPart)]);
+    addValueToPropNVals(properties, vals, ["flex-shrink", processValuePart(valPart)]);
   } else if (/^flex_wrap/.test(class1stPart)) {
-    addValueToPropNVals(properties, vals, ["flex_wrap", processValuePart(valPart, flexWrap)]);
+    addValueToPropNVals(properties, vals, ["flex-wrap", processValuePart(valPart)]);
   } else if (/^flex_child/.test(class1stPart)) {
     addValueToPropNVals(properties, vals, ["max-width", "100%"]);
     if (valPart === "even") {
@@ -86,8 +84,7 @@ export const flexClasses = (classParts = [], className) => {
     addValueToPropNVals(properties, vals, ["flex", processValuePart(valPart.replace(/_/g, " "))]);
   }
 
-  classToBuild = getClassDefinition(properties, vals, className);
-
+  const classToBuild = getClassDefinition(properties, vals, className);
   return getCompleteClassDefinition(2, classToBuild, classParts);
 
 }
@@ -100,7 +97,7 @@ export const gridClasses = (classParts = [], className) => {
   // grid-[max/min]_[breakpoint]-(col/row):width1,width2,....
   // grid-[max/min]_[breakpoint]-(col/row)Span:to_from
 
-  // grid-col_(auto-fit/auto-fill)_10(vw/vh/px/rem)
+  // grid_col-[max/min]_[breakpoint]-(autoFill/autoFit)_10(vw/vh/px/rem)
 
   const properties = [];
   const vals = [];
@@ -123,13 +120,19 @@ export const gridClasses = (classParts = [], className) => {
         addValueToPropNVals(properties, vals, [gapType, processValuePart(value)]);
       }
     })
-  } else if (!valPart.contains("span")) {
+  } else if (!valPart.includes("span")) {
     valParts = valPart.split(":");
     addValueToPropNVals(properties, vals, ["grid-template-" + valParts[0] === "col" ? "columns" : "rows", valParts[0].split(",").map(el => processValuePart(el)).join(" ")]);
-  } else if (valPart.contains("span")) {
+  } else if (valPart.includes("span")) {
     valParts = valPart.split(":");
     addValueToPropNVals(properties, vals, ["grid-" + valParts[0] === "col" ? "column" : "row", valParts[0].split("_").map(el => processValuePart(el)).join("/")]);
+  } else if (/^grid_col/.test(classParts)) {
+    valParts = valPart.split("_");
+    addValueToPropNVals(properties, vals, [`grid-template-columns`, `repeat(${processValuePart(valParts[0])}, minmax(${processValuePart(valParts[1])}, 1fr))`]);
   }
+
+  const classToBuild = getClassDefinition(properties, vals, className);
+  return getCompleteClassDefinition(2, classToBuild, classParts);
 }
 
 // justify_[Content/items/self]
@@ -137,7 +140,7 @@ export const justifyClasses = (classParts = [], className = "") => {
 
   // justify_[content/items/self]-[max/min]_{breakpoint}-value
 
-  const classToBuild = getClassDefinition([classParts[0].replace("_", "-")], [processValuePart(classParts.at(-1), layoutAlignments)], className);
+  const classToBuild = getClassDefinition([classParts[0].replace("_", "-")], [processValuePart(classParts.at(-1))], className);
   return getCompleteClassDefinition(2, classToBuild, classParts);
 
 }
@@ -147,7 +150,7 @@ export const alignClasses = (classParts = [], className = "") => {
 
   // align_[content/items/self]-[max/min]_{breakpoint}-value
 
-  const classToBuild = getClassDefinition([classParts[0].replace("_", "-")], [processValuePart(classParts.at(-1), layoutAlignments)], className);
+  const classToBuild = getClassDefinition([classParts[0].replace("_", "-")], [processValuePart(classParts.at(-1))], className);
   return getCompleteClassDefinition(2, classToBuild, classParts);
 
 
@@ -160,7 +163,7 @@ export const gapCLasses = (classParts = [], className = "") => {
   // col_gap-[max/min]_{breakpoint}-value
   // row_gap-[max/min]_{breakpoint}-value
 
-  const classToBuild = getClassDefinition([classParts[0].replace("_", "-").replace("col", "column")], [processValuePart(classParts.at(-1), layoutAlignments)], className);
+  const classToBuild = getClassDefinition([classParts[0].replace("_", "-").replace("col", "column")], [processValuePart(classParts.at(-1))], className);
   return getCompleteClassDefinition(2, classToBuild, classParts);
 
 }
@@ -251,4 +254,15 @@ export const centerElemClasses = (classParts = [], className = "") => {
   const classToBuild = getClassDefinition(properties, vals, className);
   return getCompleteClassDefinition(2, classToBuild, classParts);
 
+}
+
+const sides = {
+  t: "top",
+  r: "right",
+  b: "bottom",
+  l: "left",
+  top: "top",
+  right: "right",
+  bottom: "bottom",
+  left: "left"
 }

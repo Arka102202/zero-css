@@ -8,13 +8,16 @@ It is css library that uses classes to add style to any element.
 - if somethings are within `{}` ==> that means any or all of the value can be used.
 - if somethings are within `()` ==> that means only one of the value can be used.
 - any and every length units can be used like `px, rem, em, %, vw, vh`.
+- rules for value:
+  1. replace any `space` with a `+`.
+  2. replace any `-` with `camelCase`.
 
 ### Class name for size
 
 - `[max/min]_(wd/ht/size)-[max/min]_[breakpoint]-value_[imp]`
 - `aspect_ratio-[max/min]_[breakpoint]-value_[imp]`:
   while providing the value of aspect ratio the `/` should be replaced with a `_`,
-  e.g. `aspect_ratio-max_xxl-3-4` which means the value of the aspect ratio will be `3/4`.
+  e.g. `aspect_ratio-max_xxl-3_4` which means the value of the aspect ratio will be `3/4`.
 
 ### Class name for layout
 

@@ -53,17 +53,24 @@ export const processValuePart = (val = "", mappingObj = null, breakWordWithDash 
   if (mappingObj) result = mappingObj[val];
 
   if (!result) {
-    if (/^v/.test(val)) {
-      return `var(-${val.replace(/^v/, "").replace(/[A-Z]/g, match => '-' + match.toLowerCase())})${impString}`;
+
+    const newVal = val
+      .replace(/([_\-.,\s])p(\d+)/g, "$1-$2")
+      .replace("+", " ")
+      .replace(/[A-Z]/g, match => '-' + match.toLowerCase());
+
+
+    if (/^v/.test(newVal)) {
+      return `var(-${newVal.replace(/^v/, "").replace(/[A-Z]/g, match => '-' + match.toLowerCase())})${impString}`;
     } else if (breakWordWithDash) {
-      return val.replace(/[A-Z]/g, (match) => `-${match.toLowerCase()}`) + impString;
+      return newVal.replace(/[A-Z]/g, (match) => `-${match.toLowerCase()}`) + impString;
     } else if (breakWordWithSpace) {
-      return val.replace(/\+/g, " ") + impString;
+      return newVal.replace(/\+/g, " ") + impString;
     } else if (breakWord) {
-      return val.replace(/[A-Z]/g, (match) => ` ${match.toLowerCase()}`) + impString;
+      return newVal.replace(/[A-Z]/g, (match) => ` ${match.toLowerCase()}`) + impString;
     } else if (isFontName) {
-      return formatFontName(val) + impString;
-    } else return val + impString;
+      return formatFontName(newVal) + impString;
+    } else return newVal + impString;
 
   }
 

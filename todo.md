@@ -1,11 +1,9 @@
 # Todo list
 
-- fix the gridClasses
 - Add multiple bgs and also url as image source for bgs
 - adding liner grad and other gradient as bg values
-- add the ability to provide negative values
 - multiple shadow
-- fix the processValuePart func*****
+- fix the processValuePart func ==> in the process
 - new classes that needs to be added
 
   1. backface-visibility
@@ -15,4 +13,4 @@
   5. object-fit
   6. object-position
   7. overscroll-behavior
-  8. text shadow
+  8. text-shadow
