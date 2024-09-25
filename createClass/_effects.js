@@ -110,7 +110,8 @@ export const blendClasses = (classParts = [], className = "") => {
 
   const blendType = classParts[0].split("_")[0] === "bg" ? "background" : "mix";
 
-  addValueToPropNVals(properties, vals, [blendType + "-blend-mode", processValuePart(classParts.at(-1), null, true)]);
+  // removed
+  addValueToPropNVals(properties, vals, [blendType + "-blend-mode", processValuePart(classParts.at(-1))]);
 
 
   const classToBuild = getClassDefinition(properties, vals, className);

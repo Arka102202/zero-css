@@ -1,4 +1,4 @@
-import { addValueToPropNVals, getClassDefinition, getCompleteClassDefinition } from "./_generic.js";
+import { addValueToPropNVals, getClassDefinition, getCompleteClassDefinition, processValuePart } from "./_generic.js";
 
 export const interactionClasses = (classParts = [], className = "") => {
 
@@ -15,19 +15,19 @@ export const interactionClasses = (classParts = [], className = "") => {
   const vals = [];
 
   if (class1stPart === "accent_clr") {
-    addValueToPropNVals(properties, vals, ["accent-color", value]);
+    addValueToPropNVals(properties, vals, ["accent-color", processValuePart(value)]);
   } else if (class1stPart === "cursor") {
-    addValueToPropNVals(properties, vals, ["cursor", value]);
+    addValueToPropNVals(properties, vals, ["cursor", processValuePart(value)]);
   } else if (class1stPart === "pointer_events") {
-    addValueToPropNVals(properties, vals, ["pointer-events", value]);
+    addValueToPropNVals(properties, vals, ["pointer-events", processValuePart(value)]);
   } else if (class1stPart === "resize") {
-    addValueToPropNVals(properties, vals, ["resize", value]);
+    addValueToPropNVals(properties, vals, ["resize", processValuePart(value)]);
   } else if (class1stPart === "resize") {
-    addValueToPropNVals(properties, vals, ["resize", value]);
+    addValueToPropNVals(properties, vals, ["resize", processValuePart(value)]);
   } else if (class1stPart === "touch_act") {
-    addValueToPropNVals(properties, vals, ["touch-action", value]);
+    addValueToPropNVals(properties, vals, ["touch-action", processValuePart(value)]);
   } else if (class1stPart === "user_select") {
-    addValueToPropNVals(properties, vals, ["user-select", value]);
+    addValueToPropNVals(properties, vals, ["user-select", processValuePart(value)]);
   }
 
   const classToBuild = getClassDefinition(properties, vals, className);

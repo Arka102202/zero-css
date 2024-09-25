@@ -58,9 +58,11 @@ export const transitionClasses = (classParts = [], className = "") => {
   let value = "";
 
   if (class1stPart.length === 1) {
-    value = valPart.split("_").map(el => processValuePart(el, null, true)).join(" ");
+    // removed
+    value = valPart.split("_").map(el => processValuePart(el)).join(" ");
   } else {
-    value = processValuePart(valPart, null, true);
+    // removed
+    value = processValuePart(valPart);
   }
 
   addValueToPropNVals(properties, vals, [classParts[0].replace("_", "-"), value]);
@@ -74,7 +76,8 @@ export const perspectiveOrgClasses = (classParts = [], className = "") => {
 
   // perspective_origin-[max/min]_{breakpoint}-value
 
-  const classToBuild = getClassDefinition(["perspective-origin"], [processValuePart(classParts.at(-1), null, true)], className);
+  // removed
+  const classToBuild = getClassDefinition(["perspective-origin"], [processValuePart(classParts.at(-1))], className);
   return getCompleteClassDefinition(2, classToBuild, classParts);
 }
 

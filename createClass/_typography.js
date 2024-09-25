@@ -27,14 +27,14 @@ export const fontClasses = (classParts = [], className = "") => {
       } else if (prop === "st") {
         addValueToPropNVals(properties, vals, ["font-style", processValuePart(tempValue)]);
       } else if (prop === "family") {
-        value = tempValue.split(",").map(el => processValuePart(el, null, false, true)).join(", ");
+        value = tempValue.split(",").map(el => processValuePart(el, null, true)).join(", ");
         addValueToPropNVals(properties, vals, ["font-family", value]);
       }
 
     });
 
   } else if (propName === "family") {
-    value = classParts.at(-1).split(",").map(el => processValuePart(el, null, false, true)).join(", ");
+    value = classParts.at(-1).split(",").map(el => processValuePart(el, null, true)).join(", ");
     addValueToPropNVals(properties, vals, [classParts[0].replace("_", "-"), value]);
   } else {
     value = processValuePart(classParts.at(-1));

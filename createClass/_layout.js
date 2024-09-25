@@ -23,11 +23,14 @@ export const layoutClasses = (classParts = [], className = "") => {
         addValueToPropNVals(properties, vals, ["display", processValuePart(el)]);
         type = el;
       } else if (prop === "flexDir") {
-        addValueToPropNVals(properties, vals, ["flex-direction", processValuePart(value, null, true)]);
+        // removed
+        addValueToPropNVals(properties, vals, ["flex-direction", processValuePart(value)]);
       } else if (prop === "justify") {
-        addValueToPropNVals(properties, vals, [`justify-${type === "flex" ? "content" : "items"}`, processValuePart(value, null, true)]);
+        // removed
+        addValueToPropNVals(properties, vals, [`justify-${type === "flex" ? "content" : "items"}`, processValuePart(value)]);
       } else if (prop === "align") {
-        addValueToPropNVals(properties, vals, ["align-items", processValuePart(value, null, true)]);
+        // removed
+        addValueToPropNVals(properties, vals, ["align-items", processValuePart(value)]);
       } else if (prop === "gap") {
         addValueToPropNVals(properties, vals, ["gap", processValuePart(value)]);
       }
@@ -237,11 +240,13 @@ export const centerElemClasses = (classParts = [], className = "") => {
   addValueToPropNVals(properties, vals, ["position", positionTypeABS ? "absolute" : "fixed"]);
 
   if (/^(c|l|r)/.test(valPart) || /(right|left)$/.test(classParts[0])) {
-    addValueToPropNVals(properties, vals, ["top", value]);
+    // removed
+    addValueToPropNVals(properties, vals, ["top", processValuePart(value)]);
     transformStr += "translateY(-50%) ";
   }
   if (/^(c|t|b)/.test(valPart) || /(top|bottom)$/.test(classParts[0])) {
-    addValueToPropNVals(properties, vals, ["left", value]);
+    // removed
+    addValueToPropNVals(properties, vals, ["left", processValuePart(value)]);
     transformStr += "translateX(-50%)";
   }
   if (/^(l|r|t|b)/.test(valPart) || /(top|right|bottom|left)$/.test(classParts[0])) {

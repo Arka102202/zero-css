@@ -113,9 +113,11 @@ export const scrollClasses = (classParts = [], className = "") => {
         const tempValue = elParts[1];
 
         if (propType === "type") {
-          addValueToPropNVals(properties, vals, ["scroll-snap-type", processValuePart(tempValue, scrollSnapType)]);
+          // removed
+          addValueToPropNVals(properties, vals, ["scroll-snap-type", processValuePart(tempValue)]);
         } else if (propType === "align") {
-          addValueToPropNVals(properties, vals, ["scroll-snap-align", processValuePart(tempValue, null, false, false, true)]);
+          // removed
+          addValueToPropNVals(properties, vals, ["scroll-snap-align", processValuePart(tempValue)]);
         } else if (propType === "stop") {
           addValueToPropNVals(properties, vals, ["scroll-snap-stop", processValuePart(tempValue)]);
         } else if (propType === "pad") {
@@ -127,9 +129,11 @@ export const scrollClasses = (classParts = [], className = "") => {
     } else if (class1stParts.length === 3) {
       const propType = class1stParts[2];
       if (propType === "type") {
-        addValueToPropNVals(properties, vals, ["scroll-snap-type", processValuePart(value, scrollSnapType)]);
+        // removed
+        addValueToPropNVals(properties, vals, ["scroll-snap-type", processValuePart(value)]);
       } else if (propType === "align") {
-        addValueToPropNVals(properties, vals, ["scroll-snap-align", processValuePart(value, null, false, false, true)]);
+        // removed
+        addValueToPropNVals(properties, vals, ["scroll-snap-align", processValuePart(value)]);
       } else if (propType === "stop") {
         addValueToPropNVals(properties, vals, ["scroll-snap-stop", processValuePart(value)]);
       } else if (propType === "pad") {
