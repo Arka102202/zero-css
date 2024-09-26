@@ -53,12 +53,13 @@ export const processValuePart = (val = "", mappingObj = null, isFontName = false
   if (mappingObj) result = mappingObj[val];
 
   if (!result) {
-
-    const newVal = val
-      .replace(/([_\-.,\s])p(\d+)/g, "$1-$2")
-      .replace("+", " ")
-      .replace(/[A-Z]/g, match => '-' + match.toLowerCase());
-
+    let newVal = val;
+    if (!isFontName) {
+      newVal = val
+        .replace(/p(\d+)/g, "-$1")
+        .replace("+", " ")
+        .replace(/[A-Z]/g, match => '-' + match.toLowerCase());
+    }
 
     if (/^v/.test(newVal)) {
       return `var(-${newVal.replace(/^v/, "")})${impString}`;
@@ -76,5 +77,5 @@ const formatFontName = (val = "") => {
     return '"' + val.replace(/\+/g, " ") + '"';
   } else if (/#/.test(val)) {
     return val.replace(/#/g, "-");
-  }
+  } else return val;
 }
