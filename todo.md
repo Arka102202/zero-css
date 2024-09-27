@@ -1,9 +1,7 @@
 # Todo list
 
-- Add multiple bgs and also url as image source for bgs
-- adding liner grad and other gradient as bg values
-- multiple shadow
 - functionality to be able to add image url
+- adding liner grad and other gradient as bg values
 - new classes that needs to be added
 
   1. backface-visibility
@@ -14,3 +12,6 @@
   6. object-position
   7. overscroll-behavior
   8. text-shadow
+
+- Add multiple bgs and also url as image source for bgs
+- multiple shadow
