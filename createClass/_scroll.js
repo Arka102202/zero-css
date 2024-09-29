@@ -12,6 +12,7 @@ export const scrollClasses = (classParts = [], className = "") => {
   // scroll_thumb_[wd/bgClr/border]@className-[max/min]_breakpoint-value
 
   // scroll_behavior-value
+  // overscroll_behavior-[max/min]_breakpoint-value
 
   // xm ==> x mandatory or xp ==> x proximity
   // scroll_snap-[max/min]_breakpoint-[align:val&pad:val&stop:val&type:val&margin:val]
@@ -99,6 +100,9 @@ export const scrollClasses = (classParts = [], className = "") => {
 
   } else if (/^(scroll_behavior)/.test(classParts[0])) {
     addValueToPropNVals(properties, vals, ["scroll-behavior", processValuePart(value)]);
+    classToBuild = getClassDefinition(properties, vals, className);
+  } else if (/^(overscroll_behavior)/.test(classParts[0])) {
+    addValueToPropNVals(properties, vals, ["overscroll-behavior", processValuePart(value)]);
     classToBuild = getClassDefinition(properties, vals, className);
   } else if (/^(scroll_snap)/.test(classParts[0])) {
 

@@ -47,7 +47,8 @@ export const borderCLasses = (classParts = [], className = "") => {
     } else if (radDir === "tl") {
       addValueToPropNVals(properties, vals, ["border-top-left-radius", processValuePart(valPart)]);
     } else {
-      addValueToPropNVals(properties, vals, ["border-radius", processValuePart(valPart)]);
+      const values = valPart.split("_");
+      addValueToPropNVals(properties, vals, ["border-radius", values.map(el => processValuePart(el)).join(" ")]);
     }
   } else {
 

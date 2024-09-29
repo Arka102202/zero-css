@@ -2,20 +2,23 @@ import { addValueToPropNVals, getClassDefinition, getCompleteClassDefinition, pr
 
 export const interactionClasses = (classParts = [], className = "") => {
 
-  // accent_clr-[max/min]_breakpoint-value
+  // accent_color-[max/min]_breakpoint-value
   // cursor-value
   // pointer_events-value
   // resize-[max/min]_breakpoint-value
   // touch_act-value
   // user_select-value
+  // caret_color-[max/min]_breakpoint-value
 
   const class1stPart = classParts[0];
   const value = classParts.at(-1);
   const properties = [];
   const vals = [];
 
-  if (class1stPart === "accent_clr") {
+  if (class1stPart === "accent_color") {
     addValueToPropNVals(properties, vals, ["accent-color", processValuePart(value)]);
+  } else if (class1stPart === "caret_color") {
+    addValueToPropNVals(properties, vals, ["caret-color", processValuePart(value)]);
   } else if (class1stPart === "cursor") {
     addValueToPropNVals(properties, vals, ["cursor", processValuePart(value)]);
   } else if (class1stPart === "pointer_events") {

@@ -344,7 +344,6 @@ export const columnClasses = (classParts = [], className = "") => {
     }
   }
 
-  console.log({properties, vals});
   const classToBuild = getClassDefinition(properties, vals, className);
   return getCompleteClassDefinition(2, classToBuild, classParts);
 }

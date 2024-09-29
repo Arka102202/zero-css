@@ -1,7 +1,8 @@
 import { bgClasses } from "./createClass/_background.js";
 import { borderCLasses, ringClasses } from "./createClass/_border.js";
-import { blendClasses, filterClasses, opacityClasses, shadowClasses, textGradClasses } from "./createClass/_effects.js";
-import { alignClasses, centerElemClasses, flexClasses, gapCLasses, gridClasses, justifyClasses, layoutClasses, orderClasses, overflowClasses, positionClasses, trblClasses, zIndexClasses } from "./createClass/_layout.js";
+import { backFaceClass, blendClasses, content_visibilityClass, filterClasses, opacityClasses, shadowClasses, textGradClasses } from "./createClass/_effects.js";
+import { interactionClasses } from "./createClass/_interaction.js";
+import { alignClasses, centerElemClasses, columnClasses, flexClasses, gapCLasses, gridClasses, justifyClasses, layoutClasses, orderClasses, overflowClasses, positionClasses, trblClasses, zIndexClasses } from "./createClass/_layout.js";
 import { scrollClasses } from "./createClass/_scroll.js";
 import { aspectClasses, sizeClasses } from "./createClass/_size.js";
 import { spacingClasses } from "./createClass/_spacing.js";
@@ -57,7 +58,7 @@ export const createClass = (className = "", styleTag) => {
         styleTag.innerHTML += blendClasses(classParts, className);
     } else if (/^opacity/.test(className)) {
         styleTag.innerHTML += opacityClasses(classParts, className);
-    } else if (/^shadow/.test(className)) {
+    } else if (/^(shadow|txt_shadow)/.test(className)) {
         styleTag.innerHTML += shadowClasses(classParts, className);
     } else if (/^text_grad/.test(className)) {
         styleTag.innerHTML += textGradClasses(classParts, className);
@@ -71,7 +72,7 @@ export const createClass = (className = "", styleTag) => {
         styleTag.innerHTML += textClasses(classParts, className);
     } else if (/^@import/.test(className)) {
         importStatement += fontImportClass(classParts, className);
-    } else if (/^scroll/.test(className)) {
+    } else if (/^(scroll|overscroll)/.test(className)) {
         styleTag.innerHTML += scrollClasses(classParts, className);
     } else if (/^transform/.test(className)) {
         styleTag.innerHTML += transformClasses(classParts, className);
@@ -81,6 +82,24 @@ export const createClass = (className = "", styleTag) => {
         styleTag.innerHTML += perspectiveOrgClasses(classParts, className);
     } else if (/^column/.test(className)) {
         styleTag.innerHTML += columnClasses(classParts, className);
+    } else if (firstPart === "content_visibility") {
+        styleTag.innerHTML += content_visibilityClass(classParts, className);
+    } else if (firstPart === "backface_visibility") {
+        styleTag.innerHTML += backFaceClass(classParts, className);
+    } else if (firstPart === "caret_color") {
+        styleTag.innerHTML += interactionClasses(classParts, className);
+    } else if (firstPart === "accent_color") {
+        styleTag.innerHTML += interactionClasses(classParts, className);
+    } else if (firstPart === "cursor") {
+        styleTag.innerHTML += interactionClasses(classParts, className);
+    } else if (firstPart === "pointer_events") {
+        styleTag.innerHTML += interactionClasses(classParts, className);
+    } else if (firstPart === "resize") {
+        styleTag.innerHTML += interactionClasses(classParts, className);
+    } else if (firstPart === "touch_act") {
+        styleTag.innerHTML += interactionClasses(classParts, className);
+    } else if (firstPart === "user_select") {
+        styleTag.innerHTML += interactionClasses(classParts, className);
     }
 
     styleTag.innerHTML = (importStatement + styleTag.innerHTML);
