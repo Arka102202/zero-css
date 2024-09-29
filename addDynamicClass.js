@@ -79,6 +79,8 @@ export const createClass = (className = "", styleTag) => {
         styleTag.innerHTML += transitionClasses(classParts, className);
     } else if (/^perspective_origin/.test(className)) {
         styleTag.innerHTML += perspectiveOrgClasses(classParts, className);
+    } else if (/^column/.test(className)) {
+        styleTag.innerHTML += columnClasses(classParts, className);
     }
 
     styleTag.innerHTML = (importStatement + styleTag.innerHTML);

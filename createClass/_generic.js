@@ -2,7 +2,7 @@ import { breakPoints } from "../mappings/_variables.js";
 
 export const getClassDefinition = (properties = [], vals = [], className = '') => {
   if (!properties.length || !vals.length) return "";
-  let modifiedClassName = className.replace(/[.,#%+&:]/g, '\\$&');
+  let modifiedClassName = className.replace(/[.,#%+&:/@]/g, '\\$&');
 
   return (
     `.${modifiedClassName} {
@@ -11,7 +11,7 @@ export const getClassDefinition = (properties = [], vals = [], className = '') =
 }
 export const getPseudoElementDefinition = (properties = [], vals = [], className = '', pseudoElement = "") => {
   if (!properties.length || !vals.length) return "";
-  let modifiedClassName = className.replace(/[.,#%+&:]/g, '\\$&');
+  let modifiedClassName = className.replace(/[.,#%+&:/@]/g, '\\$&');
 
   return (
     `${modifiedClassName ? "." : ""}${modifiedClassName}::${pseudoElement} {
@@ -44,6 +44,17 @@ export const addValueToPropNVals = (properties = [], vals = [], valsToAdd = [], 
 }
 
 
+/**
+ * 
+ * Process_val_part 
+ * 
+ * 
+ * @param {*} val 
+ * @param {*} mappingObj 
+ * @param {*} isFontName 
+ * @returns 
+ */
+
 export const processValuePart = (val = "", mappingObj = null, isFontName = false) => {
 
   const impString = /_imp$/.test(val) ? " !important" : "";
@@ -54,7 +65,7 @@ export const processValuePart = (val = "", mappingObj = null, isFontName = false
 
   if (!result) {
     let newVal = val;
-    if (!isFontName) {
+    if (!isFontName && !/^url@/.test(newVal)) {
       newVal = val
         .replace(/p(\d+)/g, "-$1")
         .replace("+", " ")
@@ -63,6 +74,9 @@ export const processValuePart = (val = "", mappingObj = null, isFontName = false
 
     if (/^v/.test(newVal)) {
       return `var(-${newVal.replace(/^v/, "")})${impString}`;
+    } else if (/^url@/.test(newVal)) {
+      const valParts = newVal.split("@");
+      return `url(${valParts[1]})${impString}`;
     } else if (isFontName) {
       return formatFontName(newVal) + impString;
     } else return newVal + impString;

@@ -102,12 +102,43 @@ export const gridClasses = (classParts = [], className) => {
 
   // grid_col-[max/min]_[breakpoint]-(autoFill/autoFit)_10(vw/vh/px/rem)
 
+  // grid_auto-[max/min]_[breakpoint]-cols:val&flow:val&rows:val
+  // grid_auto_[columns/flow/rows]-[max/min]_[breakpoint]-value
+
   const properties = [];
   const vals = [];
   const valPart = classParts.at(-1);
   let valParts = valPart.split("&");
 
-  if (valParts.length > 0) {
+  if (/^grid_col/.test(classParts)) {
+    valParts = valPart.split("_");
+    addValueToPropNVals(properties, vals, [`grid-template-columns`, `repeat(${processValuePart(valParts[0])}, minmax(${processValuePart(valParts[1])}, 1fr))`]);
+  } else if (/^grid_auto/.test(classParts)) {
+    const class1stParts = classParts[0].split("_");
+
+    if (class1stParts.length === 2) {
+      valParts.forEach(el => {
+        const elParts = el.split(":");
+        const prop = elParts[0];
+        const value = elParts.at(-1);
+
+        if (prop === "cols") {
+          addValueToPropNVals(properties, vals, [classParts[0] + "-columns", processValuePart(value)]);
+        } else {
+          addValueToPropNVals(properties, vals, [classParts[0] + "-" + prop, processValuePart(value)]);
+        }
+      })
+    } else {
+      const propName = classParts[0].replace(/_/g, "-");
+      addValueToPropNVals(properties, vals, [propName, processValuePart(valPart)]);
+    }
+  } else if (!valPart.includes("span")) {
+    valParts = valPart.split(":");
+    addValueToPropNVals(properties, vals, ["grid-template-" + valParts[0] === "col" ? "columns" : "rows", valParts[0].split(",").map(el => processValuePart(el)).join(" ")]);
+  } else if (valPart.includes("span")) {
+    valParts = valPart.split(":");
+    addValueToPropNVals(properties, vals, ["grid-" + valParts[0] === "col" ? "column" : "row", valParts[0].split("_").map(el => processValuePart(el)).join("/")]);
+  } else {
     valParts.forEach(el => {
       const elParts = el.split(":");
       const prop = elParts[0];
@@ -123,15 +154,6 @@ export const gridClasses = (classParts = [], className) => {
         addValueToPropNVals(properties, vals, [gapType, processValuePart(value)]);
       }
     })
-  } else if (!valPart.includes("span")) {
-    valParts = valPart.split(":");
-    addValueToPropNVals(properties, vals, ["grid-template-" + valParts[0] === "col" ? "columns" : "rows", valParts[0].split(",").map(el => processValuePart(el)).join(" ")]);
-  } else if (valPart.includes("span")) {
-    valParts = valPart.split(":");
-    addValueToPropNVals(properties, vals, ["grid-" + valParts[0] === "col" ? "column" : "row", valParts[0].split("_").map(el => processValuePart(el)).join("/")]);
-  } else if (/^grid_col/.test(classParts)) {
-    valParts = valPart.split("_");
-    addValueToPropNVals(properties, vals, [`grid-template-columns`, `repeat(${processValuePart(valParts[0])}, minmax(${processValuePart(valParts[1])}, 1fr))`]);
   }
 
   const classToBuild = getClassDefinition(properties, vals, className);
@@ -270,4 +292,71 @@ const sides = {
   right: "right",
   bottom: "bottom",
   left: "left"
+}
+
+export const columnClasses = (classParts = [], className = "") => {
+
+  // column-[max/min]_{breakpoint}-count:val&fill:val&gap:val&span:val&wd:val
+  // column_[count/fill/gap/span/width]-[max/min]_{breakpoint}-value
+  // column_rule-[max/min]_{breakpoint}-value
+  // column_rule_[color/style/width]-[max/min]_{breakpoint}-value
+
+   // columns-[max/min]_{breakpoint}-value
+
+  const properties = [];
+  const vals = [];
+  const valPart = classParts.at(-1);
+  const class1stParts = classParts[0].split("_");
+
+  if (classParts[0] === "columns") {
+
+    const valParts = valPart.split("_");
+    addValueToPropNVals(properties, vals, [classParts[0], valParts.map(el => processValuePart(el)).join(" ")]);
+
+  } else if (!/^column_rule/.test(classParts[0])) {
+
+    const prop1stPart = classParts[0];
+
+    if (class1stParts.length === 1) {
+      const valParts = valPart.split("&");
+
+      valParts.forEach(el => {
+        const elParts = el.split(":");
+        const prop = elParts[0];
+        const value = elParts[1];
+        if (prop === "wd") {
+          addValueToPropNVals(properties, vals, [prop1stPart + "-width", processValuePart(value)]);
+        } else {
+          addValueToPropNVals(properties, vals, [prop1stPart + "-" + prop, processValuePart(value)]);
+        }
+      })
+    } else {
+      const propName = classParts[0].replace("_", "-");
+      addValueToPropNVals(properties, vals, [propName, processValuePart(valPart)]);
+    }
+  } else {
+    const propName = classParts[0].replace("_", "-");
+    if (class1stParts.length === 2) {
+      const valParts = valPart.split("_");
+      addValueToPropNVals(properties, vals, [propName, valParts.map(el => processValuePart(el)).join(" ")]);
+    } else {
+      addValueToPropNVals(properties, vals, [propName, processValuePart(valPart)]);
+    }
+  }
+
+  console.log({properties, vals});
+  const classToBuild = getClassDefinition(properties, vals, className);
+  return getCompleteClassDefinition(2, classToBuild, classParts);
+}
+
+// object-position and object-fit
+export const objClasses = (classParts = [], className = "") => {
+
+  // obj_[fit/pos]-[max/min]_{breakpoint}-value
+
+  const propType = classParts[0].split("_");
+
+  const classToBuild = getClassDefinition(["object" + propType === "pos" ? "position" : "fit"], [processValuePart(classParts.at(-1))], className);
+  return getCompleteClassDefinition(2, classToBuild, classParts);
+
 }

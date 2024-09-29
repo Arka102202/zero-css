@@ -5,8 +5,10 @@ import { addValueToPropNVals, getClassDefinition, getCompleteClassDefinition, pr
 export const bgClasses = (classParts = [], className = "") => {
 
   // when to use a variable:
-  // 1. image as url
-  // 2. complex image
+  // 1. image as url ==> url@./folder1/folder2/image.png
+  // 1. image as url ==> url@../folder1/folder2/image.png
+  // 1. image as url ==> url@[Complete Link]
+  
   // bg-[max/min]_{breakpoint}-[clr:val&img:val&pos:val&s:val&re:val&org:val&clip:val&att:val]
   // bg_[color_image_position_size_repeat_origin_clip_attachment]-[max/min]_{breakpoint}-value
 
