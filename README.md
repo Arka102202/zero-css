@@ -1,3 +1,6 @@
+<img src="./Zero-Css.svg" alt="My library logo">
+
+
 # zero-css
 
 It is css library that uses classes to add style to any element.
