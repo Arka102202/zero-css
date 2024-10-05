@@ -31,7 +31,7 @@
 
 ### Class name for layout
 
--- **Display Classes**:
+-- <strong style="color: orange;">Display Classes</strong>:
 
 - `d-[max/min]_[breakpoint]-(block/inline/inline-block/flex/grid/none)`
 - `d-[max/min]_[breakpoint]-type:(flex/grid)&[flexDir:val]&justify:val&align:val&gap:val`
