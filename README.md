@@ -1,6 +1,6 @@
 # zero-css- A fully-dynamic, class-based CSS library
 
-<img src="./Zero-Css.svg" alt="My library logo">
+<img src="./Zero-Css.svg" alt="My library logo" width="400px">
 
 **What is a CSS library?**
 
@@ -31,7 +31,7 @@
 
 ### Class name for layout
 
--- <strong style="color: orange;">Display Classes</strong>:
+-- **Display Classes**:
 
 - `d-[max/min]_[breakpoint]-(block/inline/inline-block/flex/grid/none)`
 - `d-[max/min]_[breakpoint]-type:(flex/grid)&[flexDir:val]&justify:val&align:val&gap:val`
