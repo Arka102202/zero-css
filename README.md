@@ -1,6 +1,6 @@
 # zero-css- A fully-dynamic, class-based CSS library
 
-<img src="./Zero-Css.svg" alt="My library logo" width="400px">
+<p style="text-align: center;"><img src="./Zero-Css.svg" alt="My library logo" width="400px"></p>
 
 **What is a CSS library?**
 
