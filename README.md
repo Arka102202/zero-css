@@ -1,8 +1,33 @@
-# zero-css- A fully-dynamic, class-based CSS library
+# <p align="center">ZERO CSS - A fully-dynamic, class-based CSS library</p>
 
 <div align="center"><img src="./Zero-Css.svg" alt="My library logo" width="400px"></div>
 
-**What is a CSS library?**
+## **What is a CSS library?**
+
+  There is no formal definition of a `CSS library`, but looking at the popular CSS library we can define it in the following manner -
+  it is a collection of `pre-written`, `highly-reusable` CSS `Class-based` rules that help developers to style any HTML elements `quickly` and `consistently` throughout a website. These libraries promote adherence to the DRY ("Don't Repeat Yourself") principle, streamlining development by eliminating redundant code and reducing the time and effort required to maintain a cohesive design system.
+
+## Two Types of CSS Classes in Libraries
+
+1. Utility Classes
+  These are highly specific classes that target individual aspects of an element's appearance, like margin, padding, text alignment, or background color. They provide fine-grained control, allowing developers to combine various utility classes to create a custom look for each element.
+
+  > Example (from Tailwind CSS):
+
+  ```HTML
+  <div class="bg-blue-500 text-white p-4">
+    A box with background, text color, and padding
+  </div>
+  ```
+
+2. Component Classes
+  These are classes designed to style entire elements or components, such as buttons, cards, or forms, in one go. They abstract away detailed styling, offering a fully-styled version of the element or component.
+
+  > Example (from Bootstrap):
+
+  ```HTML
+  <button class="btn btn-primary">Primary Button</button>
+  ```
 
 **What is the need of a CSS Library?**
 
@@ -13,8 +38,8 @@
 ## Some rules before use start using this awesome Library
 
 - if somethings are within `[]` ==> that value is optional.
-- if somethings are within `{}` ==> that means any or all of the value can be used.
-- if somethings are within `()` ==> that means only one of the value can be used.
+- if somethings are within `{}` ==> any or all of the value can be used.
+- if somethings are within `()` ==> only one of the value can be used.
 - any and every length units can be used like `px, rem, em, %, vw, vh`.
 - rules for value:
   1. replace any `space` with a `+`.
