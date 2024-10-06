@@ -9,7 +9,7 @@
 
 ## Two Types of CSS Classes in Libraries
 
-1. Utility Classes
+1. Utility Classes<br>
   These are highly specific classes that target individual aspects of an element's appearance, like margin, padding, text alignment, or background color. They provide fine-grained control, allowing developers to combine various utility classes to create a custom look for each element.
 
   > Example (from Tailwind CSS):
@@ -20,7 +20,7 @@
   </div>
   ```
 
-2. Component Classes
+2. Component Classes<br>
   These are classes designed to style entire elements or components, such as buttons, cards, or forms, in one go. They abstract away detailed styling, offering a fully-styled version of the element or component.
 
   > Example (from Bootstrap):
