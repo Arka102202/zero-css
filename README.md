@@ -37,17 +37,47 @@ This innovative approach empowers developers with unparalleled flexibility and p
 
 `ZERO CSS` is not just a tool — it's a `paradigm shift in CSS development`, comparable to the transformation React brought to JavaScript. Its instant adaptability and real-time styling power deliver performance and versatility that traditional libraries simply cannot replicate, pushing the boundaries of what’s possible in modern web development.
 
-### So the Super powers of ZERO CSS and How its stack up to other libraries out there
+### The Unmatched Superpowers of ZERO CSS: How It Stands Above All Other Libraries
 
 1. `ZERO CSS` is the epitome of **true dynamism**<br>
 
   While other libraries might define `dynamic` within rigid boundaries, `ZERO CSS` shatters those limitations. Here, `dynamic` means `absolute freedom` — the ability to apply any value to any property, without constraints.
 
-  > Example: Whether it's `wd-10%`, `wd-12.5vw`, or `border_rad-2.4vw_2.4%_10px_2rem`, developers can seamlessly use any unit — `px, rem, em, %, vw, vh` — with any value, from decimals like `1.2` and `11.56` to more complex combinations(with the upcoming updates).
+  > Example: Whether it's `wd-10%`, `wd-12.5vw`, `border_rad-2.4vw_2.4%_10px_2rem`, or `color-red`, developers can seamlessly use any unit — `px, rem, em, %, vw, vh` — with any value, from decimals like `1.2` and `11.56` to more complex combinations(with the upcoming updates).
 
-  Sure, other libraries may claim to support flexibility, but they require pre-definition in a config file, limiting developers to a pre-set range of values. What they call `dynamic` is just controlled variability—it’s far from the real-time, unrestricted power that `ZERO CSS` delivers.
+  Sure, other libraries may claim to support flexibility, but they require pre-definition in a config file, limiting developers to a pre-set range of values. What they call `dynamic` is just controlled variability — it’s far from the real-time, unrestricted power that `ZERO CSS` delivers.
 
   With `ZERO CSS`, there are no predefined limits. It’s not just flexible—it’s truly `dynamic`.
+
+2. Set Your Own Standards to provide a Truly Customized Web Experience
+
+  CSS variables are one of the most powerful tools in modern web design, offering unparalleled flexibility to customize a website’s look and feel. Traditionally, developers must manually define these variables, but `ZERO CSS` takes this to a whole new level, making customization seamless and intuitive.
+
+  Unlike other libraries, which don't even offer the ability to create your own CSS variables, `ZERO CSS` empowers developers to define them effortlessly. With `ZERO CSS`, you don’t even need to know how CSS variables work. Simply create a JavaScript object, where the keys become the CSS variable names and the values are your custom properties.
+
+  > Example
+
+```js
+const vars = {
+        "mainWidth": "80%",
+        "flexGap": "1rem",
+        "flexDir": "row",
+        "firstCol": "1fr",
+        "spanVal": "2/4",
+        "textGrad": "linear-gradient(90deg,rgba(2,0,36,1)0%,rgba(9,9,121,1)35%,rgba(0,212,255,1)100%)",
+        "bgImg": "url('https://cdn.pixabay.com/photo/2024/05/26/10/15/bird-8788491_1280.jpg')"
+    }
+```
+
+In your HTML, simply use:
+
+```HTML
+  <div class="vars_e_html::${JSON.stringify(vars)}"></div>
+```
+
+The `vars_e_html::${JSON.stringify(vars)}` will automatically inject all key-value pairs as CSS variables, giving you complete control over your site’s design with zero hassle.
+
+With `ZERO CSS`, setting your own standards is easier, faster, and more powerful than ever before—delivering a next-level customization experience unmatched by any other library.
 
 ## Some rules before use start using this awesome Library
 
