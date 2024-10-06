@@ -37,9 +37,9 @@ This innovative approach empowers developers with unparalleled flexibility and p
 
 `ZERO CSS` is not just a tool — it's a `paradigm shift in CSS development`, comparable to the transformation React brought to JavaScript. Its instant adaptability and real-time styling power deliver performance and versatility that traditional libraries simply cannot replicate, pushing the boundaries of what’s possible in modern web development.
 
-### The Unmatched Superpowers of ZERO CSS: How It Stands Above All Other Libraries
+## The Unmatched Superpowers of ZERO CSS: How It Stands Above All Other Libraries
 
-1. `ZERO CSS` is the epitome of **true dynamism**<br>
+### `ZERO CSS` is the epitome of true dynamism
 
   While other libraries might define `dynamic` within rigid boundaries, `ZERO CSS` shatters those limitations. Here, `dynamic` means `absolute freedom` — the ability to apply any value to any property, without constraints.
 
@@ -49,7 +49,7 @@ This innovative approach empowers developers with unparalleled flexibility and p
 
   With `ZERO CSS`, there are no predefined limits. It’s not just flexible—it’s truly `dynamic`.
 
-2. Set Your Own Standards to provide a Truly Customized Web Experience
+### Set Your Own Standards to provide a Truly Customized Web Experience
 
   CSS variables are one of the most powerful tools in modern web design, offering unparalleled flexibility to customize a website’s look and feel. Traditionally, developers must manually define these variables, but `ZERO CSS` takes this to a whole new level, making customization seamless and intuitive.
 
