@@ -29,11 +29,25 @@
   <button class="btn btn-primary">Primary Button</button>
   ```
 
-**What is the need of a CSS Library?**
+## Now let's come to My Library
 
-**Some Modern CSS libraries and their pros and cons:**
+Introducing `ZERO CSS`, the most advanced and groundbreaking CSS library ever conceived. `ZERO CSS` redefines the boundaries of what a CSS library can be. Unlike traditional libraries, `ZERO CSS` `doesn't rely on pre-defined classes`. Instead, every `class is dynamically generated on the client side`, in real-time, as developers apply them to HTML elements.
 
-**Pros and Cons of my Library (in detail):**
+This innovative approach empowers developers with unparalleled flexibility and performance, creating a truly on-demand styling experience. By shifting CSS generation to the client-side, `ZERO CSS` unlocks capabilities that no other library can match.
+
+`ZERO CSS` is not just a tool — it's a `paradigm shift in CSS development`, comparable to the transformation React brought to JavaScript. Its instant adaptability and real-time styling power deliver performance and versatility that traditional libraries simply cannot replicate, pushing the boundaries of what’s possible in modern web development.
+
+### So the Super powers of ZERO CSS and How its stack up to other libraries out there
+
+1. `ZERO CSS` is the epitome of **true dynamism**<br>
+
+  While other libraries might define `dynamic` within rigid boundaries, `ZERO CSS` shatters those limitations. Here, `dynamic` means `absolute freedom` — the ability to apply any value to any property, without constraints.
+
+  > Example: Whether it's `wd-10%`, `wd-12.5vw`, or `border_rad-2.4vw_2.4%_10px_2rem`, developers can seamlessly use any unit — `px, rem, em, %, vw, vh` — with any value, from decimals like `1.2` and `11.56` to more complex combinations(with the upcoming updates).
+
+  Sure, other libraries may claim to support flexibility, but they require pre-definition in a config file, limiting developers to a pre-set range of values. What they call `dynamic` is just controlled variability—it’s far from the real-time, unrestricted power that `ZERO CSS` delivers.
+
+  With `ZERO CSS`, there are no predefined limits. It’s not just flexible—it’s truly `dynamic`.
 
 ## Some rules before use start using this awesome Library
 
