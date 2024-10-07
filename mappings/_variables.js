@@ -1,12 +1,12 @@
 // break-points
 export const breakPoints = {
-  "xxl": 1500,
-  "xl": 1250,
-  "l": 1024,
-  "md": 768,
-  "s": 425,
-  "xs": 375,
-  "xxs": 320
+  "xxl": "1500px",
+  "xl": "1250px",
+  "l": "1024px",
+  "md": "768px",
+  "s": "425px",
+  "xs": "375px",
+  "xxs": "320px"
 };
 
 // rem values at different break-points

@@ -43,7 +43,7 @@ export const createClass = (className = "", styleTag) => {
     } else if (/^(right|left|bottom|top)/.test(firstPart)) {
         styleTag.innerHTML += trblClasses(classParts, className);
     } else if (/^vars/.test(firstPart)) {
-        styleTag.innerHTML = varClass(className.split("::"), className) + styleTag.innerHTML;
+        styleTag.innerHTML = varClass(className.split("@"), className) + styleTag.innerHTML;
     } else if (/^(p[_-]|m[_-])/.test(className)) {
         styleTag.innerHTML += spacingClasses(classParts, className);
     } else if (/^(bg[_-])/.test(className)) {

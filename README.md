@@ -47,7 +47,7 @@ This innovative approach empowers developers with unparalleled flexibility and p
 
   Sure, other libraries may claim to support flexibility, but they require pre-definition in a config file, limiting developers to a pre-set range of values. What they call `dynamic` is just controlled variability — it’s far from the real-time, unrestricted power that `ZERO CSS` delivers.
 
-  With `ZERO CSS`, there are no predefined limits. It’s not just flexible—it’s truly `dynamic`.
+  With `ZERO CSS`, **there are no predefined limits. It’s not just flexible—it’s truly `dynamic`**.
 
 ### Set Your Own Standards to provide a Truly Customized Web Experience
 
@@ -77,7 +77,20 @@ In your HTML, simply use:
 
 The `vars_e_html::${JSON.stringify(vars)}` will automatically inject all key-value pairs as CSS variables, giving you complete control over your site’s design with zero hassle.
 
-With `ZERO CSS`, setting your own standards is easier, faster, and more powerful than ever before—delivering a next-level customization experience unmatched by any other library.
+With `ZERO CSS`, setting **your own standards is easier, faster, and more powerful than ever before—delivering a next-level customization experience unmatched by any other library**.
+
+### It's not tiny, It's NULL
+
+  Unlike traditional CSS libraries that come bloated with pre-defined classes and rely on purging unused styles after the fact, `ZERO CSS` takes a revolutionary approach. Instead of generating a separate CSS file, `ZERO CSS` dynamically creates all classes at runtime. This means there’s nothing to purge—ever.
+
+  By adhering to the DRY (Don't Repeat Yourself) principle at its core, `ZERO CSS` ensures that no CSS class is redundantly generated or evaluated more than once. **Every class is unique, and no code duplication occurs**.
+
+  The real power of this approach? No CSS file is ever shipped across the network. Traditional libraries may boast of tiny, purged CSS files, but with `ZERO CSS`, there’s no file at all—it's fully dynamic. This leads to drastically improved site performance, as no bandwidth is wasted on delivering or caching static CSS files.
+
+  With `ZERO CSS`, **you unlock the next level of CSS optimization: zero redundancy, zero purging, zero files—delivering a leaner, faster web experience**.
+
+### 
+
 
 ## Some rules before use start using this awesome Library
 

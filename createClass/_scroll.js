@@ -1,4 +1,3 @@
-import { scrollSnapType } from "../mappings/_scroll.js";
 import { addValueToPropNVals, getClassDefinition, getCompleteClassDefinition, getPseudoElementDefinition, processValuePart } from "./_generic.js";
 
 export const scrollClasses = (classParts = [], className = "") => {

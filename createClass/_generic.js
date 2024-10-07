@@ -29,9 +29,12 @@ const addMediaQuery = (classToPut = "", classParts = []) => {
   if (!classParts || !classParts.length || !classParts[1]) return "";
 
   const isMax = !/^(min)/.test(classParts[1]);
-  const width = breakPoints[classParts[1].split("_").at(-1)];
+  let width = breakPoints[classParts[1].split("_").at(-1)];
+
+  if(!width) width = classParts[1].split("_").at(-1);
+
   return (
-    `@media (${isMax ? "max-width" : "min-width"}: ${width}px) {
+    `@media (${isMax ? "max-width" : "min-width"}: ${width}) {
   ${classToPut.replace(/\n$/, "")}
 }\n`);
 }
