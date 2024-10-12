@@ -10,97 +10,101 @@ import { perspectiveOrgClasses, transformClasses, transitionClasses } from "./cr
 import { colorClass, fontClasses, fontImportClass, letterClass, textClasses } from "./createClass/_typography.js";
 import { varClass } from "./createClass/_var.js";
 
-export const createClass = (className = "", styleTag) => {
+export const createClass = (className = "", styleTag, returnOnlyPropNVal = false) => {
     const classParts = className.split("-");
     const firstPart = classParts[0];
-    let importStatement = "";
+    let importStatement = "", returnedString = "";
     if (/^(wd|ht|size)$/.test(firstPart)) {
-        styleTag.innerHTML += sizeClasses(className, classParts);
+        returnedString = sizeClasses(classParts, className, returnOnlyPropNVal);
     } else if (firstPart === "aspect_ratio") {
-        styleTag.innerHTML += aspectClasses(classParts, className);
+        returnedString = aspectClasses(classParts, className, returnOnlyPropNVal);
     } else if (firstPart === "d") {
-        styleTag.innerHTML += layoutClasses(classParts, className);
+        returnedString = layoutClasses(classParts, className, returnOnlyPropNVal);
     } else if (/^flex/.test(firstPart)) {
-        styleTag.innerHTML += flexClasses(classParts, className);
+        returnedString = flexClasses(classParts, className, returnOnlyPropNVal);
     } else if (/^grid/.test(firstPart)) {
-        styleTag.innerHTML += gridClasses(classParts, className);
+        returnedString = gridClasses(classParts, className, returnOnlyPropNVal);
     } else if (/^justify/.test(firstPart)) {
-        styleTag.innerHTML += justifyClasses(classParts, className);
+        returnedString = justifyClasses(classParts, className, returnOnlyPropNVal);
     } else if (/^(center_el|align_(right|left|bottom|top))/.test(firstPart)) {
-        styleTag.innerHTML += centerElemClasses(classParts, className);
+        returnedString = centerElemClasses(classParts, className, returnOnlyPropNVal);
     } else if (/^align/.test(firstPart)) {
-        styleTag.innerHTML += alignClasses(classParts, className);
+        returnedString = alignClasses(classParts, className, returnOnlyPropNVal);
     } else if (/gap$/.test(firstPart)) {
-        styleTag.innerHTML += gapCLasses(classParts, className);
+        returnedString = gapCLasses(classParts, className, returnOnlyPropNVal);
     } else if (firstPart === "order") {
-        styleTag.innerHTML += orderClasses(classParts, className);
+        returnedString = orderClasses(classParts, className, returnOnlyPropNVal);
     } else if (firstPart === "pos") {
-        styleTag.innerHTML += positionClasses(classParts, className);
+        returnedString = positionClasses(classParts, className, returnOnlyPropNVal);
     } else if (firstPart === "overflow") {
-        styleTag.innerHTML += overflowClasses(classParts, className);
+        returnedString = overflowClasses(classParts, className, returnOnlyPropNVal);
     } else if (firstPart === "zIndex") {
-        styleTag.innerHTML += zIndexClasses(classParts, className);
+        returnedString = zIndexClasses(classParts, className, returnOnlyPropNVal);
     } else if (/^(right|left|bottom|top)/.test(firstPart)) {
-        styleTag.innerHTML += trblClasses(classParts, className);
+        returnedString = trblClasses(classParts, className, returnOnlyPropNVal);
     } else if (/^vars/.test(firstPart)) {
         styleTag.innerHTML = varClass(className.split("@"), className) + styleTag.innerHTML;
     } else if (/^(p[_-]|m[_-])/.test(className)) {
-        styleTag.innerHTML += spacingClasses(classParts, className);
+        returnedString = spacingClasses(classParts, className, returnOnlyPropNVal);
     } else if (/^(bg[_-])/.test(className)) {
-        styleTag.innerHTML += bgClasses(classParts, className);
+        returnedString = bgClasses(classParts, className, returnOnlyPropNVal);
     } else if (/^(border|outline)/.test(className)) {
-        styleTag.innerHTML += borderCLasses(classParts, className);
+        returnedString = borderCLasses(classParts, className, returnOnlyPropNVal);
     } else if (/^ring/.test(className)) {
-        styleTag.innerHTML += ringClasses(classParts, className);
+        returnedString = ringClasses(classParts, className, returnOnlyPropNVal);
     } else if (/^(filter|bdFilter)/.test(className)) {
-        styleTag.innerHTML += filterClasses(classParts, className);
+        returnedString = filterClasses(classParts, className, returnOnlyPropNVal);
     } else if (/^(bg|mix)_blend/.test(className)) {
-        styleTag.innerHTML += blendClasses(classParts, className);
+        returnedString = blendClasses(classParts, className, returnOnlyPropNVal);
     } else if (/^opacity/.test(className)) {
-        styleTag.innerHTML += opacityClasses(classParts, className);
+        returnedString = opacityClasses(classParts, className, returnOnlyPropNVal);
     } else if (/^(shadow|txt_shadow)/.test(className)) {
-        styleTag.innerHTML += shadowClasses(classParts, className);
+        returnedString = shadowClasses(classParts, className, returnOnlyPropNVal);
     } else if (/^text_grad/.test(className)) {
-        styleTag.innerHTML += textGradClasses(classParts, className);
+        returnedString = textGradClasses(classParts, className, returnOnlyPropNVal);
     } else if (/^font/.test(className)) {
-        styleTag.innerHTML += fontClasses(classParts, className);
+        returnedString = fontClasses(classParts, className, returnOnlyPropNVal);
     } else if (/^color/.test(className)) {
-        styleTag.innerHTML += colorClass(classParts, className);
+        returnedString = colorClass(classParts, className, returnOnlyPropNVal);
     } else if (/^letter/.test(className)) {
-        styleTag.innerHTML += letterClass(classParts, className);
+        returnedString = letterClass(classParts, className, returnOnlyPropNVal);
     } else if (/^txt/.test(className)) {
-        styleTag.innerHTML += textClasses(classParts, className);
+        returnedString = textClasses(classParts, className, returnOnlyPropNVal);
     } else if (/^@import/.test(className)) {
-        importStatement += fontImportClass(classParts, className);
+        importStatement += fontImportClass(classParts, className, returnOnlyPropNVal);
     } else if (/^(scroll|overscroll)/.test(className)) {
-        styleTag.innerHTML += scrollClasses(classParts, className);
+        returnedString = scrollClasses(classParts, className, returnOnlyPropNVal);
     } else if (/^transform/.test(className)) {
-        styleTag.innerHTML += transformClasses(classParts, className);
+        returnedString = transformClasses(classParts, className, returnOnlyPropNVal);
     } else if (/^transition/.test(className)) {
-        styleTag.innerHTML += transitionClasses(classParts, className);
+        returnedString = transitionClasses(classParts, className, returnOnlyPropNVal);
     } else if (/^perspective_origin/.test(className)) {
-        styleTag.innerHTML += perspectiveOrgClasses(classParts, className);
+        returnedString = perspectiveOrgClasses(classParts, className, returnOnlyPropNVal);
     } else if (/^column/.test(className)) {
-        styleTag.innerHTML += columnClasses(classParts, className);
+        returnedString = columnClasses(classParts, className, returnOnlyPropNVal);
     } else if (firstPart === "content_visibility") {
-        styleTag.innerHTML += content_visibilityClass(classParts, className);
+        returnedString = content_visibilityClass(classParts, className, returnOnlyPropNVal);
     } else if (firstPart === "backface_visibility") {
-        styleTag.innerHTML += backFaceClass(classParts, className);
+        returnedString = backFaceClass(classParts, className, returnOnlyPropNVal);
     } else if (firstPart === "caret_color") {
-        styleTag.innerHTML += interactionClasses(classParts, className);
+        returnedString = interactionClasses(classParts, className, returnOnlyPropNVal);
     } else if (firstPart === "accent_color") {
-        styleTag.innerHTML += interactionClasses(classParts, className);
+        returnedString = interactionClasses(classParts, className, returnOnlyPropNVal);
     } else if (firstPart === "cursor") {
-        styleTag.innerHTML += interactionClasses(classParts, className);
+        returnedString = interactionClasses(classParts, className, returnOnlyPropNVal);
     } else if (firstPart === "pointer_events") {
-        styleTag.innerHTML += interactionClasses(classParts, className);
+        returnedString = interactionClasses(classParts, className, returnOnlyPropNVal);
     } else if (firstPart === "resize") {
-        styleTag.innerHTML += interactionClasses(classParts, className);
+        returnedString = interactionClasses(classParts, className, returnOnlyPropNVal);
     } else if (firstPart === "touch_act") {
-        styleTag.innerHTML += interactionClasses(classParts, className);
+        returnedString = interactionClasses(classParts, className, returnOnlyPropNVal);
     } else if (firstPart === "user_select") {
-        styleTag.innerHTML += interactionClasses(classParts, className);
+        returnedString = interactionClasses(classParts, className, returnOnlyPropNVal);
     }
+
+    if(returnOnlyPropNVal) return returnedString;
+
+    styleTag.innerHTML += returnedString;
 
     styleTag.innerHTML = (importStatement + styleTag.innerHTML);
 }
