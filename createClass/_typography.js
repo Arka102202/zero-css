@@ -162,10 +162,11 @@ export const fontImportClass = (classParts = [], className = "") => {
 
 }
 
-export const colorClass = (classParts = [], className = "") => {
+export const colorClass = (classParts = [], className = "", returnOnlyPropNVal = false) => {
 
   // color-[max/min]_{breakpoint}-value
 
-  const classToBuild = getClassDefinition(["color"], [processValuePart(classParts.at(-1))], className);
+  const classToBuild = getClassDefinition(["color"], [processValuePart(classParts.at(-1))], className, returnOnlyPropNVal);
+  if(returnOnlyPropNVal) return classToBuild;
   return getCompleteClassDefinition(2, classToBuild, classParts);
 }
