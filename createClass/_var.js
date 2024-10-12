@@ -1,12 +1,11 @@
-import { getCompleteClassDefinition } from "./_generic.js";
+import { getCompleteClassDefinition, splitStringByParts } from "./_generic.js";
 
 export const varClass = (classParts = [], className = "") => {
 
-  // vars_e_html-[max/min]_[breakPoints]@var1:val,var2:val,.....
+  // vars_html-[max/min]_[breakPoints]@var1:val,var2:val,.....
 
   const namePart = classParts[0].split("-");
   const nameParts = namePart[0].split("_");
-  const type = nameParts[1];
   const selectorName = nameParts.at(-1);
   const valParts = classParts[1].split(",");
 
@@ -21,7 +20,7 @@ export const varClass = (classParts = [], className = "") => {
 
 
   const classToAdd =
-    `${type === "e" ? `` : `.`}${selectorName}{
+    `${selectorName}{
 ${cssVars}
 }\n`;
 
@@ -30,21 +29,3 @@ ${cssVars}
 
 }
 
-function splitStringByParts(str, num, delimiter) {
-  if (num <= 0) {
-      return [];
-  }
-  
-  // Split the string using the delimiter
-  const parts = str.split(delimiter);
-  
-  // If the number of parts is less than or equal to the requested number
-  if (parts.length <= num) {
-      return parts;
-  }
-  
-  const result = parts.slice(0, num - 1); // Take the first (num - 1) parts
-  result.push(parts.slice(num - 1).join(delimiter)); // Join the remaining parts for the last chunk
-  
-  return result;
-}
