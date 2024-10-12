@@ -1,98 +1,204 @@
 import { breakPoints } from "../mappings/_variables.js";
 
-export const getClassDefinition = (properties = [], vals = [], className = '') => {
+/**
+ * Generates a CSS class definition or property-value pairs based on the provided input.
+ * 
+ * @param {Array} properties - An array of CSS properties (e.g., 'color', 'font-size').
+ * @param {Array} vals - An array of values corresponding to the CSS properties (e.g., 'red', '16px').
+ * @param {string} className - The name of the CSS class to be generated. Special characters are escaped.
+ * @param {boolean} returnOnlyPropVal - If true, returns only the CSS property-value pairs without the class name wrapper.
+ * @returns {string} - The generated CSS class definition or the property-value pairs.
+ */
+export const getClassDefinition = (properties = [], vals = [], className = '', returnOnlyPropVal = false) => {
   if (!properties.length || !vals.length) return "";
-  let modifiedClassName = className.replace(/[.,#%+&:/@]/g, '\\$&');
 
-  return (
-    `.${modifiedClassName} {
-    ${properties.map((el, idx) => `${idx !== 0 ? `\t` : ""}${el}: ${vals[idx] ? vals[idx] : processValuePart(vals[idx])}`).join(";\n")};
-}\n`)
-}
-export const getPseudoElementDefinition = (properties = [], vals = [], className = '', pseudoElement = "") => {
+  // Escape special characters in the class name for valid CSS selectors
+  const modifiedClassName = className.replace(/[.,#%+&:/@]/g, '\\$&');
+
+  // Generate CSS property-value pairs
+  const cssBody = properties.map((prop, idx) => 
+    `\t${prop}: ${vals[idx]}`).join(";\n");
+
+  // Return only the property-value pairs if requested
+  if (returnOnlyPropVal) return `${cssBody};`;
+
+  // Otherwise, return the full class definition
+  return `.${modifiedClassName} {\n${cssBody};\n}\n`;
+};
+
+
+
+/**
+ * Generates a CSS definition for a pseudo-element.
+ *
+ * @param {string[]} properties - The CSS properties to define.
+ * @param {string[]} vals - The corresponding values for the properties.
+ * @param {string} className - The class name for the element to which the pseudo-element is applied.
+ * @param {string} pseudoElement - The pseudo-element (e.g., 'before', 'after').
+ * @param {boolean} returnOnlyPropVal - Whether to return only the property-value pairs without the selector.
+ * @returns {string} - A string representing the CSS definition or property-value pairs.
+ */
+export const getPseudoElementDefinition = (properties = [], vals = [], className = '', pseudoElement = "", returnOnlyPropVal = false) => {
   if (!properties.length || !vals.length) return "";
-  let modifiedClassName = className.replace(/[.,#%+&:/@]/g, '\\$&');
 
-  return (
-    `${modifiedClassName ? "." : ""}${modifiedClassName}::${pseudoElement} {
-    ${properties.map((el, idx) => `${idx !== 0 ? `\t` : ""}${el}: ${vals[idx] ? vals[idx] : processValuePart(vals[idx])}`).join(";\n")};
-}\n`)
-}
+  // Escape special characters in class name for valid CSS
+  const escapedClassName = className ? `.${className.replace(/[.,#%+&:/@]/g, '\\$&')}` : "";
+
+  // Create CSS property-value pairs
+  const propValPairs = properties
+    .map((prop, idx) => `\t${prop}: ${vals[idx]}`)
+    .join(';\n');
+
+  // Return only property-value pairs if required
+  if (returnOnlyPropVal) {
+    return `${propValPairs};`;
+  }
+
+  // Return full CSS rule with pseudo-element
+  return `${escapedClassName}::${pseudoElement} {\n${propValPairs};\n}\n`;
+};
+
+
+/**
+ * Constructs a full class definition, optionally adding a media query.
+ *
+ * @param {number} lengthWithoutMediaQuery - The number of parts that define a class without any media query.
+ * @param {string} classToBuild - The base class name that is being built.
+ * @param {string[]} classParts - An array of parts that might include media query definitions.
+ * @returns {string} - The complete class definition with or without a media query.
+ */
 
 export const getCompleteClassDefinition = (lengthWithoutMediaQuery = 2, classToBuild = "", classParts = []) => {
+  // If there's no class to build, return an empty string
   if (!classToBuild) return "";
-  return classParts.length === lengthWithoutMediaQuery ? classToBuild : addMediaQuery(classToBuild, classParts);
+
+  // If the number of class parts matches the length for no media query, return the class directly
+  if (classParts.length === lengthWithoutMediaQuery) {
+    return classToBuild;
+  }
+
+  // If the class includes media query parts, add them using a helper function
+  return addMediaQuery(classToBuild, classParts);
 }
 
-const addMediaQuery = (classToPut = "", classParts = []) => {
+/**
+ * Adds a media query to the class definition.
+ *
+ * @param {string} classToPut - The base class name or styles that need to be wrapped in a media query.
+ * @param {string[]} classParts - The parts of the class that contain media query conditions, including breakpoints.
+ * @returns {string} - A string representing the CSS definition with a media query.
+ */
+export const addMediaQuery = (classToPut = "", classParts = []) => {
 
+  // Validate that classParts contains the expected values
   if (!classParts || !classParts.length || !classParts[1]) return "";
 
+  // Determine if it's a "max-width" query if classParts[1] does not start with "min"
   const isMax = !/^(min)/.test(classParts[1]);
+
+  // Extract the breakpoint key from classParts[1], and look it up in the breakPoints object
   let width = breakPoints[classParts[1].split("_").at(-1)];
 
-  if(!width) width = classParts[1].split("_").at(-1);
+  // If no breakpoint is found in the breakPoints object, use the value directly from classParts[1]
+  if (!width) width = classParts[1].split("_").at(-1);
 
+  // Return the complete media query with either "max-width" or "min-width" based on the condition
   return (
     `@media (${isMax ? "max-width" : "min-width"}: ${width}) {
   ${classToPut.replace(/\n$/, "")}
 }\n`);
 }
 
+
+/**
+ * Adds a new value to the properties and vals arrays, marking it as important if necessary.
+ *
+ * @param {string[]} properties - The list of CSS properties.
+ * @param {string[]} vals - The list of corresponding values for the properties.
+ * @param {string[]} valsToAdd - An array where the first element is the property and the second is the value to add.
+ * @param {boolean} isImportant - Whether to append `!important` to the value.
+ */
+
 export const addValueToPropNVals = (properties = [], vals = [], valsToAdd = [], isImportant = false) => {
+  // Ensure that valsToAdd contains at least one valid property before proceeding
   if (valsToAdd[0]) {
+    // Add the property from valsToAdd to the properties array
     properties.push(valsToAdd[0]);
-    vals.push(`${valsToAdd[1]} ${isImportant ? "!important" : ""}`);
+
+    // Add the corresponding value, appending !important if isImportant is true
+    vals.push(`${valsToAdd[1]}${isImportant ? " !important" : ""}`);
   }
 }
+
 
 
 /**
- * 
- * Process_val_part 
- * 
- * 
- * @param {*} val 
- * @param {*} mappingObj 
- * @param {*} isFontName 
- * @returns 
+ * Processes a value for a CSS property, handling special cases like !important, URLs, variables, and font names.
+ *
+ * @param {string} val - The value to process.
+ * @param {object} mappingObj - An optional object for mapping specific values to predefined strings.
+ * @param {boolean} isFontName - A flag indicating if the value is a font name (for special processing).
+ * @returns {string} - The processed CSS value.
  */
 
 export const processValuePart = (val = "", mappingObj = null, isFontName = false) => {
-
-  const impString = /_imp$/.test(val) ? " !important" : "";
+  // Check for !important and remove _imp suffix
+  const impString = val.endsWith('_imp') ? ' !important' : '';
   val = val.replace(/_imp$/, "");
-  let result = "";
 
-  if (mappingObj) result = mappingObj[val];
+  // Return mapped value if available
+  const mappedValue = mappingObj?.[val];
+  if (mappedValue) return mappedValue + impString;
 
-  if (!result) {
-    let newVal = val;
-    if (!isFontName && !/^url@/.test(newVal)) {
-      newVal = val
-        .replace(/p(\d+)/g, "-$1")
-        .replace("+", " ")
-        .replace(/[A-Z]/g, match => '-' + match.toLowerCase());
-    }
+  // Skip processing if it's a font name or URL
+  if (isFontName) return formatFontName(val) + impString;
+  if (/^url@/.test(val)) return `url(${val.split("@")[1]})${impString}`;
 
-    if (/^v/.test(newVal)) {
-      return `var(-${newVal.replace(/^v/, "")})${impString}`;
-    } else if (/^url@/.test(newVal)) {
-      const valParts = newVal.split("@");
-      return `url(${valParts[1]})${impString}`;
-    } else if (isFontName) {
-      return formatFontName(newVal) + impString;
-    } else return newVal + impString;
+  // Default processing for variables and regular values
+  let processedVal = val
+    .replace(/p(\d+)/g, "-$1")    // Convert 'p<number>' to '-<number>'
+    .replace("+", " ")            // Replace '+' with space
+    .replace(/[A-Z]/g, match => '-' + match.toLowerCase());  // Convert camelCase to kebab-case
 
+  // Handle CSS variable notation (v<var>)
+  if (processedVal.startsWith("v")) {
+    return `var(-${processedVal.slice(1)})${impString}`;
   }
 
-  return result;
-}
+  // Return processed value with optional !important
+  return processedVal + impString;
+};
 
+/**
+ * Formats a font name by replacing special characters.
+ *
+ * @param {string} val - The font name to format.
+ * @returns {string} - The formatted font name.
+ */
 const formatFontName = (val = "") => {
   if (/\+/.test(val)) {
-    return '"' + val.replace(/\+/g, " ") + '"';
+    return '"' + val.replace(/\+/g, " ") + '"';  // Replace '+' with space and wrap in quotes
   } else if (/#/.test(val)) {
-    return val.replace(/#/g, "-");
-  } else return val;
+    return val.replace(/#/g, "-");  // Replace '#' with '-'
+  } else return val;  // Return as-is if no special characters
+}
+
+
+export const splitStringByParts = (str, num, delimiter) => {
+  if (num <= 0) {
+      return [];
+  }
+  
+  // Split the string using the delimiter
+  const parts = str.split(delimiter);
+  
+  // If the number of parts is less than or equal to the requested number
+  if (parts.length <= num) {
+      return parts;
+  }
+  
+  const result = parts.slice(0, num - 1); // Take the first (num - 1) parts
+  result.push(parts.slice(num - 1).join(delimiter)); // Join the remaining parts for the last chunk
+  
+  return result;
 }
