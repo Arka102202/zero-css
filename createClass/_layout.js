@@ -1,7 +1,19 @@
 import { addValueToPropNVals, getClassDefinition, getCompleteClassDefinition, processValuePart } from "./_generic.js";
 
+
+const sides = {
+  t: "top",
+  r: "right",
+  b: "bottom",
+  l: "left",
+  top: "top",
+  right: "right",
+  bottom: "bottom",
+  left: "left"
+}
+
 // for display along with some basic properties
-export const layoutClasses = (classParts = [], className = "") => {
+export const layoutClasses = (classParts = [], className = "", returnOnlyPropNVal = false) => {
 
   // d-[max/min]_{breakpoint}-[block/inline/inline-block/flex/grid/none]
   // d-[max/min]_[breakpoint]-(flex/grid)&[flexDir:val]&justify:val&align:val&gap:val
@@ -23,13 +35,13 @@ export const layoutClasses = (classParts = [], className = "") => {
         addValueToPropNVals(properties, vals, ["display", processValuePart(el)]);
         type = el;
       } else if (prop === "flexDir") {
-        // removed
+         
         addValueToPropNVals(properties, vals, ["flex-direction", processValuePart(value)]);
       } else if (prop === "justify") {
-        // removed
+         
         addValueToPropNVals(properties, vals, [`justify-${type === "flex" ? "content" : "items"}`, processValuePart(value)]);
       } else if (prop === "align") {
-        // removed
+         
         addValueToPropNVals(properties, vals, ["align-items", processValuePart(value)]);
       } else if (prop === "gap") {
         addValueToPropNVals(properties, vals, ["gap", processValuePart(value)]);
@@ -37,7 +49,8 @@ export const layoutClasses = (classParts = [], className = "") => {
     });
   }
 
-  const classToBuild = getClassDefinition(properties, vals, className);
+  const classToBuild = getClassDefinition(properties, vals, className, returnOnlyPropNVal);
+  if(returnOnlyPropNVal) return classToBuild;
   return getCompleteClassDefinition(2, classToBuild, classParts);
 }
 
@@ -87,7 +100,8 @@ export const flexClasses = (classParts = [], className) => {
     addValueToPropNVals(properties, vals, ["flex", processValuePart(valPart.replace(/_/g, " "))]);
   }
 
-  const classToBuild = getClassDefinition(properties, vals, className);
+  const classToBuild = getClassDefinition(properties, vals, className, returnOnlyPropNVal);
+  if(returnOnlyPropNVal) return classToBuild;
   return getCompleteClassDefinition(2, classToBuild, classParts);
 
 }
@@ -156,98 +170,107 @@ export const gridClasses = (classParts = [], className) => {
     })
   }
 
-  const classToBuild = getClassDefinition(properties, vals, className);
+  const classToBuild = getClassDefinition(properties, vals, className, returnOnlyPropNVal);
+  if(returnOnlyPropNVal) return classToBuild;
   return getCompleteClassDefinition(2, classToBuild, classParts);
 }
 
 // justify_[Content/items/self]
-export const justifyClasses = (classParts = [], className = "") => {
+export const justifyClasses = (classParts = [], className = "", returnOnlyPropNVal = false) => {
 
   // justify_[content/items/self]-[max/min]_{breakpoint}-value
 
-  const classToBuild = getClassDefinition([classParts[0].replace("_", "-")], [processValuePart(classParts.at(-1))], className);
+  const classToBuild = getClassDefinition([classParts[0].replace("_", "-")], [processValuePart(classParts.at(-1))], className, returnOnlyPropNVal);
+  if(returnOnlyPropNVal) return classToBuild;
   return getCompleteClassDefinition(2, classToBuild, classParts);
 
 }
 
 // align_[Content/items/self]
-export const alignClasses = (classParts = [], className = "") => {
+export const alignClasses = (classParts = [], className = "", returnOnlyPropNVal = false) => {
 
   // align_[content/items/self]-[max/min]_{breakpoint}-value
 
-  const classToBuild = getClassDefinition([classParts[0].replace("_", "-")], [processValuePart(classParts.at(-1))], className);
+  const classToBuild = getClassDefinition([classParts[0].replace("_", "-")], [processValuePart(classParts.at(-1))], className, returnOnlyPropNVal);
+  if(returnOnlyPropNVal) return classToBuild;
   return getCompleteClassDefinition(2, classToBuild, classParts);
 
 
 }
 
 // gap
-export const gapCLasses = (classParts = [], className = "") => {
+export const gapCLasses = (classParts = [], className = "", returnOnlyPropNVal = false) => {
 
   // gap-[max/min]_{breakpoint}-value
   // col_gap-[max/min]_{breakpoint}-value
   // row_gap-[max/min]_{breakpoint}-value
 
-  const classToBuild = getClassDefinition([classParts[0].replace("_", "-").replace("col", "column")], [processValuePart(classParts.at(-1))], className);
+  const classToBuild = getClassDefinition([classParts[0].replace("_", "-").replace("col", "column")], [processValuePart(classParts.at(-1))], className, returnOnlyPropNVal);
+  if(returnOnlyPropNVal) return classToBuild;
   return getCompleteClassDefinition(2, classToBuild, classParts);
 
 }
 
 
 // order
-export const orderClasses = (classParts = [], className = "") => {
+export const orderClasses = (classParts = [], className = "", returnOnlyPropNVal = false) => {
 
   // order-[max/min]_{breakpoint}-value
 
-  const classToBuild = getClassDefinition([classParts[0]], [processValuePart(classParts.at(-1))], className);
+  const classToBuild = getClassDefinition([classParts[0]], [processValuePart(classParts.at(-1))], className, returnOnlyPropNVal);
+  if(returnOnlyPropNVal) return classToBuild;
   return getCompleteClassDefinition(2, classToBuild, classParts);
 
 
 }
 
 // position
-export const positionClasses = (classParts = [], className = "") => {
+export const positionClasses = (classParts = [], className = "", returnOnlyPropNVal = false) => {
 
   // pos-[max/min]_{breakpoint}-value
 
-  const classToBuild = getClassDefinition(["position"], [processValuePart(classParts.at(-1))], className);
+  const classToBuild = getClassDefinition(["position"], [processValuePart(classParts.at(-1))], className, returnOnlyPropNVal);
+  if(returnOnlyPropNVal) return classToBuild;
   return getCompleteClassDefinition(2, classToBuild, classParts);
 
 }
 
 
 // overflow
-export const overflowClasses = (classParts = [], className = "") => {
+export const overflowClasses = (classParts = [], className = "", returnOnlyPropNVal = false) => {
 
   // overflow-[max/min]_{breakpoint}-value
-  const classToBuild = getClassDefinition([classParts[0]], [processValuePart(classParts.at(-1))], className);
+  const classToBuild = getClassDefinition([classParts[0]], [processValuePart(classParts.at(-1))], className, returnOnlyPropNVal);
+  if(returnOnlyPropNVal) return classToBuild;
   return getCompleteClassDefinition(2, classToBuild, classParts);
 
 
 }
 
 // zIndex
-export const zIndexClasses = (classParts = [], className = "") => {
+export const zIndexClasses = (classParts = [], className = "", returnOnlyPropNVal = false) => {
 
   // zIndex-[max/min]_{breakpoint}-value
 
-  const classToBuild = getClassDefinition(["z-index"], [processValuePart(classParts.at(-1))], className);
+  const classToBuild = getClassDefinition(["z-index"], [processValuePart(classParts.at(-1))], className, returnOnlyPropNVal);
+  if(returnOnlyPropNVal) return classToBuild;
   return getCompleteClassDefinition(2, classToBuild, classParts);
 
 }
 
 // trbl
-export const trblClasses = (classParts = [], className = "") => {
+export const trblClasses = (classParts = [], className = "", returnOnlyPropNVal = false) => {
 
   // [top/right/bottom/left]-[max/min]_{breakpoint}-value
 
-  const classToBuild = getClassDefinition([classParts.at(0)], [processValuePart(classParts.at(-1))], className);
+  const classToBuild = getClassDefinition([classParts.at(0)], [processValuePart(classParts.at(-1))], className, returnOnlyPropNVal);
+  if(returnOnlyPropNVal) return classToBuild;
   return getCompleteClassDefinition(2, classToBuild, classParts);
 
 }
 
 
-export const centerElemClasses = (classParts = [], className = "") => {
+export const centerElemClasses = (classParts = [], className = "", returnOnlyPropNVal = false) => {
 
   // center_el-[max/min]_{breakpoint}-[c/t/r/b/l]_[abs/fix]
   // align_[left/right/top/bottom]-[max/min]_{breakpoint}-[abs/fix]_value
@@ -262,12 +285,12 @@ export const centerElemClasses = (classParts = [], className = "") => {
   addValueToPropNVals(properties, vals, ["position", positionTypeABS ? "absolute" : "fixed"]);
 
   if (/^(c|l|r)/.test(valPart) || /(right|left)$/.test(classParts[0])) {
-    // removed
+     
     addValueToPropNVals(properties, vals, ["top", processValuePart(value)]);
     transformStr += "translateY(-50%) ";
   }
   if (/^(c|t|b)/.test(valPart) || /(top|bottom)$/.test(classParts[0])) {
-    // removed
+     
     addValueToPropNVals(properties, vals, ["left", processValuePart(value)]);
     transformStr += "translateX(-50%)";
   }
@@ -278,23 +301,13 @@ export const centerElemClasses = (classParts = [], className = "") => {
 
   addValueToPropNVals(properties, vals, ["transform", transformStr]);
 
-  const classToBuild = getClassDefinition(properties, vals, className);
+  const classToBuild = getClassDefinition(properties, vals, className, returnOnlyPropNVal);
+  if(returnOnlyPropNVal) return classToBuild;
   return getCompleteClassDefinition(2, classToBuild, classParts);
 
 }
 
-const sides = {
-  t: "top",
-  r: "right",
-  b: "bottom",
-  l: "left",
-  top: "top",
-  right: "right",
-  bottom: "bottom",
-  left: "left"
-}
-
-export const columnClasses = (classParts = [], className = "") => {
+export const columnClasses = (classParts = [], className = "", returnOnlyPropNVal = false) => {
 
   // column-[max/min]_{breakpoint}-count:val&fill:val&gap:val&span:val&wd:val
   // column_[count/fill/gap/span/width]-[max/min]_{breakpoint}-value
@@ -344,18 +357,20 @@ export const columnClasses = (classParts = [], className = "") => {
     }
   }
 
-  const classToBuild = getClassDefinition(properties, vals, className);
+  const classToBuild = getClassDefinition(properties, vals, className, returnOnlyPropNVal);
+  if(returnOnlyPropNVal) return classToBuild;
   return getCompleteClassDefinition(2, classToBuild, classParts);
 }
 
 // object-position and object-fit
-export const objClasses = (classParts = [], className = "") => {
+export const objClasses = (classParts = [], className = "", returnOnlyPropNVal = false) => {
 
   // obj_[fit/pos]-[max/min]_{breakpoint}-value
 
   const propType = classParts[0].split("_");
 
-  const classToBuild = getClassDefinition(["object" + propType === "pos" ? "position" : "fit"], [processValuePart(classParts.at(-1))], className);
+  const classToBuild = getClassDefinition(["object" + propType === "pos" ? "position" : "fit"], [processValuePart(classParts.at(-1))], className, returnOnlyPropNVal);
+  if(returnOnlyPropNVal) return classToBuild;
   return getCompleteClassDefinition(2, classToBuild, classParts);
 
 }

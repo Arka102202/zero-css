@@ -1,5 +1,5 @@
 import { createClass } from './addDynamicClass.js';
-import { createSelectorClasses } from './combinators/child.js';
+import { createSelectorClasses } from './combinators/_child.js';
 
 
 // Get the <style> tag where new styles will be added

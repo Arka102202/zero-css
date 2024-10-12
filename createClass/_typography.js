@@ -1,6 +1,6 @@
 import { addValueToPropNVals, getClassDefinition, getCompleteClassDefinition, processValuePart } from "./_generic.js";
 
-export const fontClasses = (classParts = [], className = "") => {
+export const fontClasses = (classParts = [], className = "", returnOnlyPropNVal = false) => {
 
   // font-[max/min]_{breakpoint}-st:val&weight:val&s:val&family:val
   // font_family-name-1,name-2,nameDifferent 
@@ -41,13 +41,12 @@ export const fontClasses = (classParts = [], className = "") => {
     addValueToPropNVals(properties, vals, [classParts[0].replace("_", "-"), value]);
   }
 
-
-
-  const classToBuild = getClassDefinition(properties, vals, className);
+  const classToBuild = getClassDefinition(properties, vals, className, returnOnlyPropNVal);
+  if (returnOnlyPropNVal) return classToBuild;
   return getCompleteClassDefinition(2, classToBuild, classParts);
 }
 
-export const letterClass = (classParts = [], className = "") => {
+export const letterClass = (classParts = [], className = "", returnOnlyPropNVal = false) => {
 
   // letter_space-[max/min]_{breakpoint}-value
   // letter_dir-[max/min]_{breakpoint}-value ==> writing mode
@@ -56,7 +55,8 @@ export const letterClass = (classParts = [], className = "") => {
   let classToBuild = "";
 
   if (propType === "space") {
-    classToBuild = getClassDefinition(["letter-spacing"], [processValuePart(classParts.at(-1))], className);
+    classToBuild = getClassDefinition(["letter-spacing"], [processValuePart(classParts.at(-1))], className, returnOnlyPropNVal);
+    if (returnOnlyPropNVal) return classToBuild;
   } else {
 
     const val = classParts.at(-1);
@@ -74,15 +74,14 @@ export const letterClass = (classParts = [], className = "") => {
       addValueToPropNVals(properties, vals, ["transform", "rotate(180deg)"]);
     }
 
-    classToBuild = getClassDefinition(properties, vals, className);
+    classToBuild = getClassDefinition(properties, vals, className, returnOnlyPropNVal);
+    if (returnOnlyPropNVal) return classToBuild;
   }
 
   return getCompleteClassDefinition(2, classToBuild, classParts);
-
 }
 
-
-export const lineClasses = (classParts = [], className = "") => {
+export const lineClasses = (classParts = [], className = "", returnOnlyPropNVal = false) => {
 
   // line_height-[max/min]_{breakpoint}-value
   // line_clamp-[max/min]_{breakpoint}-value
@@ -105,11 +104,12 @@ export const lineClasses = (classParts = [], className = "") => {
     addValueToPropNVals(properties, vals, ["line-break", processValuePart(value)]);
   }
 
-  const classToBuild = getClassDefinition(properties, vals, className);
+  const classToBuild = getClassDefinition(properties, vals, className, returnOnlyPropNVal);
+  if (returnOnlyPropNVal) return classToBuild;
   return getCompleteClassDefinition(2, classToBuild, classParts);
 }
 
-export const textClasses = (classParts = [], className = "") => {
+export const textClasses = (classParts = [], className = "", returnOnlyPropNVal = false) => {
 
   // txt_decor-[max/min]_{breakpoint}-type_color_style_thick
   // txt_decor_[type/color/style/thick]-[max/min]_{breakpoint}-value
@@ -146,20 +146,16 @@ export const textClasses = (classParts = [], className = "") => {
   }
 
 
-  const classToBuild = getClassDefinition(properties, vals, className);
+  const classToBuild = getClassDefinition(properties, vals, className, returnOnlyPropNVal);
+  if (returnOnlyPropNVal) return classToBuild;
   return getCompleteClassDefinition(2, classToBuild, classParts);
-
-
 }
 
-// word-break and whitespace
-
-export const fontImportClass = (classParts = [], className = "") => {
+export const fontImportClass = (classParts = []) => {
 
   // @import-value
 
   return `${classParts[0]} url('${classParts[1]}');\n`;
-
 }
 
 export const colorClass = (classParts = [], className = "", returnOnlyPropNVal = false) => {
@@ -167,6 +163,6 @@ export const colorClass = (classParts = [], className = "", returnOnlyPropNVal =
   // color-[max/min]_{breakpoint}-value
 
   const classToBuild = getClassDefinition(["color"], [processValuePart(classParts.at(-1))], className, returnOnlyPropNVal);
-  if(returnOnlyPropNVal) return classToBuild;
+  if (returnOnlyPropNVal) return classToBuild;
   return getCompleteClassDefinition(2, classToBuild, classParts);
 }

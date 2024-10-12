@@ -1,7 +1,15 @@
 import { colors } from "../mappings/_clr.js";
 import { addValueToPropNVals, getClassDefinition, getCompleteClassDefinition, processValuePart } from "./_generic.js";
 
-export const borderCLasses = (classParts = [], className = "") => {
+const directions = {
+  t: "-top",
+  r: "-right",
+  b: "-bottom",
+  l: "-left",
+  "": ""
+}
+
+export const borderCLasses = (classParts = [], className = "", returnOnlyPropNVal = false) => {
 
   //  border_[t/r/b/l]-[max/min]_{breakpoint}-{wd:val&st:va&clr:val}
   //  border_[t/r/b/l]_[wd/st/clr/off]-[max/min]_{breakpoint}-value
@@ -79,12 +87,13 @@ export const borderCLasses = (classParts = [], className = "") => {
 
 
 
-  const classToBuild = getClassDefinition(properties, vals, className);
+  const classToBuild = getClassDefinition(properties, vals,  className, returnOnlyPropNVal);
+  if(returnOnlyPropNVal) return classToBuild;
   return getCompleteClassDefinition(2, classToBuild, classParts);
 
 }
 
-export const ringClasses = (classParts = [], className = "") => {
+export const ringClasses = (classParts = [], className = "", returnOnlyPropNVal = false) => {
 
   //  ring_[t/r/b/l]-[max/min]_{breakpoint}-[wd:val&clr:val] ==> using shadow
 
@@ -126,16 +135,10 @@ export const ringClasses = (classParts = [], className = "") => {
     addValueToPropNVals(properties, vals, ["box-shadow", `inset 0 0 0 ${processValuePart(wd)} ${processValuePart(clr, colors)}`]);
   }
 
-  const classToBuild = getClassDefinition(properties, vals, className);
+  const classToBuild = getClassDefinition(properties, vals, className, returnOnlyPropNVal);
+  if(returnOnlyPropNVal) return classToBuild;
   return getCompleteClassDefinition(2, classToBuild, classParts);
 }
 
 // ring offset using extra element
 
-const directions = {
-  t: "-top",
-  r: "-right",
-  b: "-bottom",
-  l: "-left",
-  "": ""
-}

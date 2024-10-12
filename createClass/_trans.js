@@ -1,6 +1,6 @@
 import { addValueToPropNVals, getClassDefinition, getCompleteClassDefinition, processValuePart } from "./_generic.js";
 
-export const transformClasses = (classParts = [], className = "") => {
+export const transformClasses = (classParts = [], className = "", returnOnlyPropNVal = false) => {
 
   // transform-[max/min]_{breakpoint}-matrix:1_2_3_4_5_6&perspective:17px&rotate:0.5turn&...
   // transform_[matrix/.../origin/style]-[max/min]_{breakpoint}-value
@@ -41,13 +41,14 @@ export const transformClasses = (classParts = [], className = "") => {
     addValueToPropNVals(properties, vals, ["transform", `${propType}(${createFuncArgs})`]);
   }
 
-  const classToBuild = getClassDefinition(properties, vals, className);
+  const classToBuild = getClassDefinition(properties, vals, className, returnOnlyPropNVal);
+  if(returnOnlyPropNVal) return classToBuild;
   return getCompleteClassDefinition(2, classToBuild, classParts);
 
 
 }
 
-export const transitionClasses = (classParts = [], className = "") => {
+export const transitionClasses = (classParts = [], className = "", returnOnlyPropNVal = false) => {
 
   // transition-[max/min]_{breakpoint}-usual_way
   // transition_[behavior/delay/duration/property/style]-[max/min]_{breakpoint}-value
@@ -58,26 +59,28 @@ export const transitionClasses = (classParts = [], className = "") => {
   let value = "";
 
   if (class1stPart.length === 1) {
-    // removed
+     
     value = valPart.split("_").map(el => processValuePart(el)).join(" ");
   } else {
-    // removed
+     
     value = processValuePart(valPart);
   }
 
   addValueToPropNVals(properties, vals, [classParts[0].replace("_", "-"), value]);
 
-  const classToBuild = getClassDefinition(properties, vals, className);
+  const classToBuild = getClassDefinition(properties, vals, className, returnOnlyPropNVal);
+  if(returnOnlyPropNVal) return classToBuild;
   return getCompleteClassDefinition(2, classToBuild, classParts);
 }
 
 
-export const perspectiveOrgClasses = (classParts = [], className = "") => {
+export const perspectiveOrgClasses = (classParts = [], className = "", returnOnlyPropNVal = false) => {
 
   // perspective_origin-[max/min]_{breakpoint}-value
 
-  // removed
-  const classToBuild = getClassDefinition(["perspective-origin"], [processValuePart(classParts.at(-1))], className);
+   
+  const classToBuild = getClassDefinition(["perspective-origin"], [processValuePart(classParts.at(-1))], className, returnOnlyPropNVal);
+  if(returnOnlyPropNVal) return classToBuild;
   return getCompleteClassDefinition(2, classToBuild, classParts);
 }
 

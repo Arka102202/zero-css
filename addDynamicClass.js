@@ -13,7 +13,7 @@ import { varClass } from "./createClass/_var.js";
 export const createClass = (className = "", styleTag, returnOnlyPropNVal = false) => {
     const classParts = className.split("-");
     const firstPart = classParts[0];
-    let importStatement = "", returnedString = "";
+    let importStatement = "", returnedString = "", varString = "";
     if (/^(wd|ht|size)$/.test(firstPart)) {
         returnedString = sizeClasses(classParts, className, returnOnlyPropNVal);
     } else if (firstPart === "aspect_ratio") {
@@ -43,7 +43,7 @@ export const createClass = (className = "", styleTag, returnOnlyPropNVal = false
     } else if (/^(right|left|bottom|top)/.test(firstPart)) {
         returnedString = trblClasses(classParts, className, returnOnlyPropNVal);
     } else if (/^vars/.test(firstPart)) {
-        styleTag.innerHTML = varClass(className.split("@"), className) + styleTag.innerHTML;
+        varString = varClass(className.split("@"), className);
     } else if (/^(p[_-]|m[_-])/.test(className)) {
         returnedString = spacingClasses(classParts, className, returnOnlyPropNVal);
     } else if (/^(bg[_-])/.test(className)) {
@@ -71,7 +71,7 @@ export const createClass = (className = "", styleTag, returnOnlyPropNVal = false
     } else if (/^txt/.test(className)) {
         returnedString = textClasses(classParts, className, returnOnlyPropNVal);
     } else if (/^@import/.test(className)) {
-        importStatement += fontImportClass(classParts, className, returnOnlyPropNVal);
+        importStatement += fontImportClass(classParts);
     } else if (/^(scroll|overscroll)/.test(className)) {
         returnedString = scrollClasses(classParts, className, returnOnlyPropNVal);
     } else if (/^transform/.test(className)) {
@@ -102,11 +102,10 @@ export const createClass = (className = "", styleTag, returnOnlyPropNVal = false
         returnedString = interactionClasses(classParts, className, returnOnlyPropNVal);
     }
 
-    if(returnOnlyPropNVal) return returnedString;
+    if (returnOnlyPropNVal) return returnedString;
 
     styleTag.innerHTML += returnedString;
-
-    styleTag.innerHTML = (importStatement + styleTag.innerHTML);
+    styleTag.innerHTML = (varString + importStatement + styleTag.innerHTML);
 }
 
 

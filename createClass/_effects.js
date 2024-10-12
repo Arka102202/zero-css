@@ -1,6 +1,6 @@
 import { addValueToPropNVals, getClassDefinition, getCompleteClassDefinition, processValuePart } from "./_generic.js";
 
-export const filterClasses = (classParts = [], className = "") => {
+export const filterClasses = (classParts = [], className = "", returnOnlyPropNVal = false) => {
 
   // filter-[max/min]_{breakpoint}-blur:val&brightness:val&dropShadow:val&....
   // filter_[blur/brightness/contrast/shadow/gray/hue/invert/sat/sepia/dropShadow]-[max/min]_{breakpoint}-value
@@ -95,11 +95,12 @@ export const filterClasses = (classParts = [], className = "") => {
 
   addValueToPropNVals(properties, vals, [filterKind === "filter" ? "filter" : "backdrop-filter", filterVal]);
 
-  const classToBuild = getClassDefinition(properties, vals, className);
+  const classToBuild = getClassDefinition(properties, vals, className, returnOnlyPropNVal);
+  if(returnOnlyPropNVal) return classToBuild;
   return getCompleteClassDefinition(2, classToBuild, classParts);
 }
 
-export const blendClasses = (classParts = [], className = "") => {
+export const blendClasses = (classParts = [], className = "", returnOnlyPropNVal = false) => {
 
   // [mix/bg]_blend-[max/min]_{breakpoint}-value
 
@@ -108,37 +109,40 @@ export const blendClasses = (classParts = [], className = "") => {
 
   const blendType = classParts[0].split("_")[0] === "bg" ? "background" : "mix";
 
-  // removed
+   
   addValueToPropNVals(properties, vals, [blendType + "-blend-mode", processValuePart(classParts.at(-1))]);
 
 
-  const classToBuild = getClassDefinition(properties, vals, className);
+  const classToBuild = getClassDefinition(properties, vals, className, returnOnlyPropNVal);
+  if(returnOnlyPropNVal) return classToBuild;
   return getCompleteClassDefinition(2, classToBuild, classParts);
 
 }
 
-export const opacityClasses = (classParts = [], className = "") => {
+export const opacityClasses = (classParts = [], className = "", returnOnlyPropNVal = false) => {
 
   // opacity-[max/min]_{breakpoint}-value
 
 
-  const classToBuild = getClassDefinition(["opacity"], [processValuePart(classParts.at(-1))], className);
+  const classToBuild = getClassDefinition(["opacity"], [processValuePart(classParts.at(-1))], className, returnOnlyPropNVal);
+  if(returnOnlyPropNVal) return classToBuild;
   return getCompleteClassDefinition(2, classToBuild, classParts);
 
 }
 
-export const shadowClasses = (classParts = [], className = "") => {
+export const shadowClasses = (classParts = [], className = "", returnOnlyPropNVal = false) => {
 
   // [txt_]shadow-[max/min]_{breakpoint}-value
 
   const values = classParts.at(-1).split("_");
   const val = values.map(el => processValuePart(el)).join(" ");
 
-  const classToBuild = getClassDefinition([classParts[0] === "shadow" ? "box-shadow" : "text-shadow"], [val], className);
+  const classToBuild = getClassDefinition([classParts[0] === "shadow" ? "box-shadow" : "text-shadow"], [val], className, returnOnlyPropNVal);
+  if(returnOnlyPropNVal) return classToBuild;
   return getCompleteClassDefinition(2, classToBuild, classParts);
 }
 
-export const textGradClasses = (classParts = [], className = "") => {
+export const textGradClasses = (classParts = [], className = "", returnOnlyPropNVal = false) => {
 
   // text_grad-[max/min]_{breakpoint}-value
 
@@ -150,27 +154,30 @@ export const textGradClasses = (classParts = [], className = "") => {
   addValueToPropNVals(properties, vals, ["background-clip", "text"]);
 
 
-  const classToBuild = getClassDefinition(properties, vals, className);
+  const classToBuild = getClassDefinition(properties, vals, className, returnOnlyPropNVal);
+  if(returnOnlyPropNVal) return classToBuild;
   return getCompleteClassDefinition(2, classToBuild, classParts);
 
 }
 
-export const backFaceClass = (classParts = [], className = "") => {
+export const backFaceClass = (classParts = [], className = "", returnOnlyPropNVal = false) => {
 
   // backface_visibility-[max/min]_{breakpoint}-value
 
 
-  const classToBuild = getClassDefinition(["backface-visibility"], [processValuePart(classParts.at(-1))], className);
+  const classToBuild = getClassDefinition(["backface-visibility"], [processValuePart(classParts.at(-1))], className, returnOnlyPropNVal);
+  if(returnOnlyPropNVal) return classToBuild;
   return getCompleteClassDefinition(2, classToBuild, classParts);
 
 }
 
-export const content_visibilityClass = (classParts = [], className = "") => {
+export const content_visibilityClass = (classParts = [], className = "", returnOnlyPropNVal = false) => {
 
   // content_visibility-[max/min]_{breakpoint}-value
 
 
-  const classToBuild = getClassDefinition(["content-visibility"], [processValuePart(classParts.at(-1))], className);
+  const classToBuild = getClassDefinition(["content-visibility"], [processValuePart(classParts.at(-1))], className, returnOnlyPropNVal);
+  if(returnOnlyPropNVal) return classToBuild;
   return getCompleteClassDefinition(2, classToBuild, classParts);
 
 }

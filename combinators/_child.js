@@ -4,13 +4,13 @@ import { addMediaQuery} from "../createClass/_generic.js";
 export const createSelectorClasses = (className = "", styleTag) => {
 
 
-    // __div[>/ /+/~]p[>/ /+/~].className-[max/min]_[breakpoint]@value1,value2,value3,.....
+    // __div[>/ /+/~]p[>/ /+/~].className--[max/min]_[breakpoint]@value1,value2,value3,.....
 
     className = className.replace(/^__/, "");
 
     const classParts = className.split("@");
 
-    const selectorNMediaQuery = classParts[0].split("-");
+    const selectorNMediaQuery = classParts[0].split("--");
 
     const classNameToBe = selectorNMediaQuery[0].replace(/_/g, " ");
 

@@ -1,6 +1,6 @@
 import { addValueToPropNVals, getClassDefinition, getCompleteClassDefinition, processValuePart } from "./_generic.js";
 
-export const spacingClasses = (classParts = [], className = "") => {
+export const spacingClasses = (classParts = [], className = "", returnOnlyPropNVal = false) => {
 
   // p_[x/y/t/r/b/l]-[max/min]_{breakpoint}-value
   // m_[x/y/t/r/b/l]-[max/min]_{breakpoint}-value
@@ -28,7 +28,8 @@ export const spacingClasses = (classParts = [], className = "") => {
   }
 
 
-  const classToBuild = getClassDefinition(properties, vals, className);
+  const classToBuild = getClassDefinition(properties, vals, className, returnOnlyPropNVal);
+  if(returnOnlyPropNVal) return classToBuild;
 
   return getCompleteClassDefinition(2, classToBuild, classParts);
 

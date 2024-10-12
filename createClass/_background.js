@@ -2,7 +2,7 @@ import { colors } from "../mappings/_clr.js";
 import { addValueToPropNVals, getClassDefinition, getCompleteClassDefinition, processValuePart } from "./_generic.js";
 
 // background
-export const bgClasses = (classParts = [], className = "") => {
+export const bgClasses = (classParts = [], className = "", returnOnlyPropNVal = false) => {
 
   // when to use a variable:
   // 1. image as url ==> url@./folder1/folder2/image.png
@@ -79,7 +79,8 @@ export const bgClasses = (classParts = [], className = "") => {
 
   }
 
-  const classToBuild = getClassDefinition(properties, vals, className);
+  const classToBuild = getClassDefinition(properties, vals, className, returnOnlyPropNVal);
+  if(returnOnlyPropNVal) return classToBuild;
   return getCompleteClassDefinition(2, classToBuild, classParts);
 
 }

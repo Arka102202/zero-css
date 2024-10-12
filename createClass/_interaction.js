@@ -1,6 +1,6 @@
 import { addValueToPropNVals, getClassDefinition, getCompleteClassDefinition, processValuePart } from "./_generic.js";
 
-export const interactionClasses = (classParts = [], className = "") => {
+export const interactionClasses = (classParts = [], className = "", returnOnlyPropNVal = false) => {
 
   // accent_color-[max/min]_breakpoint-value
   // cursor-value
@@ -33,7 +33,8 @@ export const interactionClasses = (classParts = [], className = "") => {
     addValueToPropNVals(properties, vals, ["user-select", processValuePart(value)]);
   }
 
-  const classToBuild = getClassDefinition(properties, vals, className);
+  const classToBuild = getClassDefinition(properties, vals, className, returnOnlyPropNVal);
+  if(returnOnlyPropNVal) return classToBuild;
   return getCompleteClassDefinition(2, classToBuild, classParts);
 
 }

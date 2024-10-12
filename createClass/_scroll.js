@@ -1,6 +1,6 @@
 import { addValueToPropNVals, getClassDefinition, getCompleteClassDefinition, getPseudoElementDefinition, processValuePart } from "./_generic.js";
 
-export const scrollClasses = (classParts = [], className = "") => {
+export const scrollClasses = (classParts = [], className = "", returnOnlyPropNVal = false) => {
 
   // scroll_bar@className-[max/min]_breakpoint-hide
 
@@ -99,10 +99,12 @@ export const scrollClasses = (classParts = [], className = "") => {
 
   } else if (/^(scroll_behavior)/.test(classParts[0])) {
     addValueToPropNVals(properties, vals, ["scroll-behavior", processValuePart(value)]);
-    classToBuild = getClassDefinition(properties, vals, className);
+    classToBuild = getClassDefinition(properties, vals, className, returnOnlyPropNVal);
+    if (returnOnlyPropNVal) return classToBuild;
   } else if (/^(overscroll_behavior)/.test(classParts[0])) {
     addValueToPropNVals(properties, vals, ["overscroll-behavior", processValuePart(value)]);
-    classToBuild = getClassDefinition(properties, vals, className);
+    classToBuild = getClassDefinition(properties, vals, className, returnOnlyPropNVal);
+    if (returnOnlyPropNVal) return classToBuild;
   } else if (/^(scroll_snap)/.test(classParts[0])) {
 
     const class1stParts = classParts[0].split("_");
@@ -116,10 +118,10 @@ export const scrollClasses = (classParts = [], className = "") => {
         const tempValue = elParts[1];
 
         if (propType === "type") {
-          // removed
+           
           addValueToPropNVals(properties, vals, ["scroll-snap-type", processValuePart(tempValue)]);
         } else if (propType === "align") {
-          // removed
+           
           addValueToPropNVals(properties, vals, ["scroll-snap-align", processValuePart(tempValue)]);
         } else if (propType === "stop") {
           addValueToPropNVals(properties, vals, ["scroll-snap-stop", processValuePart(tempValue)]);
@@ -132,10 +134,10 @@ export const scrollClasses = (classParts = [], className = "") => {
     } else if (class1stParts.length === 3) {
       const propType = class1stParts[2];
       if (propType === "type") {
-        // removed
+         
         addValueToPropNVals(properties, vals, ["scroll-snap-type", processValuePart(value)]);
       } else if (propType === "align") {
-        // removed
+         
         addValueToPropNVals(properties, vals, ["scroll-snap-align", processValuePart(value)]);
       } else if (propType === "stop") {
         addValueToPropNVals(properties, vals, ["scroll-snap-stop", processValuePart(value)]);
@@ -146,7 +148,8 @@ export const scrollClasses = (classParts = [], className = "") => {
       }
     }
 
-    classToBuild = getClassDefinition(properties, vals, className);
+    classToBuild = getClassDefinition(properties, vals, className, returnOnlyPropNVal);
+    if (returnOnlyPropNVal) return classToBuild;
   }
 
 
