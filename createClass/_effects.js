@@ -99,8 +99,6 @@ export const filterClasses = (classParts = [], className = "") => {
   return getCompleteClassDefinition(2, classToBuild, classParts);
 }
 
-
-
 export const blendClasses = (classParts = [], className = "") => {
 
   // [mix/bg]_blend-[max/min]_{breakpoint}-value
@@ -119,7 +117,6 @@ export const blendClasses = (classParts = [], className = "") => {
 
 }
 
-
 export const opacityClasses = (classParts = [], className = "") => {
 
   // opacity-[max/min]_{breakpoint}-value
@@ -129,7 +126,6 @@ export const opacityClasses = (classParts = [], className = "") => {
   return getCompleteClassDefinition(2, classToBuild, classParts);
 
 }
-
 
 export const shadowClasses = (classParts = [], className = "") => {
 
@@ -168,7 +164,6 @@ export const backFaceClass = (classParts = [], className = "") => {
   return getCompleteClassDefinition(2, classToBuild, classParts);
 
 }
-
 
 export const content_visibilityClass = (classParts = [], className = "") => {
 
