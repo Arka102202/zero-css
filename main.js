@@ -1,4 +1,5 @@
 import { createClass } from './addDynamicClass.js';
+import { createSelectorClasses } from './combinators/child.js';
 
 
 // Get the <style> tag where new styles will be added
@@ -49,7 +50,14 @@ const handleMutations = (mutationsList = []) => {
   // Iterate over the Set of class names and create new CSS rules for each
   let idx = 0;
   classNames.forEach((el) => {
-    if (idx++ >= startIdx) createClass(el, styleTag);
+    if (idx++ >= startIdx) {
+      if(/^__/.test(el)){
+        console.log({el});
+        createSelectorClasses(el, styleTag);
+      }else {
+        createClass(el, styleTag);
+      }
+    }
   });
 
   console.log(classNames);
