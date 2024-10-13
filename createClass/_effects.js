@@ -52,8 +52,7 @@ export const filterClasses = (classParts = [], className = "", returnOnlyPropNVa
         filterVal += `sepia(${processValuePart(value)}) `;
 
       } else if (prop === "dropShadow") {
-        let values = value.split("_").map(el => processValuePart(el));
-        filterVal += `drop-shadow(${values.join(" ")}) `;
+        filterVal += `drop-shadow(${processValuePart(value)}) `;
       }
     })
 
@@ -86,10 +85,7 @@ export const filterClasses = (classParts = [], className = "", returnOnlyPropNVa
       filterVal += `sepia(${processValuePart(valPart)}) `;
 
     } else if (filterType === "dropShadow") {
-      let values = valPart.split("_");
-      values = values.map(el => processValuePart(el));
-      filterVal += `drop-shadow(${values.join(" ")}) `;
-
+      filterVal += `drop-shadow(${processValuePart(valPart)}) `;
     }
   }
 
@@ -134,10 +130,9 @@ export const shadowClasses = (classParts = [], className = "", returnOnlyPropNVa
 
   // [txt_]shadow-[max/min]_{breakpoint}-value
 
-  const values = classParts.at(-1).split("_");
-  const val = values.map(el => processValuePart(el)).join(" ");
+  const value = processValuePart(classParts.at(-1));
 
-  const classToBuild = getClassDefinition([classParts[0] === "shadow" ? "box-shadow" : "text-shadow"], [val], className, returnOnlyPropNVal);
+  const classToBuild = getClassDefinition([classParts[0] === "shadow" ? "box-shadow" : "text-shadow"], [value], className, returnOnlyPropNVal);
   if(returnOnlyPropNVal) return classToBuild;
   return getCompleteClassDefinition(2, classToBuild, classParts);
 }
