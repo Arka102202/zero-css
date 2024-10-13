@@ -10,10 +10,10 @@ import { perspectiveOrgClasses, transformClasses, transitionClasses } from "./cr
 import { colorClass, fontClasses, fontImportClass, letterClass, textClasses } from "./createClass/_typography.js";
 import { varClass } from "./createClass/_var.js";
 
-export const createClass = (className = "", styleTag, returnOnlyPropNVal = false) => {
+export const createClass = (className = "", styleTag, returnOnlyPropNVal = false, styleImportTag) => {
     const classParts = className.split("-");
     const firstPart = classParts[0];
-    let importStatement = "", returnedString = "", varString = "";
+    let returnedString = "", varString = "";
     if (/^(wd|ht|size)$/.test(firstPart)) {
         returnedString = sizeClasses(classParts, className, returnOnlyPropNVal);
     } else if (firstPart === "aspect_ratio") {
@@ -71,7 +71,7 @@ export const createClass = (className = "", styleTag, returnOnlyPropNVal = false
     } else if (/^txt/.test(className)) {
         returnedString = textClasses(classParts, className, returnOnlyPropNVal);
     } else if (/^@import/.test(className)) {
-        importStatement += fontImportClass(classParts);
+        styleImportTag.innerHTML += fontImportClass(classParts);
     } else if (/^(scroll|overscroll)/.test(className)) {
         returnedString = scrollClasses(classParts, className, returnOnlyPropNVal);
     } else if (/^transform/.test(className)) {
@@ -105,7 +105,7 @@ export const createClass = (className = "", styleTag, returnOnlyPropNVal = false
     if (returnOnlyPropNVal) return returnedString;
 
     styleTag.innerHTML += returnedString;
-    styleTag.innerHTML = (varString + importStatement + styleTag.innerHTML);
+    styleTag.innerHTML = (varString + styleTag.innerHTML);
 }
 
 

@@ -16,7 +16,7 @@ export const getClassDefinition = (properties = [], vals = [], className = '', r
   const modifiedClassName = className.replace(/[.,#%+&:/@]/g, '\\$&');
 
   // Generate CSS property-value pairs
-  const cssBody = properties.map((prop, idx) => 
+  const cssBody = properties.map((prop, idx) =>
     `\t${prop}: ${vals[idx]}`).join(";\n");
 
   // Return only the property-value pairs if requested
@@ -157,7 +157,7 @@ export const processValuePart = (val = "", mappingObj = null, isFontName = false
   // Default processing for variables and regular values
   let processedVal = val
     .replace(/p(\d+)/g, "-$1")    // Convert 'p<number>' to '-<number>'
-    .replace(/\+/g, " ")            // Replace '+' with space
+    .replace(/\+/g, " ")            // Replace All '+' with space
     .replace(/[A-Z]/g, match => '-' + match.toLowerCase());  // Convert camelCase to kebab-case
 
   // Handle CSS variable notation (v<var>)
@@ -178,27 +178,44 @@ export const processValuePart = (val = "", mappingObj = null, isFontName = false
 const formatFontName = (val = "") => {
   if (/\+/.test(val)) {
     return '"' + val.replace(/\+/g, " ") + '"';  // Replace '+' with space and wrap in quotes
-  } else if (/#/.test(val)) {
-    return val.replace(/#/g, "-");  // Replace '#' with '-'
+  } else if (/[A-Z]/.test(val)) {
+    return val.replace(/[A-Z]/g, match => '-' + match.toLowerCase());  // Convert camelCase to kebab-case
   } else return val;  // Return as-is if no special characters
 }
 
 
+/**
+ * Splits a string into a specified number of parts using a given delimiter.
+ * If the string has more segments than the specified number, 
+ * the last part will contain the remaining segments joined by the delimiter.
+ *
+ * @param {string} str - The input string to be split.
+ * @param {number} num - The number of parts to divide the string into. Must be > 0.
+ * @param {string} delimiter - The character(s) used to split the string.
+ * @returns {Array<string>} - An array containing the split parts. If the input 
+ *                            string has fewer segments than `num`, all segments are returned.
+ */
 export const splitStringByParts = (str, num, delimiter) => {
+  // If the requested number of parts is less than or equal to zero, return an empty array.
   if (num <= 0) {
-      return [];
+    return [];
   }
-  
-  // Split the string using the delimiter
+
+  // Split the string using the specified delimiter.
   const parts = str.split(delimiter);
-  
-  // If the number of parts is less than or equal to the requested number
+
+  // If the number of resulting parts is less than or equal to the requested number,
+  // return all parts since no further splitting or joining is needed.
   if (parts.length <= num) {
-      return parts;
+    return parts;
   }
-  
-  const result = parts.slice(0, num - 1); // Take the first (num - 1) parts
-  result.push(parts.slice(num - 1).join(delimiter)); // Join the remaining parts for the last chunk
-  
+
+  // Create the result array by taking the first (num - 1) parts.
+  const result = parts.slice(0, num - 1);
+
+  // Join the remaining parts into a single string for the last chunk and add it to the result.
+  result.push(parts.slice(num - 1).join(delimiter));
+
+  // Return the final array containing the specified number of parts.
   return result;
-}
+};

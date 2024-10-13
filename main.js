@@ -4,6 +4,7 @@ import { createSelectorClasses } from './combinators/_child.js';
 
 // Get the <style> tag where new styles will be added
 const styleTag = document.getElementById("style");
+const styleImportTag = document.getElementById("style-import");
 
 // Initialize a Set to store unique class names
 const classNames = new Set();
@@ -55,7 +56,7 @@ const handleMutations = (mutationsList = []) => {
         console.log({el});
         createSelectorClasses(el, styleTag);
       }else {
-        createClass(el, styleTag);
+        createClass(el, styleTag, false, styleImportTag);
       }
     }
   });
