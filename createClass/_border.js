@@ -84,8 +84,6 @@ export const borderCLasses = (classParts = [], className = "", returnOnlyPropNVa
     off && addValueToPropNVals(properties, vals, [propName1st + "-offset", off]);
   }
 
-
-
   const classToBuild = getClassDefinition(properties, vals,  className, returnOnlyPropNVal);
   if(returnOnlyPropNVal) return classToBuild;
   return getCompleteClassDefinition(2, classToBuild, classParts);
