@@ -2,10 +2,12 @@
 
 - Add the provision to be able to add multiple values for any property using `,`
   following are the props that support multiple values:
-  - background
+  - background //done
   - outline
   - clip-path
   - box-shadow, text-shadow
+
+- fix the !important issue
 
 - binding multiple rule into one using some custom name  @new
 

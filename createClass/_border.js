@@ -12,11 +12,11 @@ const directions = {
 export const borderCLasses = (classParts = [], className = "", returnOnlyPropNVal = false) => {
 
   //  border_[t/r/b/l]-[max/min]_{breakpoint}-{wd:val&st:va&clr:val}
-  //  border_[t/r/b/l]_[wd/st/clr/off]-[max/min]_{breakpoint}-value
+  //  border_[t/r/b/l]_[width/color/style]-[max/min]_{breakpoint}-value
   //  border_rad_[tr/br/bl/tl]_[max/min]_{breakpoint}-value
 
   //  outline_[t/r/b/l]-[max/min]_{breakpoint}-{wd:val&st:va&clr:val&off:val}
-  //  outline_[t/r/b/l]_[wd/st/clr/off]-[max/min]_{breakpoint}-value
+  //  outline_[t/r/b/l]_[width/color/style/offset]-[max/min]_{breakpoint}-value
 
   const properties = [];
   const vals = [];
@@ -33,14 +33,14 @@ export const borderCLasses = (classParts = [], className = "", returnOnlyPropNVa
 
   const valPart = classParts.at(-1);
 
-  if (/^(wd|st|clr|off)$/.test(propType)) {
-    if (propType === "clr") {
+  if (/^(color|width|style|offset)$/.test(propType)) {
+    if (propType === "color") {
       addValueToPropNVals(properties, vals, [propName1st + directions[propDir] + "-color", processValuePart(valPart, colors)]);
-    } else if (propType === "wd") {
+    } else if (propType === "width") {
       addValueToPropNVals(properties, vals, [propName1st + directions[propDir] + "-width", processValuePart(valPart)]);
-    } else if (propType === "st") {
+    } else if (propType === "style") {
       addValueToPropNVals(properties, vals, [propName1st + directions[propDir] + "-style", processValuePart(valPart)]);
-    } else if (propType === "off") {
+    } else if (propType === "offset") {
       addValueToPropNVals(properties, vals, [propName1st + directions[propDir] + "-offset", processValuePart(valPart)]);
     }
   } else if (/^border_rad/.test(classParts[0])) {
@@ -55,8 +55,7 @@ export const borderCLasses = (classParts = [], className = "", returnOnlyPropNVa
     } else if (radDir === "tl") {
       addValueToPropNVals(properties, vals, ["border-top-left-radius", processValuePart(valPart)]);
     } else {
-      const values = valPart.split("_");
-      addValueToPropNVals(properties, vals, ["border-radius", values.map(el => processValuePart(el)).join(" ")]);
+      addValueToPropNVals(properties, vals, ["border-radius", processValuePart(valPart)]);
     }
   } else {
 
@@ -95,7 +94,7 @@ export const borderCLasses = (classParts = [], className = "", returnOnlyPropNVa
 
 export const ringClasses = (classParts = [], className = "", returnOnlyPropNVal = false) => {
 
-  //  ring_[t/r/b/l]-[max/min]_{breakpoint}-[wd:val&clr:val] ==> using shadow
+  //  ring_[t/r/b/l]-[max/min]_[breakpoint]-[wd:val&clr:val]
 
   const properties = [];
   const vals = [];

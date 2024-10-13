@@ -3,84 +3,65 @@ import { addValueToPropNVals, getClassDefinition, getCompleteClassDefinition, pr
 
 // background
 export const bgClasses = (classParts = [], className = "", returnOnlyPropNVal = false) => {
-
-  // when to use a variable:
-  // 1. image as url ==> url@./folder1/folder2/image.png
-  // 1. image as url ==> url@../folder1/folder2/image.png
-  // 1. image as url ==> url@[Complete Link]
-  
-  // bg-[max/min]_{breakpoint}-[clr:val&img:val&pos:val&s:val&re:val&org:val&clip:val&att:val]
-  // bg_[color_image_position_size_repeat_origin_clip_attachment]-[max/min]_{breakpoint}-value
-
   const properties = [];
   const vals = [];
-  const valPart = classParts.at(-1);
-  const prop1stPart = "background-"
+  let valPart = classParts.length ? classParts.at(-1) : "";
+  const prop1stPart = "background-";
   const isOnlyBg = classParts[0] === "bg";
+  let valObj = { color: "", image: "", position: "", size: "", repeat: "", origin: "", clip: "", attachment: "" };
+  let impString = "";
 
   if (isOnlyBg) {
+    const allVals = valPart.split(",");
+    let delimiter = "";
 
-    const valParts = valPart.split("&");
+    allVals.forEach((val) => {
+      const valParts = val.split("&");
 
-    valParts.forEach(el => {
-      const elParts = el.split(":");
-      const prop = elParts[0];
-      const value = elParts[1];
+      valParts.forEach(el => {
+        const elParts = el.split(":");
+        const prop = elParts[0];
+        const value = elParts[1] || "";
+        getVal(prop, value, valObj, delimiter);
+      });
 
-      if (prop === "clr") {
-        addValueToPropNVals(properties, vals, [prop1stPart + "color", processValuePart(value, colors)]);
-      } if (prop === "img") {
-        addValueToPropNVals(properties, vals, [prop1stPart + "image", processValuePart(value)]);
-      } if (prop === "pos") {
-        const eachPart = value.split("_");
-        const tempVal = eachPart.map(el => processValuePart(el)).join(" ");
-        addValueToPropNVals(properties, vals, [prop1stPart + "position", tempVal]);
-      } if (prop === "s") {
-        const eachPart = value.split("_");
-        const tempVal = eachPart.map(el => processValuePart(el)).join(" ");
-        addValueToPropNVals(properties, vals, [prop1stPart + "size", tempVal]);
-      } if (prop === "re") {
-        addValueToPropNVals(properties, vals, [prop1stPart + "repeat", processValuePart(value)]);
-      } if (prop === "org") {
-        addValueToPropNVals(properties, vals, [prop1stPart + "origin", processValuePart(value)]);
-      } if (prop === "clip") {
-        addValueToPropNVals(properties, vals, [prop1stPart + "clip", processValuePart(value)]);
-      } if (prop === "att") {
-        addValueToPropNVals(properties, vals, [prop1stPart + "attachment", processValuePart(value)]);
-      }
-    })
+      delimiter = ", ";
+    });
 
   } else {
-
-    const propLastPart = classParts[0].split("_").at(-1);
-    let value = "";
-
-    if (propLastPart === "color") {
-      value = processValuePart(valPart, colors);
-    } else if (propLastPart === "image") {
-      value = processValuePart(valPart);
-    } else if (propLastPart === "position") {
-      const eachPart = valPart.split("_");
-      value = eachPart.map(el => processValuePart(el)).join(" ");
-    } else if (propLastPart === "size") {
-      const eachPart = valPart.split("_");
-      value = eachPart.map(el => processValuePart(el)).join(" ");
-    } else if (propLastPart === "repeat") {
-      value = processValuePart(valPart);
-    } else if (propLastPart === "origin") {
-      value = processValuePart(valPart);
-    } else if (propLastPart === "clip") {
-      value = processValuePart(valPart);
-    } else if (propLastPart === "attachment") {
-      value = processValuePart(valPart);
+    const propLastPart = classParts[0].includes("_") ? classParts[0].split("_").at(-1) : "";
+    if (/_imp$/.test(valPart)) {
+      valPart = valPart.replace(/_imp$/, "");
+      impString = "!important";
     }
+    const valParts = valPart.split(",");
+    let delimiter = "";
 
-    addValueToPropNVals(properties, vals, [prop1stPart + propLastPart, value]);
-
+    valParts.forEach(val => {
+      getVal(propLastPart, val, valObj, delimiter);
+      delimiter = ", ";
+    });
   }
 
-  const classToBuild = getClassDefinition(properties, vals, className, returnOnlyPropNVal);
-  if(returnOnlyPropNVal) return classToBuild;
-  return getCompleteClassDefinition(2, classToBuild, classParts);
+  Object.entries(valObj).forEach(([key, v]) => {
+    if (v) {
+      addValueToPropNVals(properties, vals, [prop1stPart + key, v + impString]);
+    }
+  });
 
+  const classToBuild = getClassDefinition(properties, vals, className, returnOnlyPropNVal);
+  if (returnOnlyPropNVal) return classToBuild;
+  return getCompleteClassDefinition(2, classToBuild, classParts);
+};
+
+
+const getVal = (prop = "", value = "", valObj = {}, delimiter = "") => {
+  if (/(clr|color)/.test(prop)) valObj.color += (delimiter + processValuePart(value, colors));
+  else if (/(img|image)/.test(prop)) valObj.image += (delimiter + processValuePart(value));
+  else if (/(pos|position)/.test(prop)) valObj.position += (delimiter + processValuePart(value));
+  else if (/(s|size)/.test(prop)) valObj.size += (delimiter + processValuePart(value));
+  else if (/(re|repeat)/.test(prop)) valObj.repeat += (delimiter + processValuePart(value));
+  else if (/(org|origin)/.test(prop)) valObj.origin += (delimiter + processValuePart(value));
+  else if (/(clip|clip)/.test(prop)) valObj.clip += (delimiter + processValuePart(value));
+  else if (/(att|attachment)/.test(prop)) valObj.attachment += (delimiter + processValuePart(value));
 }
