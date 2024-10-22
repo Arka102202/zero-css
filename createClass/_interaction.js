@@ -1,40 +1,51 @@
 import { addValueToPropNVals, getClassDefinition, getCompleteClassDefinition, processValuePart } from "./_generic.js";
 
+/**
+ * Generates CSS classes for interaction-related properties, such as cursor styles, 
+ * touch actions, pointer events, and other user interaction settings.
+ * 
+ * @param {Array} classParts - An array containing parts of the class name to identify the type and value.
+ * @param {string} className - Optional class name for additional customization.
+ * @param {boolean} returnOnlyPropNVal - If true, returns only property-value pairs without a complete class definition.
+ * @returns {string} - The final CSS class or property-value pairs, depending on `returnOnlyPropNVal`.
+ */
+
 export const interactionClasses = (classParts = [], className = "", returnOnlyPropNVal = false) => {
 
-  // accent_color-[max/min]_breakpoint-value
-  // cursor-value
-  // pointer_events-value
-  // resize-[max/min]_breakpoint-value
-  // touch_act-value
-  // user_select-value
-  // caret_color-[max/min]_breakpoint-value
+  // Supported class patterns:
+  // - accent_color-[max/min]_breakpoint-value
+  // - caret_color-[max/min]_breakpoint-value
+  // - cursor-value
+  // - pointer_events-value
+  // - resize-[max/min]_breakpoint-value
+  // - touch_act-value
+  // - user_select-value
 
-  const class1stPart = classParts[0];
-  const value = classParts.at(-1);
-  const properties = [];
-  const vals = [];
+  const class1stPart = classParts[0];  // Extract the first part of the class name (e.g., "cursor" or "touch_act").
+  const value = classParts.at(-1);     // Extract the last part of the class name (usually the value).
+  const properties = [];  // Stores CSS property names.
+  const vals = [];        // Stores the corresponding values.
 
-  if (class1stPart === "accent_color") {
-    addValueToPropNVals(properties, vals, ["accent-color", processValuePart(value)]);
-  } else if (class1stPart === "caret_color") {
-    addValueToPropNVals(properties, vals, ["caret-color", processValuePart(value)]);
-  } else if (class1stPart === "cursor") {
-    addValueToPropNVals(properties, vals, ["cursor", processValuePart(value)]);
-  } else if (class1stPart === "pointer_events") {
-    addValueToPropNVals(properties, vals, ["pointer-events", processValuePart(value)]);
-  } else if (class1stPart === "resize") {
-    addValueToPropNVals(properties, vals, ["resize", processValuePart(value)]);
-  } else if (class1stPart === "resize") {
-    addValueToPropNVals(properties, vals, ["resize", processValuePart(value)]);
-  } else if (class1stPart === "touch_act") {
-    addValueToPropNVals(properties, vals, ["touch-action", processValuePart(value)]);
-  } else if (class1stPart === "user_select") {
-    addValueToPropNVals(properties, vals, ["user-select", processValuePart(value)]);
+  // Handle the special case for 'touch-action'.
+  if (class1stPart === "touch_act") {
+    addValueToPropNVals(properties, vals, [
+      "touch-action", 
+      processValuePart(value) 
+    ]);
+  } else {
+    // For other interaction classes, replace underscores with hyphens to match CSS property names.
+    addValueToPropNVals(properties, vals, [
+      class1stPart.replace("_", "-"), 
+      processValuePart(value) 
+    ]);
   }
 
+  // Generate the CSS class definition.
   const classToBuild = getClassDefinition(properties, vals, className, returnOnlyPropNVal);
-  if(returnOnlyPropNVal) return classToBuild;
-  return getCompleteClassDefinition(2, classToBuild, classParts);
 
-}
+  // If only property-value pairs are requested, return them.
+  if (returnOnlyPropNVal) return classToBuild;
+
+  // Return the complete class definition with all required components.
+  return getCompleteClassDefinition(2, classToBuild, classParts);
+};

@@ -156,8 +156,9 @@ export const processValuePart = (val = "", mappingObj = null, isFontName = false
 
   // Default processing for variables and regular values
   let processedVal = val
-    .replace(/p(\d+)/g, "-$1")    // Convert 'p<number>' to '-<number>'
-    .replace(/\+/g, " ")            // Replace All '+' with space
+    .replace(/\+/g, " ")          // Replace All '+' with space
+    .replace(/p(\d+)/g, "+$1")    // Convert 'p<number>' to '+<number>'
+    .replace(/m(\d+)/g, "-$1")    // Convert 'm<number>' to '-<number>'
     .replace(/[A-Z]/g, match => '-' + match.toLowerCase());  // Convert camelCase to kebab-case
 
   // Handle CSS variable notation (v<var>)

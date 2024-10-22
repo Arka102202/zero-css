@@ -73,7 +73,6 @@ export const transitionClasses = (classParts = [], className = "", returnOnlyPro
   return getCompleteClassDefinition(2, classToBuild, classParts);
 }
 
-
 export const perspectiveOrgClasses = (classParts = [], className = "", returnOnlyPropNVal = false) => {
 
   // perspective_origin-[max/min]_{breakpoint}-value

@@ -4,6 +4,8 @@ import { createSelectorClasses } from './combinators/_child.js';
 
 // Get the <style> tag where new styles will be added
 const styleTag = document.getElementById("style");
+
+// Get the <style> tag with id = "style-import" where new styles will be added
 const styleImportTag = document.getElementById("style-import");
 
 // Initialize a Set to store unique class names
@@ -31,41 +33,53 @@ function getAllClassNames(element = document.body, classNames = new Set()) {
 }
 
 /**
- * Handles mutations observed in the DOM, updates the classNames Set,
- * and applies new styles for each class name.
+ * Handles mutations observed in the DOM, updates the `classNames` Set,
+ * and applies new styles by generating CSS rules for each class name.
+ * This function ensures that newly added class names are tracked and styled efficiently.
  *
- * @param {MutationRecord[]} mutationsList - A list of MutationRecord objects describing each change.
+ * @param {MutationRecord[]} mutationsList - A list of MutationRecord objects describing 
+ *                                           changes to the DOM (e.g., added/removed nodes or attributes).
  */
 const handleMutations = (mutationsList = []) => {
 
-  mutationsList.forEach(el => {
+  // Iterate through each mutation record in the list.
+  mutationsList.forEach((el) => {
+    // If the mutation affects the <body> or #root elements, gather class names recursively.
     if (el.target.localName === "body" || el.target.id === "root") {
-      // Get all class names from the body and its children
+      // Collect all class names from the body element and its children into the `classNames` Set.
       getAllClassNames(el.target, classNames);
+    } 
+    // If it's another element, add each class from its classList to the `classNames` Set.
+    else {
+      el.target.classList.forEach((className) => classNames.add(className));
     }
-    // If not the first time, add class names from the target element's classList
-    else el.target.classList.forEach(el => classNames.add(el));
-
   });
 
-  // Iterate over the Set of class names and create new CSS rules for each
+  // Iterate over the `classNames` Set and generate new CSS rules as needed.
   let idx = 0;
-  classNames.forEach((el) => {
+  classNames.forEach((className) => {
+    // Ensure only unprocessed class names (those added after the last update) are processed.
     if (idx++ >= startIdx) {
-      if(/^__/.test(el)){
-        console.log({el});
-        createSelectorClasses(el, styleTag);
-      }else {
-        createClass(el, styleTag, false, styleImportTag);
+      // If the class name starts with "__", handle it as a special selector.
+      if (/^__/.test(className)) {
+        console.log({ className });
+        createSelectorClasses(className, styleTag);
+      } 
+      // For regular class names, create standard CSS rules.
+      else {
+        createClass(className, styleTag, false, styleImportTag);
       }
     }
   });
 
+  // Log the `classNames` Set for debugging purposes.
   console.log(classNames);
 
-  // Update startIdx to avoid reprocessing class names
+  // Update `startIdx` to mark the current size of `classNames` 
+  // to avoid reprocessing already handled class names.
   startIdx = classNames.size;
-}
+};
+
 
 // Initialize a MutationObserver with the handleMutations callback
 const observer = new MutationObserver(handleMutations);

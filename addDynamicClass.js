@@ -10,104 +10,181 @@ import { perspectiveOrgClasses, transformClasses, transitionClasses } from "./cr
 import { colorClass, fontClasses, fontImportClass, letterClass, textClasses } from "./createClass/_typography.js";
 import { varClass } from "./createClass/_var.js";
 
+/**
+ * Creates and applies CSS class rules based on the provided class name and its structure.
+ * Supports various utility classes like size, layout, position, interaction, etc.
+ * If `returnOnlyPropNVal` is true, it returns the CSS properties and values without applying them.
+ *
+ * @param {string} className - The class name to be processed and transformed into CSS rules.
+ * @param {HTMLElement} styleTag - The <style> tag where the generated CSS rules will be appended.
+ * @param {boolean} [returnOnlyPropNVal=false] - If true, returns only the CSS properties and values without adding to the style tag.
+ * @param {HTMLElement} styleImportTag - The <style> tag for importing external font styles (used for @import).
+ * @returns {string | void} - Returns the CSS string if `returnOnlyPropNVal` is true, otherwise updates the style tag.
+ */
 export const createClass = (className = "", styleTag, returnOnlyPropNVal = false, styleImportTag) => {
+    // Split the className into parts using "-" to identify its category.
     const classParts = className.split("-");
-    const firstPart = classParts[0];
-    let returnedString = "", varString = "";
-    if (/^(wd|ht|size)$/.test(firstPart)) {
+    const firstPart = classParts[0];  // Extract the first part to determine the class type.
+    let returnedString = "", varString = "";  // Initialize variables for CSS rules and variable definitions.
+
+    // Handle size-related classes like width, height, and general size.
+    if (/^(?:max_|min_)?(?:wd|ht|size)/.test(firstPart)) {
         returnedString = sizeClasses(classParts, className, returnOnlyPropNVal);
-    } else if (firstPart === "aspect_ratio") {
+    } 
+    // Handle aspect ratio classes.
+    else if (firstPart === "aspect_ratio") {
         returnedString = aspectClasses(classParts, className, returnOnlyPropNVal);
-    } else if (firstPart === "d") {
+    } 
+    // Handle layout-related classes (e.g., display).
+    else if (firstPart === "d") {
         returnedString = layoutClasses(classParts, className, returnOnlyPropNVal);
-    } else if (/^flex/.test(firstPart)) {
+    } 
+    // Handle flexbox-related classes.
+    else if (/^flex/.test(firstPart)) {
         returnedString = flexClasses(classParts, className, returnOnlyPropNVal);
-    } else if (/^grid/.test(firstPart)) {
+    } 
+    // Handle grid-related classes.
+    else if (/^grid/.test(firstPart)) {
         returnedString = gridClasses(classParts, className, returnOnlyPropNVal);
-    } else if (/^justify/.test(firstPart)) {
+    } 
+    // Handle justify-content-related classes.
+    else if (/^justify/.test(firstPart)) {
         returnedString = justifyClasses(classParts, className, returnOnlyPropNVal);
-    } else if (/^(center_el|align_(right|left|bottom|top))/.test(firstPart)) {
+    } 
+    // Handle element alignment (e.g., center, align-left/right).
+    else if (/^(?:center_el|align_(right|left|bottom|top))/.test(firstPart)) {
         returnedString = centerElemClasses(classParts, className, returnOnlyPropNVal);
-    } else if (/^align/.test(firstPart)) {
+    } 
+    // Handle alignment-related classes.
+    else if (/^align/.test(firstPart)) {
         returnedString = alignClasses(classParts, className, returnOnlyPropNVal);
-    } else if (/gap$/.test(firstPart)) {
+    } 
+    // Handle gap-related classes.
+    else if (/gap$/.test(firstPart)) {
         returnedString = gapCLasses(classParts, className, returnOnlyPropNVal);
-    } else if (firstPart === "order") {
+    } 
+    // Handle order-related classes.
+    else if (firstPart === "order") {
         returnedString = orderClasses(classParts, className, returnOnlyPropNVal);
-    } else if (firstPart === "pos") {
+    } 
+    // Handle position-related classes.
+    else if (firstPart === "pos") {
         returnedString = positionClasses(classParts, className, returnOnlyPropNVal);
-    } else if (firstPart === "overflow") {
+    } 
+    // Handle overflow-related classes.
+    else if (firstPart === "overflow") {
         returnedString = overflowClasses(classParts, className, returnOnlyPropNVal);
-    } else if (firstPart === "zIndex") {
+    } 
+    // Handle z-index-related classes.
+    else if (firstPart === "zIndex") {
         returnedString = zIndexClasses(classParts, className, returnOnlyPropNVal);
-    } else if (/^(right|left|bottom|top)/.test(firstPart)) {
+    } 
+    // Handle top, right, bottom, left (TRBL) positioning classes.
+    else if (/^(right|left|bottom|top)/.test(firstPart)) {
         returnedString = trblClasses(classParts, className, returnOnlyPropNVal);
-    } else if (/^vars/.test(firstPart)) {
+    } 
+    // Handle variable classes (e.g., CSS variables).
+    else if (/^vars/.test(firstPart)) {
         varString = varClass(className.split("@"), className);
-    } else if (/^(p[_-]|m[_-])/.test(className)) {
+    } 
+    // Handle padding and margin (spacing) classes.
+    else if (/^(p[_-]|m[_-])/.test(className)) {
         returnedString = spacingClasses(classParts, className, returnOnlyPropNVal);
-    } else if (/^(bg[_-])/.test(className)) {
+    } 
+    // Handle background-related classes.
+    else if (/^(bg[_-])/.test(className)) {
         returnedString = bgClasses(classParts, className, returnOnlyPropNVal);
-    } else if (/^(border|outline)/.test(className)) {
+    } 
+    // Handle border and outline-related classes.
+    else if (/^(border|outline)/.test(className)) {
         returnedString = borderCLasses(classParts, className, returnOnlyPropNVal);
-    } else if (/^ring/.test(className)) {
+    } 
+    // Handle ring-related classes.
+    else if (/^ring/.test(className)) {
         returnedString = ringClasses(classParts, className, returnOnlyPropNVal);
-    } else if (/^(filter|bdFilter)/.test(className)) {
+    } 
+    // Handle filter and backdrop filter classes.
+    else if (/^(filter|bdFilter)/.test(className)) {
         returnedString = filterClasses(classParts, className, returnOnlyPropNVal);
-    } else if (/^(bg|mix)_blend/.test(className)) {
+    } 
+    // Handle blend mode-related classes.
+    else if (/^(bg|mix)_blend/.test(className)) {
         returnedString = blendClasses(classParts, className, returnOnlyPropNVal);
-    } else if (/^opacity/.test(className)) {
+    } 
+    // Handle opacity-related classes.
+    else if (/^opacity/.test(className)) {
         returnedString = opacityClasses(classParts, className, returnOnlyPropNVal);
-    } else if (/^(shadow|txt_shadow)/.test(className)) {
+    } 
+    // Handle shadow-related classes.
+    else if (/^(shadow|txt_shadow)/.test(className)) {
         returnedString = shadowClasses(classParts, className, returnOnlyPropNVal);
-    } else if (/^text_grad/.test(className)) {
+    } 
+    // Handle text gradient classes.
+    else if (/^text_grad/.test(className)) {
         returnedString = textGradClasses(classParts, className, returnOnlyPropNVal);
-    } else if (/^font/.test(className)) {
+    } 
+    // Handle font-related classes.
+    else if (/^font/.test(className)) {
         returnedString = fontClasses(classParts, className, returnOnlyPropNVal);
-    } else if (/^color/.test(className)) {
+    } 
+    // Handle color-related classes.
+    else if (/^color/.test(className)) {
         returnedString = colorClass(classParts, className, returnOnlyPropNVal);
-    } else if (/^letter/.test(className)) {
+    } 
+    // Handle letter-spacing-related classes.
+    else if (/^letter/.test(className)) {
         returnedString = letterClass(classParts, className, returnOnlyPropNVal);
-    } else if (/^txt/.test(className)) {
+    } 
+    // Handle text-related classes.
+    else if (/^txt/.test(className)) {
         returnedString = textClasses(classParts, className, returnOnlyPropNVal);
-    } else if (/^@import/.test(className)) {
+    } 
+    // Handle font import (@import) rules.
+    else if (/^@import/.test(className)) {
         styleImportTag.innerHTML += fontImportClass(classParts);
-    } else if (/^(scroll|overscroll)/.test(className)) {
+    } 
+    // Handle scroll and overscroll-related classes.
+    else if (/^(scroll|overscroll)/.test(className)) {
         returnedString = scrollClasses(classParts, className, returnOnlyPropNVal);
-    } else if (/^transform/.test(className)) {
+    } 
+    // Handle transform-related classes.
+    else if (/^transform/.test(className)) {
         returnedString = transformClasses(classParts, className, returnOnlyPropNVal);
-    } else if (/^transition/.test(className)) {
+    } 
+    // Handle transition-related classes.
+    else if (/^transition/.test(className)) {
         returnedString = transitionClasses(classParts, className, returnOnlyPropNVal);
-    } else if (/^perspective_origin/.test(className)) {
+    } 
+    // Handle perspective origin classes.
+    else if (/^perspective_origin/.test(className)) {
         returnedString = perspectiveOrgClasses(classParts, className, returnOnlyPropNVal);
-    } else if (/^column/.test(className)) {
+    } 
+    // Handle column-related classes.
+    else if (/^column/.test(className)) {
         returnedString = columnClasses(classParts, className, returnOnlyPropNVal);
-    } else if (firstPart === "content_visibility") {
+    } 
+    // Handle content visibility classes.
+    else if (firstPart === "content_visibility") {
         returnedString = content_visibilityClass(classParts, className, returnOnlyPropNVal);
-    } else if (firstPart === "backface_visibility") {
+    } 
+    // Handle backface visibility classes.
+    else if (firstPart === "backface_visibility") {
         returnedString = backFaceClass(classParts, className, returnOnlyPropNVal);
-    } else if (firstPart === "caret_color") {
-        returnedString = interactionClasses(classParts, className, returnOnlyPropNVal);
-    } else if (firstPart === "accent_color") {
-        returnedString = interactionClasses(classParts, className, returnOnlyPropNVal);
-    } else if (firstPart === "cursor") {
-        returnedString = interactionClasses(classParts, className, returnOnlyPropNVal);
-    } else if (firstPart === "pointer_events") {
-        returnedString = interactionClasses(classParts, className, returnOnlyPropNVal);
-    } else if (firstPart === "resize") {
-        returnedString = interactionClasses(classParts, className, returnOnlyPropNVal);
-    } else if (firstPart === "touch_act") {
-        returnedString = interactionClasses(classParts, className, returnOnlyPropNVal);
-    } else if (firstPart === "user_select") {
+    } 
+    // Handle interaction-related classes (e.g., caret, accent, cursor).
+    else if (["caret_color", "accent_color", "cursor", "pointer_events", "resize", "touch_act", "user_select"]
+        .includes(firstPart)) {
         returnedString = interactionClasses(classParts, className, returnOnlyPropNVal);
     }
 
+    // If only CSS properties and values are requested, return them.
     if (returnOnlyPropNVal) return returnedString;
 
+    // Append the generated CSS rules to the style tag.
     styleTag.innerHTML += returnedString;
-    styleTag.innerHTML = (varString + styleTag.innerHTML);
-}
-
+    // Add variable definitions to the beginning of the style tag.
+    styleTag.innerHTML = varString + styleTag.innerHTML;
+};
 
 
 

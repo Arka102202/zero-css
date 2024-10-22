@@ -7,7 +7,7 @@ export const varClass = (classParts = [], className = "") => {
   const namePart = classParts[0].split("-");
   const nameParts = namePart[0].split("_");
   const selectorName = nameParts.at(-1);
-  const valParts = classParts[1].split(",");
+  const valParts = classParts[1].split("&");
 
   const cssVars = valParts.map(el => {
     const elParts = splitStringByParts(el, 2, ":");
@@ -16,8 +16,6 @@ export const varClass = (classParts = [], className = "") => {
 
     return `\t--${key.replace(/[A-Z]/g, match => '-' + match.toLowerCase())}: ${val}`
   }).join(";\n") + ";";
-
-
 
   const classToAdd =
     `${selectorName}{
