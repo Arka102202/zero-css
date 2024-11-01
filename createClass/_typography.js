@@ -33,11 +33,14 @@ export const fontClasses = (classParts = [], className = "", returnOnlyPropNVal 
 
     });
 
-  } else if (propName === "family") {
-    value = classParts.at(-1).split(",").map(el => processValuePart(el, null, true)).join(", ");
-    addValueToPropNVals(properties, vals, [classParts[0].replace("_", "-"), value]);
   } else {
-    value = processValuePart(classParts.at(-1));
+
+    if (propName === "family") {
+      value = classParts.at(-1).split(",").map(el => processValuePart(el, null, true)).join(", ");
+    } else {
+      value = processValuePart(classParts.at(-1));
+    }
+
     addValueToPropNVals(properties, vals, [classParts[0].replace("_", "-"), value]);
   }
 
@@ -66,16 +69,20 @@ export const letterClass = (classParts = [], className = "", returnOnlyPropNVal 
       addValueToPropNVals(properties, vals, ["writing-mode", "horizontal-tb"]);
     } else if (val === "down") {
       addValueToPropNVals(properties, vals, ["writing-mode", "horizontal-tb"]);
-      addValueToPropNVals(properties, vals, ["transform", "scale(-1)"]);
+      addValueToPropNVals(properties, vals, ["--scale", "-1"]);
     } else if (val === "right") {
       addValueToPropNVals(properties, vals, ["writing-mode", "vertical-lr"]);
     } else if (val === "left") {
       addValueToPropNVals(properties, vals, ["writing-mode", "vertical-rl"]);
-      addValueToPropNVals(properties, vals, ["transform", "rotate(180deg)"]);
+      addValueToPropNVals(properties, vals, ["--rotate", "180deg"]);
     }
 
     classToBuild = getClassDefinition(properties, vals, className, returnOnlyPropNVal);
     if (returnOnlyPropNVal) return classToBuild;
+
+    const transformStyleTag = document.getElementById("style-transform-class");
+
+    transformStyleTag.innerHTML = "." + className.replace(/[.,#%+&:/@]/g, '\\$&') + "," + transformStyleTag.innerHTML;
   }
 
   return getCompleteClassDefinition(2, classToBuild, classParts);
@@ -85,7 +92,7 @@ export const lineClasses = (classParts = [], className = "", returnOnlyPropNVal 
 
   // line_height-[max/min]_{breakpoint}-value
   // line_clamp-[max/min]_{breakpoint}-value
-  // line-break-[max/min]_{breakpoint}-value
+  // line_break-[max/min]_{breakpoint}-value
 
   const properties = [];
   const vals = [];
@@ -101,7 +108,7 @@ export const lineClasses = (classParts = [], className = "", returnOnlyPropNVal 
     addValueToPropNVals(properties, vals, ["-webkit-box-orient", "vertical"]);
     addValueToPropNVals(properties, vals, ["-webkit-line-clamp", processValuePart(value)]);
   } else {
-    addValueToPropNVals(properties, vals, ["line-break", processValuePart(value)]);
+    addValueToPropNVals(properties, vals, ["word-break", processValuePart(value)]);
   }
 
   const classToBuild = getClassDefinition(properties, vals, className, returnOnlyPropNVal);
@@ -119,32 +126,29 @@ export const textClasses = (classParts = [], className = "", returnOnlyPropNVal 
   // txt_[overflow/wrap/indent/justify]-[max/min]_{breakpoint}-value 
   // txt_align[X/Y]-[max/min]_{breakpoint}-value
   // txt_orientation-[max/min]_{breakpoint}-value
-  // txt_stroke-[max/min]_{breakpoint}-[width_color]
-  // txt_stroke_[width_color]-[max/min]_{breakpoint}-value // add -webkit in front
+  // txt_stroke-[max/min]_{breakpoint}-[width+color]
+  // txt_stroke_[width/color]-[max/min]_{breakpoint}-value // add -webkit in front
 
 
   const properties = [];
   const vals = [];
   const propType = classParts[0].split("_").at(1);
-  const class1stPartLen = classParts[0].split("_").length;
+  const class1stParts = classParts[0].split("_");
   const valPart = classParts.at(-1);
 
   if (/^(decor|stroke)$/.test(propType)) {
     const actualName = propType === "decor" ? "text-decoration" : "-webkit-text-stroke";
-    if (class1stPartLen === 2) {
-      const values = valPart.split("_");
-      const value = values.map(el => processValuePart(el)).join(" ");
-      addValueToPropNVals(properties, vals, [actualName, value]);
+    if (class1stParts.length === 2) {
+      addValueToPropNVals(properties, vals, [actualName, processValuePart(valPart)]);
     } else {
-      const propSubType = classParts[0].split("_").at(2);
+      const propSubType = class1stParts.at(2);
       addValueToPropNVals(properties, vals, [actualName + "-" + propSubType, processValuePart(valPart)]);
     }
   } else if (propType === "underline") {
     addValueToPropNVals(properties, vals, ["text-underline-offset", processValuePart(valPart)]);
-  } else if (/^(overflow|wrap|indent|justify|align|orientation)$/.test(propType)) {
+  } else {
     addValueToPropNVals(properties, vals, ["text-" + propType, processValuePart(valPart)]);
   }
-
 
   const classToBuild = getClassDefinition(properties, vals, className, returnOnlyPropNVal);
   if (returnOnlyPropNVal) return classToBuild;

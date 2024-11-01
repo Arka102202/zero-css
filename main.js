@@ -1,5 +1,6 @@
 import { createClass } from './addDynamicClass.js';
 import { createSelectorClasses } from './combinators/_child.js';
+import { generalTransformClass } from './createClass/_trans.js';
 
 
 // Get the <style> tag where new styles will be added
@@ -97,3 +98,5 @@ export function startObserving() {
 // Set up an event listener to run the initial class name processing and start observing when the page loads
 window.addEventListener('DOMContentLoaded', startObserving);
 
+// call the global class
+generalTransformClass();

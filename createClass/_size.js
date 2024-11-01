@@ -16,7 +16,7 @@ export const sizeClasses = (classParts = [], className = "", returnOnlyPropNVal 
   addValueToPropNVals(properties, vals, [
     /(ht|size)$/.test(classParts[0]) ? `${!/^(max|min)/.test(classParts[0]) ? "" : `${classParts[0].split("_")[0]}-`}height` : "", val
   ]);
-  console.log({properties, vals});
+
   const classToBuild = getClassDefinition(properties, vals, className, returnOnlyPropNVal);
   if(returnOnlyPropNVal) return classToBuild;
   return getCompleteClassDefinition(2, classToBuild, classParts);

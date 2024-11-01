@@ -123,7 +123,7 @@ export const flexClasses = (classParts = [], className = "", returnOnlyPropNVal 
   // .flex > * {
   //   max-width: 100%;
   // }
-  
+
   // Initialize arrays to hold CSS properties and their values
   const properties = [];
   const vals = [];
@@ -193,7 +193,7 @@ export const flexClasses = (classParts = [], className = "", returnOnlyPropNVal 
 export const gridClasses = (classParts = [], className = "", returnOnlyPropNVal = false) => {
 
   // grid-[max/min]_[breakpoint]-re_(col/row):Width+count&[gap/cGap/rGap]:value
-  // grid-[max/min]_[breakpoint]-(col/row):width1,width2,....
+  // grid-[max/min]_[breakpoint]-(col/row):width1+width2,....
   // grid-[max/min]_[breakpoint]-(col/row)Span:to+from/span+2
 
   // grid_col-[max/min]_[breakpoint]-(autoFill/autoFit)+10(vw/vh/px/rem)
@@ -210,10 +210,10 @@ export const gridClasses = (classParts = [], className = "", returnOnlyPropNVal 
   if (/^grid_col/.test(classParts)) {
     valParts = valPart.split("+");
     addValueToPropNVals(properties, vals, [
-      `grid-template-columns`, 
+      `grid-template-columns`,
       `repeat(${processValuePart(valParts[0])}, minmax(${processValuePart(valParts[1])}, 1fr))`
     ]);
-  } 
+  }
   else if (/^grid_auto/.test(classParts)) {
     const class1stParts = classParts[0].split("_");
 
@@ -235,17 +235,17 @@ export const gridClasses = (classParts = [], className = "", returnOnlyPropNVal 
       const propName = classParts[0].replace(/_/g, "-");
       addValueToPropNVals(properties, vals, [propName, processValuePart(valPart)]);
     }
-  } 
+  }
   else if (valPart.includes("Span")) {
     valParts = valPart.split(":");
     const values = valParts[1].split("+");
     const delimiter = values[0] === "span" ? " " : "/";
     addValueToPropNVals(properties, vals, [
-      `grid-${valParts[0] === "colSpan" ? "column" : "row"}`, 
+      `grid-${valParts[0] === "colSpan" ? "column" : "row"}`,
       values.map(el => processValuePart(el)).join(delimiter)
     ]);
     addDisplayProp = false;
-  } 
+  }
   else {
     valParts.forEach(el => {
       const [prop, value] = el.split(":");
@@ -253,14 +253,14 @@ export const gridClasses = (classParts = [], className = "", returnOnlyPropNVal 
       if (/^re_(?:col|row)$/.test(prop)) {
         const [width, count] = value.split("+").map(v => processValuePart(v));
         addValueToPropNVals(properties, vals, [
-          `grid-template-${prop === "re_col" ? "columns" : "rows"}`, 
+          `grid-template-${prop === "re_col" ? "columns" : "rows"}`,
           `repeat(${count}, ${width})`
         ]);
       } else if (/^(?:col|row)$/.test(prop)) {
         valParts = valPart.split(":");
         addValueToPropNVals(properties, vals, [
-          `grid-template-${valParts[0] === "col" ? "columns" : "rows"}`, 
-          valParts[1].split(",").map(el => processValuePart(el)).join(" ")
+          `grid-template-${valParts[0] === "col" ? "columns" : "rows"}`,
+          processValuePart(valParts[1])
         ]);
       } else if (/gap$/.test(prop.toLowerCase())) {
         const gapType = prop === "gap" ? "gap" : prop === "rGap" ? "row-gap" : "column-gap";
@@ -276,7 +276,7 @@ export const gridClasses = (classParts = [], className = "", returnOnlyPropNVal 
 
   // Generate the final class definition
   const classToBuild = getClassDefinition(properties, vals, className, returnOnlyPropNVal);
-  
+
   // Return either the CSS properties or the complete class definition
   if (returnOnlyPropNVal) return classToBuild;
   return getCompleteClassDefinition(2, classToBuild, classParts);
@@ -303,7 +303,7 @@ export const justifyClasses = (classParts = [], className = "", returnOnlyPropNV
   const classToBuild = getClassDefinition(
     [classParts[0].replace("_", "-")], // Converts part like 'justify_content' to 'justify-content'.
     [processValuePart(classParts.at(-1))], // Processes the value part (e.g., 'center', 'flex-end').
-    className, 
+    className,
     returnOnlyPropNVal
   );
 
@@ -335,7 +335,7 @@ export const alignClasses = (classParts = [], className = "", returnOnlyPropNVal
   const classToBuild = getClassDefinition(
     [classParts[0].replace("_", "-")], // Convert 'align_content' to 'align-content'.
     [processValuePart(classParts.at(-1))], // Process the value part (e.g., 'center', 'stretch').
-    className, 
+    className,
     returnOnlyPropNVal
   );
 
@@ -371,7 +371,7 @@ export const gapCLasses = (classParts = [], className = "", returnOnlyPropNVal =
   const classToBuild = getClassDefinition(
     [classParts[0].replace("_", "-").replace("col", "column")], // Converts 'col_gap' to 'column-gap'.
     [processValuePart(classParts.at(-1))], // Processes the value part (e.g., '10px', '1rem').
-    className, 
+    className,
     returnOnlyPropNVal
   );
 
@@ -402,7 +402,7 @@ export const orderClasses = (classParts = [], className = "", returnOnlyPropNVal
   const classToBuild = getClassDefinition(
     [classParts[0]], // Uses the first part as the property (e.g., 'order').
     [processValuePart(classParts.at(-1))], // Processes the value (e.g., '1', '2', or 'auto').
-    className, 
+    className,
     returnOnlyPropNVal
   );
 
@@ -433,7 +433,7 @@ export const positionClasses = (classParts = [], className = "", returnOnlyPropN
   const classToBuild = getClassDefinition(
     ["position"], // Always sets the property name as 'position'.
     [processValuePart(classParts.at(-1))], // Processes the value (e.g., 'absolute', 'relative', 'fixed').
-    className, 
+    className,
     returnOnlyPropNVal
   );
 
@@ -463,9 +463,9 @@ export const overflowClasses = (classParts = [], className = "", returnOnlyPropN
   // overflow-[max/min]_{breakpoint}-value
 
   const classToBuild = getClassDefinition(
-    [classParts[0]], // Uses the first part as the property (e.g., 'overflow').
+    [classParts[0].replace("_", "-")], // Uses the first part as the property (e.g., 'overflow').
     [processValuePart(classParts.at(-1))], // Processes the value (e.g., 'auto', 'hidden', 'scroll').
-    className, 
+    className,
     returnOnlyPropNVal
   );
 
@@ -495,7 +495,7 @@ export const zIndexClasses = (classParts = [], className = "", returnOnlyPropNVa
   const classToBuild = getClassDefinition(
     ["z-index"], // Uses 'z-index' as the property name for CSS styling.
     [processValuePart(classParts.at(-1))], // Processes the last part to extract the z-index value (e.g., '1', '10', '100').
-    className, 
+    className,
     returnOnlyPropNVal
   );
 
@@ -525,7 +525,7 @@ export const trblClasses = (classParts = [], className = "", returnOnlyPropNVal 
   const classToBuild = getClassDefinition(
     [classParts.at(0)], // Uses the first part (e.g., 'top', 'right', 'bottom', 'left') as the CSS property.
     [processValuePart(classParts.at(-1))], // Processes the last part to extract the value for the property.
-    className, 
+    className,
     returnOnlyPropNVal
   );
 
@@ -570,8 +570,12 @@ export const centerElemClasses = (classParts = [], className = "", returnOnlyPro
 
   const addPositioning = (position) => {
     addValueToPropNVals(properties, vals, [position, processValuePart(value)]);
-    if (position === "left") transformStr += "translateX(-50%)";
-    if (position === "top") transformStr += "translateY(-50%)";
+    if (position === "left") {
+      addValueToPropNVals(properties, vals, ["--translateX", "-50%"]);
+    }
+    if (position === "top") {
+      addValueToPropNVals(properties, vals, ["--translateY", "-50%"]);
+    }
   };
 
   if (/^(?:c|l|r)/.test(valPart) || /(?:right|left)$/.test(classParts[0])) {
@@ -581,19 +585,22 @@ export const centerElemClasses = (classParts = [], className = "", returnOnlyPro
     addPositioning("left")
   }
   if (/^(?:l|r|t|b)/.test(valPart) || /(?:top|right|bottom|left)$/.test(classParts[0])) {
-    const tempSide = /^center/.test(classParts[0]) ? valPart.split("_")[0] : classParts[0].split("_")[1];
+    const tempSide = /^center/.test(classParts[0]) ? valPart.split("+")[0] : classParts[0].split("_")[1];
     addValueToPropNVals(properties, vals, [sides[tempSide], "0"]);
   }
 
-  if(!/^(?:c|l|r|t|b)/.test(valPart)){
+  if (!/^(?:c|l|r|t|b)/.test(valPart)) {
     addPositioning("top");
     addPositioning("left");
   }
 
-  addValueToPropNVals(properties, vals, ["transform", transformStr]);
-
   const classToBuild = getClassDefinition(properties, vals, className, returnOnlyPropNVal);
   if (returnOnlyPropNVal) return classToBuild;
+
+  const transformStyleTag = document.getElementById("style-transform-class");
+
+  transformStyleTag.innerHTML = "."+className.replace(/[.,#%+&:/@]/g, '\\$&') + "," + transformStyleTag.innerHTML;
+
   return getCompleteClassDefinition(2, classToBuild, classParts);
 
 }
@@ -631,7 +638,7 @@ export const columnClasses = (classParts = [], className = "", returnOnlyPropNVa
     // Handle 'columns' class: split the value part and process each value.
     const valParts = valPart.split("_");
     addValueToPropNVals(properties, vals, [classParts[0], valParts.map(el => processValuePart(el)).join(" ")]);
-  
+
   } else if (!/^column_rule/.test(classParts[0])) {
     // Handle cases where the class is related to 'column' only
     const prop1stPart = classParts[0]; // Get the first part of the class name.
@@ -644,7 +651,7 @@ export const columnClasses = (classParts = [], className = "", returnOnlyPropNVa
         const elParts = el.split(":"); // Split each value part by ':' to separate property and value.
         const prop = elParts[0]; // The property name.
         const value = elParts[1]; // The property value.
-        
+
         if (prop === "wd") {
           // Special handling for 'wd' to map to width.
           addValueToPropNVals(properties, vals, [prop1stPart + "-width", processValuePart(value)]);
@@ -661,7 +668,7 @@ export const columnClasses = (classParts = [], className = "", returnOnlyPropNVa
   } else {
     // Handle 'column_rule' classes
     const propName = classParts[0].replace(/_/g, "-"); // Convert underscores to hyphens in the property name.
-    
+
     if (class1stParts.length === 2) {
       // When there are two parts, split the last value part by '+' for multiple values.
       const valParts = valPart.split("+");
@@ -674,7 +681,7 @@ export const columnClasses = (classParts = [], className = "", returnOnlyPropNVa
 
   // Build the class definition from the collected properties and values.
   const classToBuild = getClassDefinition(properties, vals, className, returnOnlyPropNVal);
-  
+
   // If only property-value pairs are requested, return them directly.
   if (returnOnlyPropNVal) return classToBuild;
 
@@ -707,10 +714,10 @@ export const objClasses = (classParts = [], className = "", returnOnlyPropNVal =
   const classToBuild = getClassDefinition(
     ["object" + (propType[1] === "pos" ? "-position" : "-fit")], // Determines property based on fit/pos.
     [processValuePart(classParts.at(-1))], // Processes the value part.
-    className, 
+    className,
     returnOnlyPropNVal
   );
-  
+
   // If only property-value pairs are requested, return them directly.
   if (returnOnlyPropNVal) return classToBuild;
 
@@ -738,7 +745,7 @@ export const floatClass = (classParts = [], className = "", returnOnlyPropNVal =
   const classToBuild = getClassDefinition(
     ["float"], // Sets the property to 'float'.
     [processValuePart(classParts.at(-1))], // Processes the value part.
-    className, 
+    className,
     returnOnlyPropNVal
   );
 
@@ -769,7 +776,7 @@ export const clearClass = (classParts = [], className = "", returnOnlyPropNVal =
   const classToBuild = getClassDefinition(
     ["clear"], // Sets the property to 'clear'.
     [processValuePart(classParts.at(-1))], // Processes the value part.
-    className, 
+    className,
     returnOnlyPropNVal
   );
 

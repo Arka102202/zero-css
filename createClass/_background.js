@@ -89,24 +89,17 @@ export const bgClasses = (classParts = [], className = "", returnOnlyPropNVal = 
   return getCompleteClassDefinition(2, classToBuild, classParts);
 };
 
-
-
 const getVal = (prop = "", value = "", valObj = {}, delimiter = "") => {
-  if (/(clr|color)/.test(prop)) valObj.color += (delimiter + processValuePart(value, colors));
-  else if (/(img|image)/.test(prop)) valObj.image += (delimiter + processValuePart(value));
-  else if (/(pos|position)/.test(prop)) valObj.position += (delimiter + processValuePart(value));
-  else if (/(s|size)/.test(prop)) valObj.size += (delimiter + processValuePart(value));
-  else if (/(re|repeat)/.test(prop)) valObj.repeat += (delimiter + processValuePart(value));
-  else if (/(org|origin)/.test(prop)) valObj.origin += (delimiter + processValuePart(value));
-  else if (/(clip|clip)/.test(prop)) valObj.clip += (delimiter + processValuePart(value));
-  else if (/(att|attachment)/.test(prop)) valObj.attachment += (delimiter + processValuePart(value));
-}
 
+  if (valObj[mappingObj[prop]]) delimiter = ", ";
+  
+  if (/(?:clr|color)/.test(prop)) valObj.color += (delimiter + processValuePart(value, colors));
+  else valObj[mappingObj[prop]] += (delimiter + processValuePart(value));
+}
 
 export const processValPartIfOnlyBg = (valPart = "", valObj = {}) => {
   // If the class is 'bg', split the value part by commas (e.g., "color:red,image:url('img.jpg')").
   const allVals = valPart.split(",");
-  let delimiter = "";
 
   // Iterate through each value group, separated by "&".
   allVals.forEach((val) => {
@@ -119,10 +112,26 @@ export const processValPartIfOnlyBg = (valPart = "", valObj = {}) => {
       const value = elParts[1] || ""; // Extract the value, or set as an empty string if missing.
 
       // Populate the valObj with property-value pairs.
-      getVal(prop, value, valObj, delimiter);
+      getVal(prop, value, valObj);
     });
-
-    // Use a comma as the delimiter between values.
-    delimiter = ", ";
   });
 }
+
+const mappingObj = {
+  clr: "color",
+  img: "image",
+  pos: "position",
+  s: "size",
+  re: "repeat",
+  org: "origin",
+  clip: "clip",
+  att: "attachment",
+  color: "color",
+  image: "image",
+  position: "position",
+  size: "size",
+  repeat: "repeat",
+  origin: "origin",
+  clip: "clip",
+  attachment: "attachment",
+} 

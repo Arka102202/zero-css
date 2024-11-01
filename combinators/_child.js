@@ -30,15 +30,13 @@ export const createSelectorClasses = (className = "", styleTag) => {
     const valueParts = classParts.at(-1).split(",");
 
     let classInside = "";
-    console.log({ valueParts });
 
     // Iterate over each property-value pair to generate CSS rules.
     for (let i = 0; i < valueParts.length; i++) {
         const propValName = valueParts[i];
 
         // Generate the CSS rule using a helper function, `createClass`.
-        classInside += (createClass(propValName, styleTag, true) +
-            (i !== valueParts.length - 1 ? "\n\t" : "\n")); // Add newline and indentation.
+        classInside += (createClass(propValName, styleTag, true) + "\n");
     }
 
     // Build the final CSS class definition.

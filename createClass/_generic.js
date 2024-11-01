@@ -42,7 +42,7 @@ export const getPseudoElementDefinition = (properties = [], vals = [], className
   if (!properties.length || !vals.length) return "";
 
   // Escape special characters in class name for valid CSS
-  const escapedClassName = className ? `.${className.replace(/[.,#%+&:/@]/g, '\\$&')}` : "";
+  const escapedClassName = className;
 
   // Create CSS property-value pairs
   const propValPairs = properties

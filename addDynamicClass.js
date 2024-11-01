@@ -7,7 +7,7 @@ import { scrollClasses } from "./createClass/_scroll.js";
 import { aspectClasses, sizeClasses } from "./createClass/_size.js";
 import { spacingClasses } from "./createClass/_spacing.js";
 import { perspectiveOrgClasses, transformClasses, transitionClasses } from "./createClass/_trans.js";
-import { colorClass, fontClasses, fontImportClass, letterClass, textClasses } from "./createClass/_typography.js";
+import { colorClass, fontClasses, fontImportClass, letterClass, lineClasses, textClasses } from "./createClass/_typography.js";
 import { varClass } from "./createClass/_var.js";
 
 /**
@@ -72,7 +72,7 @@ export const createClass = (className = "", styleTag, returnOnlyPropNVal = false
         returnedString = positionClasses(classParts, className, returnOnlyPropNVal);
     } 
     // Handle overflow-related classes.
-    else if (firstPart === "overflow") {
+    else if (/^overflow/.test(firstPart)) {
         returnedString = overflowClasses(classParts, className, returnOnlyPropNVal);
     } 
     // Handle z-index-related classes.
@@ -138,6 +138,10 @@ export const createClass = (className = "", styleTag, returnOnlyPropNVal = false
     // Handle text-related classes.
     else if (/^txt/.test(className)) {
         returnedString = textClasses(classParts, className, returnOnlyPropNVal);
+    } 
+    // Handle line-related classes.
+    else if (/^line/.test(className)) {
+        returnedString = lineClasses(classParts, className, returnOnlyPropNVal);
     } 
     // Handle font import (@import) rules.
     else if (/^@import/.test(className)) {

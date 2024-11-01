@@ -2,7 +2,7 @@ import { addValueToPropNVals, getClassDefinition, getCompleteClassDefinition, pr
 
 export const transformClasses = (classParts = [], className = "", returnOnlyPropNVal = false) => {
 
-  // transform-[max/min]_{breakpoint}-matrix:1_2_3_4_5_6&perspective:17px&rotate:0.5turn&...
+  // transform-[max/min]_{breakpoint}-matrix:1,2,3,4,5,6&perspective:17px&rotate:0.5turn&...
   // transform_[matrix/.../origin/style]-[max/min]_{breakpoint}-value
 
   const properties = [];
@@ -11,8 +11,6 @@ export const transformClasses = (classParts = [], className = "", returnOnlyProp
   const valPart = classParts.at(-1);
 
   if (class1stPart.length === 1) {
-
-    let valueStr = ""
     const valParts = valPart.split("&");
 
     valParts.forEach(el => {
@@ -20,29 +18,22 @@ export const transformClasses = (classParts = [], className = "", returnOnlyProp
       const prop = elParts[0];
       const value = elParts[1];
 
-      const createFuncArgs = value
-        .split("_")
-        .map(el => processValuePart(el))
-        .join(", ");
-
-      valueStr += `${prop}(${createFuncArgs})`;
-
+      addValueToPropNVals(properties, vals, ["--" + prop, processValuePart(value)]);
     });
-
-    addValueToPropNVals(properties, vals, ["transform", valueStr]);
 
   } else {
     const propType = class1stPart[1];
-    const createFuncArgs = valPart
-      .split("_")
-      .map(el => processValuePart(el))
-      .join(", ");
-
-    addValueToPropNVals(properties, vals, ["transform", `${propType}(${createFuncArgs})`]);
+    if (/^(?:origin|style|box)$/.test(propType)) addValueToPropNVals(properties, vals, ["transform-" + propType, processValuePart(valPart)]);
+    else addValueToPropNVals(properties, vals, ["--" + propType, processValuePart(valPart)]);
   }
 
   const classToBuild = getClassDefinition(properties, vals, className, returnOnlyPropNVal);
-  if(returnOnlyPropNVal) return classToBuild;
+  if (returnOnlyPropNVal) return classToBuild;
+
+  const transformStyleTag = document.getElementById("style-transform-class");
+
+  transformStyleTag.innerHTML = "." + className.replace(/[.,#%+&:/@]/g, '\\$&') + "," + transformStyleTag.innerHTML;
+
   return getCompleteClassDefinition(2, classToBuild, classParts);
 
 
@@ -54,22 +45,15 @@ export const transitionClasses = (classParts = [], className = "", returnOnlyPro
   // transition_[behavior/delay/duration/property/style]-[max/min]_{breakpoint}-value
   const properties = [];
   const vals = [];
-  const class1stPart = classParts[0].split("_");
   const valPart = classParts.at(-1);
   let value = "";
 
-  if (class1stPart.length === 1) {
-     
-    value = valPart.split("_").map(el => processValuePart(el)).join(" ");
-  } else {
-     
-    value = processValuePart(valPart);
-  }
+  value = processValuePart(valPart);
 
   addValueToPropNVals(properties, vals, [classParts[0].replace("_", "-"), value]);
 
   const classToBuild = getClassDefinition(properties, vals, className, returnOnlyPropNVal);
-  if(returnOnlyPropNVal) return classToBuild;
+  if (returnOnlyPropNVal) return classToBuild;
   return getCompleteClassDefinition(2, classToBuild, classParts);
 }
 
@@ -77,10 +61,56 @@ export const perspectiveOrgClasses = (classParts = [], className = "", returnOnl
 
   // perspective_origin-[max/min]_{breakpoint}-value
 
-   
   const classToBuild = getClassDefinition(["perspective-origin"], [processValuePart(classParts.at(-1))], className, returnOnlyPropNVal);
-  if(returnOnlyPropNVal) return classToBuild;
+  if (returnOnlyPropNVal) return classToBuild;
   return getCompleteClassDefinition(2, classToBuild, classParts);
 }
 
+export const generalTransformClass = () => {
 
+  console.log("calling this");
+  const transMatrix = {
+    matrix: "1,0,0,1,0,0",
+    matrix3d: "1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1",
+    perspective: "none",
+    rotate: "0deg",
+    rotate3d: "0, 0, 0, 0deg",
+    rotateX: "0deg",
+    rotateY: "0deg",
+    rotateZ: "0deg",
+    translate: "0px, 0px",
+    translate3d: "0px, 0px, 0px",
+    translateX: "0px",
+    translateY: "0px",
+    translateZ: "0px",
+    scale: "1, 1",
+    scale3d: "1, 1, 1",
+    scaleX: "1",
+    scaleY: "1",
+    scaleZ: "1",
+    skew: "0deg, 0deg",
+    skewX: "0deg",
+    skewY: "0deg",
+  };
+
+  let transformVariables = "";
+  let transformStr = "";
+
+  Object.entries(transMatrix).forEach(([key, value]) => {
+    transformVariables += `\t--${key}: ${value};\n`;
+    transformStr += `${key}(var(--${key})) `;
+  });
+
+  let classToBuild = getClassDefinition(["transform"], [transformStr], "transform");
+
+  let transformStyleTag = document.getElementById("style-transform-class");
+
+  transformStyleTag.innerHTML = classToBuild;
+
+  transformStyleTag = document.getElementById("style-transform-var");
+
+  classToBuild = `html {\n${transformVariables}\n`;
+
+  transformStyleTag.innerHTML += classToBuild;
+
+}
