@@ -29,7 +29,7 @@ export const createSelectorClasses = (className = "", styleTag) => {
     // Extract the CSS property-value pairs from the section after the "@" symbol.
     const valueParts = classParts.at(-1).split(",");
 
-    let classInside = "";
+    let classInside = "", addToTransform = false;
 
     // Iterate over each property-value pair to generate CSS rules.
     for (let i = 0; i < valueParts.length; i++) {
@@ -37,10 +37,20 @@ export const createSelectorClasses = (className = "", styleTag) => {
 
         // Generate the CSS rule using a helper function, `createClass`.
         classInside += (createClass(propValName, styleTag, true) + "\n");
+
+        if (/^transform(?!_(origin|style))/.test(propValName) && !addToTransform) {
+            const transformStyleTag = document.getElementById("style-transform-class");
+    
+            transformStyleTag.innerHTML = classNameToBe + "," + transformStyleTag.innerHTML;
+
+            addToTransform = true;
+        }
     }
 
     // Build the final CSS class definition.
     const classToBuild = `${classNameToBe} {\n${classInside}}\n`;
+
+    
 
     // If a media query is specified, wrap the CSS class within the media query.
     const completeClassDef = selectorNMediaQuery.length === 2

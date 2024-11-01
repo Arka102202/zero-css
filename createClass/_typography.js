@@ -45,6 +45,7 @@ export const fontClasses = (classParts = [], className = "", returnOnlyPropNVal 
   }
 
   const classToBuild = getClassDefinition(properties, vals, className, returnOnlyPropNVal);
+  if(propName === "family") console.log({classToBuild});
   if (returnOnlyPropNVal) return classToBuild;
   return getCompleteClassDefinition(2, classToBuild, classParts);
 }

@@ -193,7 +193,7 @@ export const flexClasses = (classParts = [], className = "", returnOnlyPropNVal 
 export const gridClasses = (classParts = [], className = "", returnOnlyPropNVal = false) => {
 
   // grid-[max/min]_[breakpoint]-re_(col/row):Width+count&[gap/cGap/rGap]:value
-  // grid-[max/min]_[breakpoint]-(col/row):width1+width2,....
+  // grid-[max/min]_[breakpoint]-(col/row):width1,width2,....
   // grid-[max/min]_[breakpoint]-(col/row)Span:to+from/span+2
 
   // grid_col-[max/min]_[breakpoint]-(autoFill/autoFit)+10(vw/vh/px/rem)
@@ -522,9 +522,13 @@ export const trblClasses = (classParts = [], className = "", returnOnlyPropNVal 
 
   // [top/right/bottom/left]-[max/min]_{breakpoint}-value
 
+  const value = classParts.at(-1);
+
+  if(!/[0-9]/.test(value) && !/^v/.test(value)) return "";
+
   const classToBuild = getClassDefinition(
     [classParts.at(0)], // Uses the first part (e.g., 'top', 'right', 'bottom', 'left') as the CSS property.
-    [processValuePart(classParts.at(-1))], // Processes the last part to extract the value for the property.
+    [processValuePart(value)], // Processes the last part to extract the value for the property.
     className,
     returnOnlyPropNVal
   );
@@ -564,7 +568,6 @@ export const centerElemClasses = (classParts = [], className = "", returnOnlyPro
   const valPart = classParts.at(-1);
   const value = /^center/.test(classParts[0]) ? "50%" : processValuePart(valPart.split("+")[1]);
   const positionTypeABS = /^center/.test(classParts[0]) ? /abs$/.test(valPart) : /^abs/.test(valPart)
-  let transformStr = "";
 
   addValueToPropNVals(properties, vals, ["position", positionTypeABS ? "absolute" : "fixed"]);
 

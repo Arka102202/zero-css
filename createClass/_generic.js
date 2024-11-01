@@ -100,7 +100,12 @@ export const addMediaQuery = (classToPut = "", classParts = []) => {
   let width = breakPoints[classParts[1].split("_").at(-1)];
 
   // If no breakpoint is found in the breakPoints object, use the value directly from classParts[1]
-  if (!width) width = classParts[1].split("_").at(-1);
+  if (!width) {
+    width = classParts[1].split("_").at(-1);
+    if (!/[0-9]/.test(width)) {
+      return "";
+    }
+  }
 
   // Return the complete media query with either "max-width" or "min-width" based on the condition
   return (

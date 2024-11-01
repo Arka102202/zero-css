@@ -63,7 +63,7 @@ const handleMutations = (mutationsList = []) => {
     if (idx++ >= startIdx) {
       // If the class name starts with "__", handle it as a special selector.
       if (/^__/.test(className)) {
-        console.log({ className });
+        // console.log({ className });
         createSelectorClasses(className, styleTag);
       } 
       // For regular class names, create standard CSS rules.
@@ -74,7 +74,7 @@ const handleMutations = (mutationsList = []) => {
   });
 
   // Log the `classNames` Set for debugging purposes.
-  console.log(classNames);
+  // console.log(classNames);
 
   // Update `startIdx` to mark the current size of `classNames` 
   // to avoid reprocessing already handled class names.
