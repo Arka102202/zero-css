@@ -1,5 +1,5 @@
 import { createClass } from "../addDynamicClass.js";
-import { addMediaQuery } from "../createClass/_generic.js";
+import { addClassToTransformClassTag, getCompleteClassDefinition } from "../createClass/_generic.js";
 
 /**
  * Function to dynamically create CSS class selectors and add them to a provided <style> tag.
@@ -9,7 +9,7 @@ import { addMediaQuery } from "../createClass/_generic.js";
  * @param {HTMLStyleElement} styleTag - The <style> tag where the generated CSS rules will be injected.
  */
 
-export const createSelectorClasses = (className = "", styleTag) => {
+export const createSelectorClasses = (className = "") => {
 
     // __[selector,...]-[min/max]_[breakPoint]@utilityClassNames
     // __[::selection,div>p,div_p]@[bg_color-lightblue]
@@ -36,13 +36,10 @@ export const createSelectorClasses = (className = "", styleTag) => {
         const propValName = valueParts[i];
 
         // Generate the CSS rule using a helper function, `createClass`.
-        classInside += (createClass(propValName, styleTag, true) + "\n");
+        classInside += (createClass(propValName, true) + "\n");
 
         if (/^transform(?!_(origin|style))/.test(propValName) && !addToTransform) {
-            const transformStyleTag = document.getElementById("style-transform-class");
-    
-            transformStyleTag.innerHTML = classNameToBe + "," + transformStyleTag.innerHTML;
-
+            addClassToTransformClassTag(classNameToBe, true);
             addToTransform = true;
         }
     }
@@ -50,13 +47,5 @@ export const createSelectorClasses = (className = "", styleTag) => {
     // Build the final CSS class definition.
     const classToBuild = `${classNameToBe} {\n${classInside}}\n`;
 
-    
-
-    // If a media query is specified, wrap the CSS class within the media query.
-    const completeClassDef = selectorNMediaQuery.length === 2
-        ? addMediaQuery(classToBuild, selectorNMediaQuery)
-        : classToBuild;
-
-    // Append the generated CSS to the provided <style> tag.
-    styleTag.innerHTML += completeClassDef;
+    getCompleteClassDefinition(1, classToBuild, selectorNMediaQuery);
 };

@@ -1,4 +1,4 @@
-import { addValueToPropNVals, getClassDefinition, getCompleteClassDefinition, processValuePart } from "./_generic.js";
+import { addClassToTransformClassTag, addValueToPropNVals, getClassDefinition, getCompleteClassDefinition, processValuePart, transformClassesStyleTag, transformVarsStyleTag } from "./_generic.js";
 
 export const transformClasses = (classParts = [], className = "", returnOnlyPropNVal = false) => {
 
@@ -30,9 +30,7 @@ export const transformClasses = (classParts = [], className = "", returnOnlyProp
   const classToBuild = getClassDefinition(properties, vals, className, returnOnlyPropNVal);
   if (returnOnlyPropNVal) return classToBuild;
 
-  const transformStyleTag = document.getElementById("style-transform-class");
-
-  transformStyleTag.innerHTML = "." + className.replace(/[.,#%+&:/@]/g, '\\$&') + "," + transformStyleTag.innerHTML;
+  addClassToTransformClassTag(className);
 
   return getCompleteClassDefinition(2, classToBuild, classParts);
 
@@ -103,14 +101,10 @@ export const generalTransformClass = () => {
 
   let classToBuild = getClassDefinition(["transform"], [transformStr], "transform");
 
-  let transformStyleTag = document.getElementById("style-transform-class");
-
-  transformStyleTag.innerHTML = classToBuild;
-
-  transformStyleTag = document.getElementById("style-transform-var");
+  transformClassesStyleTag.innerHTML = classToBuild;
 
   classToBuild = `html {\n${transformVariables}\n`;
 
-  transformStyleTag.innerHTML += classToBuild;
+  transformVarsStyleTag.innerHTML += classToBuild;
 
 }

@@ -21,7 +21,7 @@ import { varClass } from "./createClass/_var.js";
  * @param {HTMLElement} styleImportTag - The <style> tag for importing external font styles (used for @import).
  * @returns {string | void} - Returns the CSS string if `returnOnlyPropNVal` is true, otherwise updates the style tag.
  */
-export const createClass = (className = "", styleTag, returnOnlyPropNVal = false, styleImportTag) => {
+export const createClass = (className = "", returnOnlyPropNVal = false) => {
     // Split the className into parts using "-" to identify its category.
     const classParts = className.split("-");
     const firstPart = classParts[0];  // Extract the first part to determine the class type.
@@ -145,7 +145,7 @@ export const createClass = (className = "", styleTag, returnOnlyPropNVal = false
     } 
     // Handle font import (@import) rules.
     else if (/^@import/.test(className)) {
-        styleImportTag.innerHTML += fontImportClass(classParts);
+        fontImportClass(classParts);
     } 
     // Handle scroll and overscroll-related classes.
     else if (/^(scroll|overscroll)/.test(className)) {
@@ -184,10 +184,6 @@ export const createClass = (className = "", styleTag, returnOnlyPropNVal = false
     // If only CSS properties and values are requested, return them.
     if (returnOnlyPropNVal) return returnedString;
 
-    // Append the generated CSS rules to the style tag.
-    styleTag.innerHTML += returnedString;
-    // Add variable definitions to the beginning of the style tag.
-    styleTag.innerHTML = varString + styleTag.innerHTML;
 };
 
 

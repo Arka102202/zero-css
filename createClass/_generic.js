@@ -1,5 +1,26 @@
 import { breakPoints } from "../mappings/_variables.js";
 
+
+
+const styleImportTag = document.createElement("style");
+styleImportTag.id = "style-import";
+document.body.appendChild(styleImportTag);
+
+export const transformVarsStyleTag = document.createElement("style");
+transformVarsStyleTag.id = "style-transform-var";
+document.body.appendChild(transformVarsStyleTag);
+
+export const transformClassesStyleTag = document.createElement("style");
+transformClassesStyleTag.id = "style-transform-class";
+document.body.appendChild(transformClassesStyleTag);
+
+const styleTag = document.createElement("style");
+styleTag.id = "style";
+document.body.appendChild(styleTag);
+
+const style_break_point_tags = { 120000: styleTag };
+const style_break_points = [120000];
+
 /**
  * Generates a CSS class definition or property-value pairs based on the provided input.
  * 
@@ -13,7 +34,7 @@ export const getClassDefinition = (properties = [], vals = [], className = '', r
   if (!properties.length || !vals.length) return "";
 
   // Escape special characters in the class name for valid CSS selectors
-  const modifiedClassName = className.replace(/[.,#%+&:/@]/g, '\\$&');
+  const modifiedClassName = getFormattedClassName(className);
 
   // Generate CSS property-value pairs
   const cssBody = properties.map((prop, idx) =>
@@ -25,6 +46,11 @@ export const getClassDefinition = (properties = [], vals = [], className = '', r
   // Otherwise, return the full class definition
   return `.${modifiedClassName} {\n${cssBody};\n}\n`;
 };
+
+
+export const getFormattedClassName = (className = "") => {
+  return className.replace(/[.,#%+&:/@]/g, '\\$&');
+}
 
 
 
@@ -74,7 +100,16 @@ export const getCompleteClassDefinition = (lengthWithoutMediaQuery = 2, classToB
 
   // If the number of class parts matches the length for no media query, return the class directly
   if (classParts.length === lengthWithoutMediaQuery) {
-    return classToBuild;
+
+    if (classParts[0].startsWith("vars")) {
+      styleTag.innerHTML = classToBuild + styleTag.innerHTML;
+    } else if (classParts[0].startsWith("import")) {
+      styleImportTag.innerHTML += classToBuild;
+    } else {
+      styleTag.innerHTML += classToBuild;
+    }
+
+    return "";
   }
 
   // If the class includes media query parts, add them using a helper function
@@ -107,12 +142,53 @@ export const addMediaQuery = (classToPut = "", classParts = []) => {
     }
   }
 
-  // Return the complete media query with either "max-width" or "min-width" based on the condition
-  return (
-    `@media (${isMax ? "max-width" : "min-width"}: ${width}) {
+  const completeClassName = `@media (${isMax ? "max-width" : "min-width"}: ${width}) {
   ${classToPut.replace(/\n$/, "")}
-}\n`);
+}\n`;
+
+  addNewBreakPointToDOM(parseInt(width));
+
+  style_break_point_tags[parseInt(width)].innerHTML += completeClassName;
+
+  // Return the complete media query with either "max-width" or "min-width" based on the condition
+  return "";
 }
+
+
+
+const addNewBreakPointToDOM = (new_break_point = 10) => {
+  let high = 0, low = style_break_points.length - 1;
+  let isBreakPointFound = false;
+
+  // Binary search
+  while (high <= low) {
+    const mid = Math.floor((high + low) / 2);
+    if (style_break_points[mid] === new_break_point) {
+      isBreakPointFound = true;
+      break;
+    }
+    if (style_break_points[mid] < new_break_point) {
+      low = mid - 1;
+    } else {
+      high = mid + 1;
+    }
+  }
+
+  if (!isBreakPointFound) {
+    // Create a new style tag
+    const newStyleTag = document.createElement("style");
+    newStyleTag.id = `style-${new_break_point}`;
+
+    // Insert into DOM after closest smaller breakpoint
+    style_break_point_tags[style_break_points[high - 1]].insertAdjacentElement("afterend", newStyleTag);
+
+    // Update structures
+    style_break_point_tags[new_break_point] = newStyleTag;
+    style_break_points.splice(high, 0, new_break_point);
+  }
+
+};
+
 
 
 /**
@@ -225,3 +301,11 @@ export const splitStringByParts = (str, num, delimiter) => {
   // Return the final array containing the specified number of parts.
   return result;
 };
+
+
+export const addClassToTransformClassTag = (className = "", isFormatted = false) => {
+
+  const formattedClassName = isFormatted ? className : ("." + getFormattedClassName(className));
+
+  transformClassesStyleTag.innerHTML = formattedClassName + "," + transformClassesStyleTag.innerHTML;
+}

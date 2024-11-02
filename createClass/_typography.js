@@ -1,4 +1,4 @@
-import { addValueToPropNVals, getClassDefinition, getCompleteClassDefinition, processValuePart } from "./_generic.js";
+import { addClassToTransformClassTag, addValueToPropNVals, getClassDefinition, getCompleteClassDefinition, processValuePart } from "./_generic.js";
 
 export const fontClasses = (classParts = [], className = "", returnOnlyPropNVal = false) => {
 
@@ -45,7 +45,7 @@ export const fontClasses = (classParts = [], className = "", returnOnlyPropNVal 
   }
 
   const classToBuild = getClassDefinition(properties, vals, className, returnOnlyPropNVal);
-  if(propName === "family") console.log({classToBuild});
+
   if (returnOnlyPropNVal) return classToBuild;
   return getCompleteClassDefinition(2, classToBuild, classParts);
 }
@@ -81,9 +81,7 @@ export const letterClass = (classParts = [], className = "", returnOnlyPropNVal 
     classToBuild = getClassDefinition(properties, vals, className, returnOnlyPropNVal);
     if (returnOnlyPropNVal) return classToBuild;
 
-    const transformStyleTag = document.getElementById("style-transform-class");
-
-    transformStyleTag.innerHTML = "." + className.replace(/[.,#%+&:/@]/g, '\\$&') + "," + transformStyleTag.innerHTML;
+    addClassToTransformClassTag(className);
   }
 
   return getCompleteClassDefinition(2, classToBuild, classParts);

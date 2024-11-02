@@ -1,4 +1,4 @@
-import { addValueToPropNVals, getClassDefinition, getCompleteClassDefinition, processValuePart } from "./_generic.js";
+import { addClassToTransformClassTag, addValueToPropNVals, getClassDefinition, getCompleteClassDefinition, getFormattedClassName, processValuePart } from "./_generic.js";
 
 
 const sides = {
@@ -524,7 +524,7 @@ export const trblClasses = (classParts = [], className = "", returnOnlyPropNVal 
 
   const value = classParts.at(-1);
 
-  if(!/[0-9]/.test(value) && !/^v/.test(value)) return "";
+  if (!/[0-9]/.test(value) && !/^v/.test(value)) return "";
 
   const classToBuild = getClassDefinition(
     [classParts.at(0)], // Uses the first part (e.g., 'top', 'right', 'bottom', 'left') as the CSS property.
@@ -600,9 +600,7 @@ export const centerElemClasses = (classParts = [], className = "", returnOnlyPro
   const classToBuild = getClassDefinition(properties, vals, className, returnOnlyPropNVal);
   if (returnOnlyPropNVal) return classToBuild;
 
-  const transformStyleTag = document.getElementById("style-transform-class");
-
-  transformStyleTag.innerHTML = "."+className.replace(/[.,#%+&:/@]/g, '\\$&') + "," + transformStyleTag.innerHTML;
+  addClassToTransformClassTag(className);
 
   return getCompleteClassDefinition(2, classToBuild, classParts);
 

@@ -2,13 +2,6 @@ import { createClass } from './addDynamicClass.js';
 import { createSelectorClasses } from './combinators/_child.js';
 import { generalTransformClass } from './createClass/_trans.js';
 
-
-// Get the <style> tag where new styles will be added
-const styleTag = document.getElementById("style");
-
-// Get the <style> tag with id = "style-import" where new styles will be added
-const styleImportTag = document.getElementById("style-import");
-
 // Initialize a Set to store unique class names
 const classNames = new Set();
 
@@ -64,11 +57,11 @@ const handleMutations = (mutationsList = []) => {
       // If the class name starts with "__", handle it as a special selector.
       if (/^__/.test(className)) {
         // console.log({ className });
-        createSelectorClasses(className, styleTag);
+        createSelectorClasses(className);
       } 
       // For regular class names, create standard CSS rules.
       else {
-        createClass(className, styleTag, false, styleImportTag);
+        createClass(className, false);
       }
     }
   });
