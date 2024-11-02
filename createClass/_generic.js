@@ -146,7 +146,9 @@ export const addMediaQuery = (classToPut = "", classParts = []) => {
   ${classToPut.replace(/\n$/, "")}
 }\n`;
 
-  addNewBreakPointToDOM(parseInt(width));
+  // return;
+
+  addNewBreakPointToDOM(parseInt(width), isMax);
 
   style_break_point_tags[parseInt(width)].innerHTML += completeClassName;
 
@@ -156,7 +158,8 @@ export const addMediaQuery = (classToPut = "", classParts = []) => {
 
 
 
-const addNewBreakPointToDOM = (new_break_point = 10) => {
+const addNewBreakPointToDOM = (new_break_point = 10, isMax = false) => {
+
   let high = 0, low = style_break_points.length - 1;
   let isBreakPointFound = false;
 
@@ -177,10 +180,13 @@ const addNewBreakPointToDOM = (new_break_point = 10) => {
   if (!isBreakPointFound) {
     // Create a new style tag
     const newStyleTag = document.createElement("style");
-    newStyleTag.id = `style-${new_break_point}`;
+    newStyleTag.id = `style-${isMax ? "max" : "min"}-${new_break_point}`;
 
     // Insert into DOM after closest smaller breakpoint
-    style_break_point_tags[style_break_points[high - 1]].insertAdjacentElement("afterend", newStyleTag);
+    if (isMax) style_break_point_tags[style_break_points[high - 1]].insertAdjacentElement("afterend", newStyleTag);
+    else {
+      style_break_point_tags[style_break_points[high - 1]].insertAdjacentElement(high - 1 === 0 ? "afterend" : "beforebegin", newStyleTag);
+    }
 
     // Update structures
     style_break_point_tags[new_break_point] = newStyleTag;
