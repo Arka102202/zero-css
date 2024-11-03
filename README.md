@@ -57,7 +57,7 @@ This innovative approach empowers developers with unparalleled flexibility and p
 
   With `ZERO CSS` developers can create CSS variables in one of the following two ways:
 
-  1. using utility class:<br>
+  1. **using utility class:**<br>
 
   The CSS class that lets developer create new CSS variables, looks like `vars_[selector]-[max/min]_[breakPoints]@var1:val,var2:val,.....`.
   The class must start with `vars` and the `[selector]` is a placeholder - that can be replaced with different selectors like - `html`, `:root`, `.class_name`,
@@ -66,9 +66,9 @@ This innovative approach empowers developers with unparalleled flexibility and p
   > Example
 
   ```html
-   <body class="vars_html@flexDir:column&blue:blue&bgImg:url('https://cdn.pixabay.com/photo/2024/05/26/10/15/bird-8788491_1280.jpg')&textGrad:linear-gradient(90deg,rgba(2,0,36,1)0%,rgba(9,9,121,1)35%,rgba(0,212,255,1)100%)"></body> 
+   <body class="vars_:root@flexDir:column&blue:blue&bgImg:url('https://cdn.pixabay.com/photo/2024/05/26/10/15/bird-8788491_1280.jpg')&textGrad:linear-gradient(90deg,rgba(2,0,36,1)0%,rgba(9,9,121,1)35%,rgba(0,212,255,1)100%)"></body> 
   ````
-  
+
   this will be added to the CSS as
 
   ```css
