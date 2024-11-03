@@ -63,8 +63,12 @@ This innovative approach empowers developers with unparalleled flexibility and p
   The class must start with `vars` and the `[selector]` is a placeholder - that can be replaced with different selectors like - `html`, `:root`, `.class_name`,
   `#id` or anything that is a valid CSS selector. The name of variables should be camelCased i.e. `primaryClr` and that will be added as `--primary-clr` and after the `:` provide the suitable value which must not contain any space.
 
-  > Example <br> <body class="vars_html@flexDir:column&blue:blue&bgImg:url('https://cdn.pixabay.com/photo/2024/05/26/10/15/bird-8788491_1280.jpg')&textGrad:linear-gradient(90deg,rgba(2,0,36,1)0%,rgba(9,9,121,1)35%,rgba(0,212,255,1)100%)"></body> 
+  > Example
 
+  ```html
+   <body class="vars_html@flexDir:column&blue:blue&bgImg:url('https://cdn.pixabay.com/photo/2024/05/26/10/15/bird-8788491_1280.jpg')&textGrad:linear-gradient(90deg,rgba(2,0,36,1)0%,rgba(9,9,121,1)35%,rgba(0,212,255,1)100%)"></body> 
+  ````
+  
   this will be added to the CSS as
 
   ```css
