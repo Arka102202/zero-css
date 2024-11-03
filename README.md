@@ -43,7 +43,7 @@ This innovative approach empowers developers with unparalleled flexibility and p
 
   While other libraries might define `dynamic` within rigid boundaries, `ZERO CSS` shatters those limitations. Here, `dynamic` means `absolute freedom` — the ability to apply any value to any property, without constraints.
 
-  > Example: Whether it's `wd-10%`, `wd-12.5vw`, `border_rad-2.4vw_2.4%_10px_2rem`, or `color-red`, developers can seamlessly use any unit — `px, rem, em, %, vw, vh` — with any value, from decimals like `1.2` and `11.56` to more complex combinations(with the upcoming updates).
+  > Example: Whether it's `wd-10%`, `wd-12.5vw`, `border_rad-2.4vw+2.4%+10px+2rem`, or `color-red`, developers can seamlessly use any unit — `px, rem, em, %, vw, vh` — with any value, from decimals like `1.2` and `11.56` to more complex combinations(with the upcoming updates).
 
   Sure, other libraries may claim to support flexibility, but they require pre-definition in a config file, limiting developers to a pre-set range of values. What they call `dynamic` is just controlled variability — it’s far from the real-time, unrestricted power that `ZERO CSS` delivers.
 
@@ -53,9 +53,28 @@ This innovative approach empowers developers with unparalleled flexibility and p
 
   CSS variables are one of the most powerful tools in modern web design, offering unparalleled flexibility to customize a website’s look and feel. Traditionally, developers must manually define these variables, but `ZERO CSS` takes this to a whole new level, making customization seamless and intuitive.
 
-  Unlike other libraries, which don't even offer the ability to create your own CSS variables, `ZERO CSS` empowers developers to define them effortlessly. With `ZERO CSS`, you don’t even need to know how CSS variables work. Simply create a JavaScript object, where the keys become the CSS variable names and the values are your custom properties.
+  Unlike other libraries, which don't even offer the ability to create your own CSS variables, `ZERO CSS` empowers developers to define them effortlessly. With `ZERO CSS`, you don’t even need to know how CSS variables work.
 
-  > Example
+  With `ZERO CSS` developers can create CSS variables in one of the following two ways:
+
+  1. using utility class:<br>
+
+  The CSS class that lets developer create new CSS variables, looks like `vars_[selector]-[max/min]_[breakPoints]@var1:val,var2:val,.....`.
+  The class must start with `vars` and the `[selector]` is a placeholder - that can be replaced with different selectors like - `html`, `:root`, `.class_name`,
+  `#id` or anything that is a valid CSS selector. The name of variables should be camelCased i.e. `primaryClr` and that will be added as `--primary-clr` and after the `:` provide the suitable value which must not contain any space.
+
+  > Example <br> <body class="vars_html@flexDir:column&blue:blue&bgImg:url('https://cdn.pixabay.com/photo/2024/05/26/10/15/bird-8788491_1280.jpg')&textGrad:linear-gradient(90deg,rgba(2,0,36,1)0%,rgba(9,9,121,1)35%,rgba(0,212,255,1)100%)"></body> 
+
+  this will be added to the CSS as
+
+  ```css
+  :root {
+    --flex-dir: column;
+    --blue: blue;
+    --bg-img: url(https://cdn.pixabay.com/photo/2024/05/26/10/15/bird-8788491_1280.jpg);
+    --text-grad: linear-gradient(90deg, rgba(2, 0, 36, 1) 0%, rgba(9, 9, 121, 1) 35%, rgba(0, 212, 255, 1) 100%);
+  }
+  ```
 
 ```js
 const vars = {
@@ -89,8 +108,19 @@ With `ZERO CSS`, setting **your own standards is easier, faster, and more powerf
 
   With `ZERO CSS`, **you unlock the next level of CSS optimization: zero redundancy, zero purging, zero files—delivering a leaner, faster web experience**.
 
-### 
+### Effortless, Pixel-Perfect Adaptation for Every Screen Size
 
+### Unleash the Power of Flexbox and Grid
+
+### Craft Custom Classes to Keep Your Code DRY and Stylish
+
+### Full Selector & Combinator Integration for True Styling Freedom
+
+### Say Goodbye to Clutter: Embrace Compact CSS with Pseudo Classes & Elements
+
+### Pro-Level Styling: Stack Backgrounds & Shadows
+
+### Elevate Your Typography: Simple Online Font Importing
 
 ## Some rules before use start using this awesome Library
 
@@ -98,9 +128,6 @@ With `ZERO CSS`, setting **your own standards is easier, faster, and more powerf
 - if somethings are within `{}` ==> any or all of the value can be used.
 - if somethings are within `()` ==> only one of the value can be used.
 - any and every length units can be used like `px, rem, em, %, vw, vh`.
-- rules for value:
-  1. replace any `space` with a `+`.
-  2. replace any `-` with `camelCase`.
 
 ## List of possible class name and How to use them
 

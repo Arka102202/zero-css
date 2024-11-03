@@ -1,5 +1,6 @@
 import { createClass } from './addDynamicClass.js';
 import { createSelectorClasses } from './combinators/_child.js';
+import { addCssVariables, addGlobalStyle } from './createClass/_generic.js';
 import { generalTransformClass } from './createClass/_trans.js';
 
 // Initialize a Set to store unique class names
@@ -93,3 +94,5 @@ window.addEventListener('DOMContentLoaded', startObserving);
 
 // call the global class
 generalTransformClass();
+addGlobalStyle();
+addCssVariables();

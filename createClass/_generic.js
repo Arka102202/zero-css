@@ -1,10 +1,13 @@
 import { breakPoints } from "../mappings/_variables.js";
 
 
-
 const styleImportTag = document.createElement("style");
 styleImportTag.id = "style-import";
 document.body.appendChild(styleImportTag);
+
+const styleGlobalTag = document.createElement("style");
+styleGlobalTag.id = "style-global";
+document.body.appendChild(styleGlobalTag);
 
 export const transformVarsStyleTag = document.createElement("style");
 transformVarsStyleTag.id = "style-transform-var";
@@ -20,6 +23,96 @@ document.body.appendChild(styleTag);
 
 const style_break_point_tags = { 120000: styleTag };
 const style_break_points = [120000];
+
+export const addGlobalStyle = () => {
+
+  const cssReset = `
+*,
+*::before,
+*::after {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+body {
+  line-height: 1.5;
+  font-family: sans-serif;
+  text-rendering: optimizeLegibility;
+}
+ul, ol {
+  list-style: none;
+}
+img, video {
+  max-width: 100%;
+  width: 100%;
+  height: auto;
+  display: block;
+}
+input, button, textarea, select {
+  font: inherit;
+  border: none;
+  outline: none;
+}
+input::placeholder,
+textarea::placeholder {
+  font: inherit;
+}
+button {
+  cursor: pointer;
+}
+table {
+  border-collapse: collapse;
+  width: 100%;
+}
+strong {
+  font-weight: bold;
+}
+blockquote {
+  margin: 1rem 0;
+  padding-left: 1rem;
+  border-left: 4px solid #ccc;
+}
+input:focus,
+textarea:focus,
+select:focus,
+button:focus {
+  outline: 2px solid #00f; /* Custom focus outline */
+  outline-offset: 2px;
+}
+`;
+
+  styleGlobalTag.innerHTML += cssReset;
+
+  console.log("adding global");
+
+}
+
+export const addCssVariables = () => {
+
+  let formattedVariables = "", classToBuild = "";
+
+  if (css_vari) {
+    Object.entries(css_vari).forEach(([breakPoint, selectors]) => {
+      Object.entries(selectors).forEach(([selector, propVals]) => {
+        Object.entries(propVals).forEach(([key, val]) => {
+            formattedVariables += `\t--${key.replace(/[A-Z]/g, match => '-' + match.toLowerCase())}: ${val};\n`;
+        });
+
+        classToBuild += `${selector} {\n${formattedVariables}}\n`;
+
+      });
+
+      if(breakPoint === "generic") {
+        styleGlobalTag.innerHTML += classToBuild;
+      } else {
+        addMediaQuery(classToBuild, ["", breakPoint]);
+      }
+
+      formattedVariables = "", classToBuild = "";
+    })
+  }
+
+}
 
 /**
  * Generates a CSS class definition or property-value pairs based on the provided input.

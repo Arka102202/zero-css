@@ -66,7 +66,6 @@ export const perspectiveOrgClasses = (classParts = [], className = "", returnOnl
 
 export const generalTransformClass = () => {
 
-  console.log("calling this");
   const transMatrix = {
     matrix: "1,0,0,1,0,0",
     matrix3d: "1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1",
