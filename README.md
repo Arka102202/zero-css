@@ -2,35 +2,6 @@
 
 <div align="center"><img src="./Zero-Css.svg" alt="My library logo" width="400px"></div>
 
-## **What is a CSS library?**
-
-  There is no formal definition of a `CSS library`, but looking at the popular CSS library we can define it in the following manner -
-  it is a collection of `pre-written`, `highly-reusable` CSS `Class-based` rules that help developers to style any HTML elements `quickly` and `consistently` throughout a website. These libraries promote adherence to the DRY ("Don't Repeat Yourself") principle, streamlining development by eliminating redundant code and reducing the time and effort required to maintain a cohesive design system.
-
-## Two Types of CSS Classes in Libraries
-
-1. Utility Classes<br>
-  These are highly specific classes that target individual aspects of an element's appearance, like margin, padding, text alignment, or background color. They provide fine-grained control, allowing developers to combine various utility classes to create a custom look for each element.
-
-  > Example (from Tailwind CSS):
-
-  ```HTML
-  <div class="bg-blue-500 text-white p-4">
-    A box with background, text color, and padding
-  </div>
-  ```
-
-2. Component Classes<br>
-  These are classes designed to style entire elements or components, such as buttons, cards, or forms, in one go. They abstract away detailed styling, offering a fully-styled version of the element or component.
-
-  > Example (from Bootstrap):
-
-  ```HTML
-  <button class="btn btn-primary">Primary Button</button>
-  ```
-
-## Now let's come to My Library
-
 Introducing `ZERO CSS`, the most advanced and groundbreaking CSS library ever conceived. `ZERO CSS` redefines the boundaries of what a CSS library can be. Unlike traditional libraries, `ZERO CSS` `doesn't rely on pre-defined classes`. Instead, every `class is dynamically generated on the client side`, in real-time, as developers apply them to HTML elements.
 
 This innovative approach empowers developers with unparalleled flexibility and performance, creating a truly on-demand styling experience. By shifting CSS generation to the client-side, `ZERO CSS` unlocks capabilities that no other library can match.
@@ -86,34 +57,32 @@ This innovative approach empowers developers with unparalleled flexibility and p
 
 ```js
 const css_vari = {
-            generic: { // for the CSS variables that don't have any media queries. 
-                html: { // provide the selector name 
-                    mainClr: "#345262",
-                    primaryClr: "#2345ef",
-                    borderRad: "10px",
-                },
-                ".some-class": {
-                    mainClr: "#345262",
-                    primaryClr: "#2345ef",
-                    borderRad: "10px",
-                }
-            },
-
-            "500px": { // breakPoint value, for max-width, you can omit the max.
-                ":root": {
-                    borderRad: "5px",
-                    blur: "2px",
-                }
-            },
-
-            "min_300px": {
-                ":root": {
-                    borderRad: "10px",
-                    blur: "2px",
-                    bgClr: "#234567"
-                }
-            }
+    generic: { // for the CSS variables that don't have any media queries. 
+        html: { // provide the selector name 
+            mainClr: "#345262",
+            primaryClr: "#2345ef",
+            borderRad: "10px",
+        },
+        ".some-class": {
+            mainClr: "#345262",
+            primaryClr: "#2345ef",
+            borderRad: "10px",
         }
+    },
+    "500px": { // breakPoint value, for max-width, you can omit the max.
+        ":root": {
+            borderRad: "5px",
+            blur: "2px",
+        }
+    },
+    "min_300px": {
+        ":root": {
+            borderRad: "10px",
+            blur: "2px",
+            bgClr: "#234567"
+        }
+    }
+}
 ```
 
 In CSS this will added in the following manner:
@@ -161,6 +130,33 @@ With `ZERO CSS`, setting **your own standards is easier, faster, and more powerf
   With `ZERO CSS`, **you unlock the next level of CSS optimization: zero redundancy, zero purging, zero files—delivering a leaner, faster web experience**.
 
 ### Effortless, Pixel-Perfect Adaptation for Every Screen Size
+
+As developers, we all strive to create visually stunning websites that seamlessly adapt to any device, regardless of screen size. Achieving this requires the strategic use of media queries with precise min and max-width conditions. While standard breakpoints are a solid foundation, unique screen sizes often demand special attention:
+
+```js
+breakPoints = { // normal breaking point list available in ZERO CSS
+  "xxl": "1500px",
+  "xl": "1250px",
+  "l": "1024px",
+  "md": "768px",
+  "s": "425px",
+  "xs": "375px",
+  "xxs": "320px"
+};
+```
+
+But what happens when your design vision extends beyond these standard sizes? With ZERO CSS, styling custom breakpoints feels as natural as using predefined ones, unlocking unparalleled creative freedom.
+
+> Example
+
+```html
+<!-- The Magic in Action -->
+<div class="wd-xl-23rem wd-550px-15rem">Going for break-points that are not common screen sizes</div>
+```
+
+Simply swap in your desired screen width, and you're set. No additional configuration—just seamless, custom responsive design.
+
+With ZERO CSS, developers can push the boundaries and fine-tune their designs for every imaginable screen size, showcasing their skills without breaking a sweat. It's not just a solution; it's the key to unlocking your responsive design potential.
 
 ### Unleash the Power of Flexbox and Grid
 
