@@ -134,7 +134,7 @@ With `ZERO CSS`, setting **your own standards is easier, faster, and more powerf
 As developers, we all strive to create visually stunning websites that seamlessly adapt to any device, regardless of screen size. Achieving this requires the strategic use of media queries with precise min and max-width conditions. While standard breakpoints are a solid foundation, unique screen sizes often demand special attention:
 
 ```js
-breakPoints = { // normal breaking point list available in ZERO CSS
+breakPoints = { // normal breaking point list available in `ZERO CSS`
   "xxl": "1500px",
   "xl": "1250px",
   "l": "1024px",
@@ -145,7 +145,7 @@ breakPoints = { // normal breaking point list available in ZERO CSS
 };
 ```
 
-But what happens when your design vision extends beyond these standard sizes? With ZERO CSS, styling custom breakpoints feels as natural as using predefined ones, unlocking unparalleled creative freedom.
+But what happens when your design vision extends beyond these standard sizes? With `ZERO CSS`, styling custom breakpoints feels as natural as using predefined ones, unlocking unparalleled creative freedom.
 
 > Example
 
@@ -156,9 +156,47 @@ But what happens when your design vision extends beyond these standard sizes? Wi
 
 Simply swap in your desired screen width, and you're set. No additional configuration—just seamless, custom responsive design.
 
-With ZERO CSS, developers can push the boundaries and fine-tune their designs for every imaginable screen size, showcasing their skills without breaking a sweat. It's not just a solution; it's the key to unlocking your responsive design potential.
+With `ZERO CSS`, developers can push the boundaries and fine-tune their designs for every imaginable screen size, showcasing their skills without breaking a sweat. It's not just a solution; it's the key to unlocking your responsive design potential.
 
 ### Unleash the Power of Flexbox and Grid
+
+Every game-changer has that one standout feature that sets it apart, transforming complex tasks into elegant solutions. For CSS, that revolution came with the introduction of `Flexbox` and `Grid`. These technologies empowered developers to craft layouts that were once considered impossible.
+
+With `ZERO CSS`, we take that power further, creating a suite of custom classes that make working with Flexbox and Grid intuitive, streamlined, and effortlessly powerful. Say goodbye to verbose code and hello to concise, readable styling that brings your design visions to life.
+
+> Example
+
+**The Magic of Custom Classes:** <br>
+
+1. `d-[max/min]_[breakpoint]-(flex/grid)&[flexDir:val]&justify:val&align:val&gap:val`:
+
+This all-in-one class replaces lengthy CSS blocks, allowing you to define complex layouts with a single, intuitive line
+
+```css
+.interesting_selector {
+  display: flex; /* or grid */
+  flex-direction: column;
+  justify-content: center; /* for grid this will be `justify-items` */
+  align-items: end;
+  gap: 3rem;
+}
+```
+
+2. `flex_child-[max/min]_{breakpoint}-even`: <br>
+
+Achieve equal-width child elements with ease, eliminating the need for additional tweaks and calculations. Flex your layout muscles without breaking a sweat.
+
+3. `grid_col-[max/min]_[breakpoint]-(autoFill/autoFit)+val(vw/vh/px/rem)`: <br>
+
+Create stunning, responsive gallery views for any screen size in an instant. Just one class sets the stage for a layout that's both adaptive and visually compelling. The result? (exact class in the following example `grid_col-autoFit+10rem`)
+
+```css
+  grid-template-columns: repeat(auto-fit, minmax(10rem, 1fr));
+```
+
+**Say Goodbye to Layout Frustrations**
+
+Crafting layouts can be challenging, but implementing them shouldn’t be. With `ZERO CSS`, developers unlock the ability to create visually engaging, responsive layouts effortlessly. It’s not just about simplifying code—it’s about redefining how you build and style for the modern web.
 
 ### Craft Custom Classes to Keep Your Code DRY and Stylish
 
