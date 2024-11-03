@@ -173,6 +173,7 @@ With `ZERO CSS`, we take that power further, creating a suite of custom classes 
 This all-in-one class replaces lengthy CSS blocks, allowing you to define complex layouts with a single, intuitive line
 
 ```css
+/* exact class in the following example d-flex&flexDir:column&justify:center&align:end&gap:3rem */
 .interesting_selector {
   display: flex; /* or grid */
   flex-direction: column;
@@ -182,15 +183,16 @@ This all-in-one class replaces lengthy CSS blocks, allowing you to define comple
 }
 ```
 
-2. `flex_child-[max/min]_{breakpoint}-even`: <br>
+2. `flex_child-[max/min]_[breakpoint]-even`: <br>
 
 Achieve equal-width child elements with ease, eliminating the need for additional tweaks and calculations. Flex your layout muscles without breaking a sweat.
 
 3. `grid_col-[max/min]_[breakpoint]-(autoFill/autoFit)+val(vw/vh/px/rem)`: <br>
 
-Create stunning, responsive gallery views for any screen size in an instant. Just one class sets the stage for a layout that's both adaptive and visually compelling. The result? (exact class in the following example `grid_col-autoFit+10rem`)
+Create stunning, responsive gallery views for any screen size in an instant. Just one class sets the stage for a layout that's both adaptive and visually compelling. The result?
 
 ```css
+/* exact class in the following example `grid_col-autoFit+10rem` */
   grid-template-columns: repeat(auto-fit, minmax(10rem, 1fr));
 ```
 
@@ -199,6 +201,24 @@ Create stunning, responsive gallery views for any screen size in an instant. Jus
 Crafting layouts can be challenging, but implementing them shouldn’t be. With `ZERO CSS`, developers unlock the ability to create visually engaging, responsive layouts effortlessly. It’s not just about simplifying code—it’s about redefining how you build and style for the modern web.
 
 ### Craft Custom Classes to Keep Your Code DRY and Stylish
+
+Staying DRY isn’t just smart—it’s the essence of coding with style. Imagine this: your design calls for the same set of classes across 20 different elements. Instead of tediously applying them one by one, wouldn’t it be better to group them into a single reusable class?<br>
+Introducing `Class combinator` in `ZERO CSS` — a game-changing feature that lets you streamline your code effortlessly.
+
+> Example
+
+  let's assume that one using the following set of classes multiple times:
+
+  `color-#fff`, `font-s:10px`, `pos-absolute`, `bottom-2%`, `left-2%`
+
+  with `ZERO CSS` what the developer can do instead
+
+  `__.unique_class-name@color-#fff,font-s:10px,pos-absolute,bottom-2%,left-2%` (exact implementation details will be discussed later)
+  and apply the `unique_class-name` -- class to all the elements.
+
+**Simplicity at Its Best**
+
+With `ZERO CSS`, developers break free from the monotony of repetition, staying true to the DRY principle without even thinking about it. Elevate your code, maximize efficiency, and keep your styling sharp and consistent. It's not just a feature—it’s your key to more creative and maintainable code.
 
 ### Full Selector & Combinator Integration for True Styling Freedom
 

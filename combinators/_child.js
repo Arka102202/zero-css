@@ -24,7 +24,7 @@ export const createSelectorClasses = (className = "") => {
     const selectorNMediaQuery = classParts[0].split("--");
 
     // Replace underscores with spaces to form the final CSS selector.
-    const classNameToBe = selectorNMediaQuery[0].replace(/_/g, " ");
+    const classNameToBe = selectorNMediaQuery[0].replace(/__/g, " ");
 
     // Extract the CSS property-value pairs from the section after the "@" symbol.
     const valueParts = classParts.at(-1).split(",");

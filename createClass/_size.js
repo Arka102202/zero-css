@@ -27,7 +27,7 @@ export const aspectClasses = (classParts = [], className = "", returnOnlyPropNVa
 
   // aspect_ratio-[max/min]_{breakpoint}-value_imp
 
-  const val = processValuePart(classParts.at(-1).replace("_", "/"));
+  const val = processValuePart(classParts.at(-1));
   const classToBuild = getClassDefinition(["aspect-ratio"], [val], className, returnOnlyPropNVal);
   if(returnOnlyPropNVal) return classToBuild;
   return getCompleteClassDefinition(2, classToBuild, classParts);
