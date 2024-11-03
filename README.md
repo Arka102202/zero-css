@@ -80,25 +80,73 @@ This innovative approach empowers developers with unparalleled flexibility and p
   }
   ```
 
+  2. **Using JavaScript Object:**<br>
+
+  Developer has to create a JS object like the following and provide it the name `css_vari`(need to be exact).
+
 ```js
-const vars = {
-        "mainWidth": "80%",
-        "flexGap": "1rem",
-        "flexDir": "row",
-        "firstCol": "1fr",
-        "spanVal": "2/4",
-        "textGrad": "linear-gradient(90deg,rgba(2,0,36,1)0%,rgba(9,9,121,1)35%,rgba(0,212,255,1)100%)",
-        "bgImg": "url('https://cdn.pixabay.com/photo/2024/05/26/10/15/bird-8788491_1280.jpg')"
-    }
+const css_vari = {
+            generic: { // for the CSS variables that don't have any media queries. 
+                html: { // provide the selector name 
+                    mainClr: "#345262",
+                    primaryClr: "#2345ef",
+                    borderRad: "10px",
+                },
+                ".some-class": {
+                    mainClr: "#345262",
+                    primaryClr: "#2345ef",
+                    borderRad: "10px",
+                }
+            },
+
+            "500px": { // breakPoint value, for max-width, you can omit the max.
+                ":root": {
+                    borderRad: "5px",
+                    blur: "2px",
+                }
+            },
+
+            "min_300px": {
+                ":root": {
+                    borderRad: "10px",
+                    blur: "2px",
+                    bgClr: "#234567"
+                }
+            }
+        }
 ```
 
-In your HTML, simply use:
+In CSS this will added in the following manner:
 
-```HTML
-  <div class="vars_e_html::${JSON.stringify(vars)}"></div>
+```css
+html {
+ --main-clr: #345262;
+ --primary-clr: #2345ef;
+ --border-rad: 10px;
+}
+.some-class {
+ --main-clr: #345262;
+ --primary-clr: #2345ef;
+ --border-rad: 10px;
+ --main-clr: #345262;
+ --primary-clr: #2345ef;
+ --border-rad: 10px;
+}
+@media (max-width: 500px) {
+  :root {
+ --border-rad: 5px;
+ --blur: 2px;
+  }
+}
+
+@media (min-width: 300px) {
+  :root {
+ --border-rad: 10px;
+ --blur: 2px;
+ --bg-clr: #234567;
+  }
+}
 ```
-
-The `vars_e_html::${JSON.stringify(vars)}` will automatically inject all key-value pairs as CSS variables, giving you complete control over your site’s design with zero hassle.
 
 With `ZERO CSS`, setting **your own standards is easier, faster, and more powerful than ever before—delivering a next-level customization experience unmatched by any other library**.
 
