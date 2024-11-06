@@ -220,7 +220,37 @@ Introducing `Class combinator` in `ZERO CSS` — a game-changing feature that le
 
 With `ZERO CSS`, developers break free from the monotony of repetition, staying true to the DRY principle without even thinking about it. Elevate your code, maximize efficiency, and keep your styling sharp and consistent. It's not just a feature—it’s your key to more creative and maintainable code.
 
-### Full Selector & Combinator Integration for True Styling Freedom
+### Full Selector & Combinator Integration for True Creative Freedom
+
+CSS selectors and combinators have long been the tools of choice for pros, unlocking creative power that makes CSS shine. Yet, no CSS library has embraced this potential—until now.
+
+With ZERO CSS, using advanced selectors and combinators is as effortless as any other utility class. We’re bringing CSS back to its coolest roots, giving developers unmatched creative freedom to style their projects with precision.
+
+Example
+Want to apply styles based on sibling elements? Here's how you can achieve this with ZERO CSS:
+
+- Traditional CSS:
+
+```css
+h2:has(+ p, + ul.red) {
+  font-style: italic;
+}
+```
+
+- With ZERO CSS:
+
+```html
+<h2 class="__h2:has(+p)@font-st:italic">Title with Sibling Paragraph</h2>
+<p>This paragraph immediately follows the h2.</p>
+
+<h2 class="__h2:has(+ul.red)@font-st:italic" >Title with Sibling List</h2>
+<ul class="red">
+  <li>Item 1</li>
+  <li>Item 2</li>
+</ul>
+```
+
+Now, let’s make CSS cool again. With ZERO CSS, selectors and combinators are no longer just features—they’re the keys to your most creative, powerful designs.
 
 ### Say Goodbye to Clutter: Embrace Compact CSS with Pseudo Classes & Elements
 
