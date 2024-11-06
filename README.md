@@ -240,14 +240,16 @@ h2:has(+ p, + ul.red) {
 - With ZERO CSS:
 
 ```html
-<h2 class="__h2:has(+p)@font-st:italic">Title with Sibling Paragraph</h2>
-<p>This paragraph immediately follows the h2.</p>
+<section class="__h2:has(+p,+ul.red)@font-st:italic">
+  <h2 >Title with Sibling Paragraph</h2>
+  <p>This paragraph immediately follows the h2.</p>
 
-<h2 class="__h2:has(+ul.red)@font-st:italic" >Title with Sibling List</h2>
-<ul class="red">
-  <li>Item 1</li>
-  <li>Item 2</li>
-</ul>
+  <h2>Title with Sibling List</h2>
+  <ul class="red">
+    <li>Item 1</li>
+    <li>Item 2</li>
+  </ul>
+</section>
 ```
 
 Now, let’s make CSS cool again. With ZERO CSS, selectors and combinators are no longer just features—they’re the keys to your most creative, powerful designs.
