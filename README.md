@@ -254,9 +254,35 @@ h2:has(+ p, + ul.red) {
 
 Now, let’s make CSS cool again. With ZERO CSS, selectors and combinators are no longer just features—they’re the keys to your most creative, powerful designs.
 
-### Say Goodbye to Clutter: Embrace Compact CSS with Pseudo Classes & Elements
+### Unlock the power of each and every Pseudo classes and elements
 
-### Pro-Level Styling: Stack Backgrounds & Shadows
+Most CSS libraries hold back, offering only the basics when it comes to pseudo-classes and elements. They give you just enough to get by, but why stop there?<br> 
+With ZERO CSS, you’re unchained from those limits! Get direct access to every pseudo-class and pseudo-element, even the rare ones, to style like a CSS powerhouse. And don’t worry—just because it’s advanced doesn’t mean it’s complex. We keep it as simple as any other utility class, putting limitless styling power at your fingertips.
+
+> Here’s What Freedom Looks Like:
+
+Instead of classic CSS like:
+
+```css
+.menu-item:hover > .submenu {
+  opacity: 1;
+}
+```
+
+Imagine using ZERO CSS to write it as easily as:
+
+```html
+
+<div class="__.menu-item:hover>.submenu@opacity-1"></div>
+
+```
+
+**Effortlessly, intuitively, and without limitations.**
+**Unleash Your Inner CSS Visionary**
+
+With ZERO CSS, you’re not bound by the usual rules. Go beyond the basics and explore the full scope of pseudo-classes and elements in your own creative style. Transform your ideas directly into styling—no limitations, no hurdles. Just pure, unfettered CSS power.
+
+### Pro-Level Styling: Stack Backgrounds & Shadows & Clip-path(to come with future releases)
 
 ### Elevate Your Typography: Simple Online Font Importing
 
