@@ -316,6 +316,34 @@ With `ZERO CSS`, the only limit is your creativity. Start stacking, start stylin
 
 ### Elevate Your Typography: Simple Online Font Importing
 
+Every website has its own unique tone, vibe, and personality. And let’s face it—fonts play a massive role in setting that tone. Yet, most CSS libraries only offer a small, selective font list, leaving developers boxed into choices that may not truly reflect their site’s personality.
+
+But with `ZERO CSS`, it’s a whole new world! Adding any font is as easy as adding a class. No limits, no compromises—just pure creative freedom to use any font you can dream of.
+
+> Example
+
+**raditional CSS Import**
+
+```css
+
+@import url('https://fonts.googleapis.com/css2?family=Doto:wght@100..900&family=Open+Sans:ital,wght@0,300..800;1,300..800&display=swap');
+
+```
+
+**with ``ZERO CSS``**
+
+```html
+
+<div class="@import-https://fonts.googleapis.com/css2?family=Doto:wght@100..900&family=Open+Sans:ital,wght@0,300..800;1,300..800&display=swap"></div>
+
+```
+
+**Stand Out with Your Font Choices**
+
+Don’t settle for “close enough”—*express your site’s personality in full*. With `ZERO CSS`, the perfect font is always just a class away. It’s time to make your website’s vibe truly one of a kind!
+
+
+
 ## Some rules before use start using this awesome Library
 
 - if somethings are within `[]` ==> that value is optional.
