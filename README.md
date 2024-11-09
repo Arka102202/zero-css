@@ -378,7 +378,7 @@ Don’t settle for “close enough”—*express your site’s personality in fu
 
 - to provide a `negative value` - start the value with a `n`.
 
->Example: m-p20px.
+>Example: m-n20px.
 
 - to define a `CSS variable` use `camelCase`.
 
