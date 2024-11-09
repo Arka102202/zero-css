@@ -350,26 +350,57 @@ Don’t settle for “close enough”—*express your site’s personality in fu
 
 ## Some rules before use start using this awesome Library
 
+### How to follow the following manual
+
 - if somethings are within `[]` ==> that value is optional.
 - if somethings are within `{}` ==> any or all of the value can be used.
 - if somethings are within `()` ==> only one of the value can be used.
+
+### Some common rules for all the classes
+
 - any and every length units can be used like `px, rem, em, %, vw, vh`.
+
+>Example: wd-500px-2rem, bg_color-#342ad2 etc.
+
+- `imp` is used to make a property as `!important`.
+
+>Example: wd-500px-2rem_imp or d-flex_imp etc.
+
+- there must not be any space within a className.
+
+- to use `space` use `+` instead while providing a value.
+
+>Example: m-20px+20px+10px+2rem
+
+- `kebabCase` should be replaced by `camelCase` while providing a value.
+
+>Example: justify_content-spaceBetween or bg_repeat-noRepeat etc.
+
+- to provide a `negative value` - start the value with a `n`.
+
+>Example: m-p20px.
+
+- to define a `CSS variable` use `camelCase`.
+
+>Example: the CSS variable should be `--input-box-padding`, then you have to use the name as `inputBoxPadding`.
+
+- to make a value a `CSS variable` - start the value with `v` and next letter must be capitalised.
+
+>Example: p-vInputBoxPadding => `--input-box-padding` is the CSS variable.
 
 ## List of possible class name and How to use them
 
 ### Class name for size
 
 - `[max/min]_(wd/ht/size)-[max/min]_[breakpoint]-value_[imp]`
-- `aspect_ratio-[max/min]_[breakpoint]-value_[imp]`:
-  while providing the value of aspect ratio the `/` should be replaced with a `_`,
-  e.g. `aspect_ratio-max_xxl-3_4` which means the value of the aspect ratio will be `3/4`.
+- `aspect_ratio-[max/min]_[breakpoint]-value_[imp]`
 
 ### Class name for layout
 
 -- **Display Classes**:
 
 - `d-[max/min]_[breakpoint]-(block/inline/inline-block/flex/grid/none)`
-- `d-[max/min]_[breakpoint]-type:(flex/grid)&[flexDir:val]&justify:val&align:val&gap:val`
+- `d-[max/min]_[breakpoint]-(flex/grid)&[flexDir:val&justify:val&align:val&gap:val]`
 
 -- **FLex Classes**:
 
@@ -454,19 +485,13 @@ Don’t settle for “close enough”—*express your site’s personality in fu
 -- **Font Classes**
 
 - `font-[max/min]_[breakpoint]-{st:val&weight:val&s:val&family:val}`
-
-- `font_family-name-1,name-2,nameDifferent`:
-rule to use font-family name:
-  - `Roboto Condensed` ==> `Roboto+Condensed`.
-  - `sans serif` ==> `sans#serif`.
-
+- `font_family-name-1,name-2,nameDifferent`
 - `font_[style/weight/size]-[max/min]_[breakpoint]-value`
 
 -- **Letter Classes**
 
 - `letter_space-[max/min]_[breakpoint]-value`
-- `letter_dir-[max/min]_[breakpoint]-value`:
-the values of letter direction are `up`, `down`, `right`, `left`.
+- `letter_dir-[max/min]_[breakpoint]-value`
 
 -- **Line Classes**
 
