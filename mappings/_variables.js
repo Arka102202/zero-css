@@ -9,14 +9,3 @@ export const breakPoints = {
   "xxs": "320px"
 };
 
-// rem values at different break-points
-export const remAtBreakPoints = {
-  "xxl": "18px",
-  "xl": "16px",
-  "l": "14px",
-  "md": "12px",
-  "s": "10px",
-  "xs": "8px",
-  "xxs": "6px"
-}
-

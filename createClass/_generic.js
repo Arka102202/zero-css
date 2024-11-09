@@ -91,18 +91,36 @@ export const addCssVariables = () => {
 
   let formattedVariables = "", classToBuild = "";
 
+  const remAtBreakPoints = {
+    "xxl": "18px",
+    "xl": "16px",
+    "l": "14px",
+    "md": "12px",
+    "s": "10px",
+    "xs": "8px",
+    "xxs": "6px"
+  }
+
+  Object.entries(remAtBreakPoints).forEach(([key, value]) => {
+    classToBuild = `:root {\nfont-size: ${value}\n}\n`;
+
+    addMediaQuery(classToBuild, ["", key]);
+  });
+
+  classToBuild = "";
+
   if (css_vari) {
     Object.entries(css_vari).forEach(([breakPoint, selectors]) => {
       Object.entries(selectors).forEach(([selector, propVals]) => {
         Object.entries(propVals).forEach(([key, val]) => {
-            formattedVariables += `\t--${key.replace(/[A-Z]/g, match => '-' + match.toLowerCase())}: ${val};\n`;
+          formattedVariables += `\t--${key.replace(/[A-Z]/g, match => '-' + match.toLowerCase())}: ${val};\n`;
         });
 
         classToBuild += `${selector} {\n${formattedVariables}}\n`;
 
       });
 
-      if(breakPoint === "generic") {
+      if (breakPoint === "generic") {
         styleGlobalTag.innerHTML += classToBuild;
       } else {
         addMediaQuery(classToBuild, ["", breakPoint]);

@@ -224,10 +224,10 @@ With `ZERO CSS`, developers break free from the monotony of repetition, staying 
 
 CSS selectors and combinators have long been the tools of choice for pros, unlocking creative power that makes CSS shine. Yet, no CSS library has embraced this potential—until now.
 
-With ZERO CSS, using advanced selectors and combinators is as effortless as any other utility class. We’re bringing CSS back to its coolest roots, giving developers unmatched creative freedom to style their projects with precision.
+With `ZERO CSS`, using advanced selectors and combinators is as effortless as any other utility class. We’re bringing CSS back to its coolest roots, giving developers unmatched creative freedom to style their projects with precision.
 
 Example
-Want to apply styles based on sibling elements? Here's how you can achieve this with ZERO CSS:
+Want to apply styles based on sibling elements? Here's how you can achieve this with `ZERO CSS`:
 
 - Traditional CSS:
 
@@ -237,7 +237,7 @@ h2:has(+ p, + ul.red) {
 }
 ```
 
-- With ZERO CSS:
+- With `ZERO CSS`:
 
 ```html
 <section class="__h2:has(+p,+ul.red)@font-st:italic">
@@ -252,12 +252,12 @@ h2:has(+ p, + ul.red) {
 </section>
 ```
 
-Now, let’s make CSS cool again. With ZERO CSS, selectors and combinators are no longer just features—they’re the keys to your most creative, powerful designs.
+Now, let’s make CSS cool again. With `ZERO CSS`, selectors and combinators are no longer just features—they’re the keys to your most creative, powerful designs.
 
 ### Unlock the power of each and every Pseudo classes and elements
 
 Most CSS libraries hold back, offering only the basics when it comes to pseudo-classes and elements. They give you just enough to get by, but why stop there?<br> 
-With ZERO CSS, you’re unchained from those limits! Get direct access to every pseudo-class and pseudo-element, even the rare ones, to style like a CSS powerhouse. And don’t worry—just because it’s advanced doesn’t mean it’s complex. We keep it as simple as any other utility class, putting limitless styling power at your fingertips.
+With `ZERO CSS`, you’re unchained from those limits! Get direct access to every pseudo-class and pseudo-element, even the rare ones, to style like a CSS powerhouse. And don’t worry—just because it’s advanced doesn’t mean it’s complex. We keep it as simple as any other utility class, putting limitless styling power at your fingertips.
 
 > Here’s What Freedom Looks Like:
 
@@ -269,7 +269,7 @@ Instead of classic CSS like:
 }
 ```
 
-Imagine using ZERO CSS to write it as easily as:
+Imagine using `ZERO CSS` to write it as easily as:
 
 ```html
 
@@ -280,9 +280,39 @@ Imagine using ZERO CSS to write it as easily as:
 **Effortlessly, intuitively, and without limitations.**
 **Unleash Your Inner CSS Visionary**
 
-With ZERO CSS, you’re not bound by the usual rules. Go beyond the basics and explore the full scope of pseudo-classes and elements in your own creative style. Transform your ideas directly into styling—no limitations, no hurdles. Just pure, unfettered CSS power.
+With `ZERO CSS`, you’re not bound by the usual rules. Go beyond the basics and explore the full scope of pseudo-classes and elements in your own creative style. Transform your ideas directly into styling—no limitations, no hurdles. Just pure, unfettered CSS power.
 
-### Pro-Level Styling: Stack Backgrounds & Shadows & Clip-path(to come with future releases)
+### Stack multiple Backgrounds & Shadows & Clip-path
+
+Ever felt the frustration of being limited by CSS libraries that don’t support complex, stacked properties? Backgrounds, shadows, clip-paths—stacking them can be a game-changer, but most libraries just can’t handle it.
+
+With `ZERO CSS`, those limits are gone. Create stunning, layered effects that would normally require dozens of lines of code, in a single class. Add multiple backgrounds, layered shadows, and even complex clip-paths (coming soon!) with the same ease as any other styling.
+
+> Example:
+
+**Traditional CSS**
+
+```css
+.some-selector{
+  background: 
+  url('image1.jpg') no-repeat center center / cover,
+  url('image2.png') repeat-x bottom / contain,
+  linear-gradient(to right, rgba(255, 0, 0, 0.5), rgba(0, 0, 255, 0.5));
+}
+```
+
+**With `ZERO CSS`:** (exact implementation details will discussed later)
+
+```html
+<div class="vars_html@linGrad:linear-gradient(to+right,rgba(255,0,0,0.5),rgba(0,0,255,0.5)) bg-size:cover&img:url@image1.jpg&pos:center+center&re:noRepeat,s:contain&img:url@image2.png&pos:bottom&re:repeatX,img:vLinGrad"></div>
+
+```
+
+**Imagine the Possibilities**
+
+Forget the constraints—`ZERO CSS` lets you stack any and every background, shadow, and soon even clip-paths, giving you a level of control usually reserved for advanced CSS.
+
+With `ZERO CSS`, the only limit is your creativity. Start stacking, start styling, and take control like never before!
 
 ### Elevate Your Typography: Simple Online Font Importing
 
