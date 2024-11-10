@@ -348,7 +348,7 @@ Don’t settle for “close enough”—*express your site’s personality in fu
  It’s pure, client-side magic, redefining **“dynamic”** to mean absolute creative freedom. **Flexibility?** Check. **Full control over every property, unit, and even pseudo-elements?** Done. Custom media queries, stacked backgrounds, instant font imports, and an intuitive utility-first design put power back in your hands.<br>
  `ZERO CSS` isn’t just efficient; it’s transformative—creating a shift in CSS as groundbreaking as React’s impact on JavaScript. Dive in and style without limits!
 
-## Some rules before use start using this awesome Library
+## Rules before use start using this awesome Library
 
 ### How to follow the following manual
 
@@ -387,6 +387,16 @@ Don’t settle for “close enough”—*express your site’s personality in fu
 - to make a value a `CSS variable` - start the value with `v` and next letter must be capitalised.
 
 >Example: p-vInputBoxPadding => `--input-box-padding` is the CSS variable.
+
+## Structure of the individual Class-name
+
+Most class has exactly three parts each separated by `-`.
+
+> <p align="center">property_identifier-media_query-value</p>
+
+1. Property identifier
+2. Media query part
+3. Value part
 
 ## List of possible class name and How to use them
 
