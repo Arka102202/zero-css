@@ -392,11 +392,13 @@ Don’t settle for “close enough”—*express your site’s personality in fu
 
 Most class has exactly three parts each separated by `-`.
 
-> <p align="center">property_identifier-media_query-value</p>
+> <p align="center" style="font-size: 24px;">property_identifier-media_query-value</p>
 
-1. Property identifier
-2. Media query part
-3. Value part
+1. **Property identifier**
+2. **Media query part**
+3. **Value part**
+
+>Let's understand with an example: 
 
 ## List of possible class name and How to use them
 
