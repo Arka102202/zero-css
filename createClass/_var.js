@@ -2,10 +2,10 @@ import { getCompleteClassDefinition, splitStringByParts } from "./_generic.js";
 
 export const varClass = (classParts = [], className = "") => {
 
-  // vars_html-[max/min]_[breakPoints]@var1:val,var2:val,.....
+  // vars__html--[max/min]_[breakPoints]@var1:val,var2:val,.....
 
-  const namePart = classParts[0].split("-");
-  const nameParts = namePart[0].split("_");
+  const namePart = classParts[0].split("--");
+  const nameParts = namePart[0].split("__");
   const selectorName = nameParts.at(-1);
   const valParts = classParts[1].split("&");
 

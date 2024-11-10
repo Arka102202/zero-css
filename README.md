@@ -352,65 +352,77 @@ Don’t settle for “close enough”—*express your site’s personality in fu
 
 ### How to follow the following manual
 
-- if somethings are within `[]` ==> that value is optional.
-- if somethings are within `{}` ==> any or all of the value can be used.
-- if somethings are within `()` ==> only one of the value can be used.
+- Anything in `[]` means it’s `optional`.
+- Anything in `{}` means you can use `one or more or all` of those values.
+- Anything in `()` means `only one` of the listed values can be used.
 
-### Some common rules for all the classes
+### General Rules for All Classes
 
 - any and every length units can be used like `px, rem, em, %, vw, vh`.
 
 >Example: wd-500px-2rem, bg_color-#342ad2 etc.
 
-- `imp` is used to make a property as `!important`.
+- Add `imp` to make a property `!important`.
 
 >Example: wd-500px-2rem_imp or d-flex_imp etc.
 
-- there must not be any space within a className.
+- `No spaces` are allowed within a class name.
 
-- to use `space` use `+` instead while providing a value.
+- To represent a `space`, use `+` instead.
 
 >Example: m-20px+20px+10px+2rem
 
-- `kebabCase` should be replaced by `camelCase` while providing a value.
+- When using `kebab-case` values, replace it with `camelCase`.
 
 >Example: justify_content-spaceBetween or bg_repeat-noRepeat etc.
 
-- to provide a `negative value` - start the value with a `n`.
+- For `negative` values, start with `n`.
 
 >Example: m-n20px.
 
-- to define a `CSS variable` use `camelCase`.
+- For `CSS variables`, use `camelCase`.
 
->Example: the CSS variable should be `--input-box-padding`, then you have to use the name as `inputBoxPadding`.
+>Example: If the CSS variable is `--input-box-padding`, refer to it as `inputBoxPadding`.
 
-- to make a value a `CSS variable` - start the value with `v` and next letter must be capitalised.
+- To mark a value as a `CSS variable`, start with `v` and `capitalize` the `next letter`.
 
->Example: p-vInputBoxPadding => `--input-box-padding` is the CSS variable.
+>Example: `vInputBoxPadding` represents the variable `--input-box-padding`.
 
 ## Structure of the individual Class-name
 
-Most class has exactly three parts each separated by `-`.
+Most classes follow a `three-part structure`, separated by dashes `(-)`. There are a few exceptions (explained at the end).
 
 > <h2 align="center">property_identifier-media_query-value</h2>
 
-1. **Property identifier**
+1. **Property identifier**<br>
+this part identifies the property to which it belongs i.e. `bg` for `background` or `m` for `margin` or `d` for `display`.
 2. **Media query part**<br>
-This one has only two parts - `[max/min]_[breakpoint]`. Now, the `min or max` part is `optional` and if you don't mention it then it will be a `max-width` media query by default.
+This part has two components - `[max/min]` and `[breakpoint]`. Here, the `min or max` part is `optional`; if left out, it defaults to `max-width`. This entire part is `optional`.
 3. **Value part**
 
-Let's understand with an example:
+**Let's understand with an example:**
 > <h3>`max_wd-xl-20rem`</h3>
 
 `max_wd` is the `property identifier part`.<br>
-`xl` is the `media query` which translate into a `'max-width` media query.
+`xl` is the `media query` which translate into a `'max-width` media query.<br>
 `20rem` is the value part.
 
-above example is a simple one, let's try with a complex one
-> <h3>`bg-size:cover&img:url@image1.jpg&pos:center+center&re:noRepeat,s:contain&img:url@image2.png&pos:bottom&re:repeatX,img:vLinGrad`</h3>
+**above example is a simple one, let's try with a complex one**
+> <h3>bg-size:cover&img:url@image1.jpg&pos:center+center&re:noRepeat,s:contain&img:url@image2.png&pos:bottom&re:repeatX,img:vLinGrad</h3>
 
+The `property identifier` part is `bg`.<br>
+This one don't have the `media-query` part.<br>
+It has multiple set of values separated by `,` and each value of each set is separated by `&`.
 
+### Now the exceptions
 
+1. for the classes that creates CSS variables or the classes that are used to create different combinators or selectors, that has a structure like
+
+> <h3 align="center">property_identifier--[max/min]_[breakPoints]@valuePart</h3>
+
+here,
+
+the value part is separated by `@` from the rest of the className and the `media query` part separated from the first part by `--`.
 
 ## List of possible class name and How to use them
 

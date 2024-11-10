@@ -11,8 +11,8 @@ import { addClassToTransformClassTag, getCompleteClassDefinition } from "../crea
 
 export const createSelectorClasses = (className = "") => {
 
-    // __[selector,...]-[min/max]_[breakPoint]@utilityClassNames
-    // __[::selection,div>p,div_p]@[bg_color-lightblue]
+    // __[selector,...]--[min/max]_[breakPoint]@utilityClassNames
+    // __[::selection,div>p,div__p]@[bg_color-lightblue]
 
     // Remove the leading "__" from the class name, if present.
     className = className.replace(/^__/, "");
