@@ -399,12 +399,16 @@ Most class has exactly three parts each separated by `-`.
 This one has only two parts - `[max/min]_[breakpoint]`. Now, the `min or max` part is `optional` and if you don't mention it then it will be a `max-width` media query by default.
 3. **Value part**
 
->Let's understand with an example: `max_wd-xl-20rem`
+Let's understand with an example:
+> <h3>`max_wd-xl-20rem`</h3>
+
 `max_wd` is the `property identifier part`.<br>
 `xl` is the `media query` which translate into a `'max-width` media query.
 `20rem` is the value part.
 
->above example is a simple one, let's try with a complex one <br> `bg-size:cover&img:url@image1.jpg&pos:center+center&re:noRepeat,s:contain&img:url@image2.png&pos:bottom&re:repeatX,img:vLinGrad`
+above example is a simple one, let's try with a complex one
+> <h3>`bg-size:cover&img:url@image1.jpg&pos:center+center&re:noRepeat,s:contain&img:url@image2.png&pos:bottom&re:repeatX,img:vLinGrad`</h3>
+
 
 
 
