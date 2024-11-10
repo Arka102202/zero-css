@@ -392,7 +392,7 @@ Don’t settle for “close enough”—*express your site’s personality in fu
 
 Most class has exactly three parts each separated by `-`.
 
-> <p align="center" style="font-size: 24px;">property_identifier-media_query-value</p>
+> <h2 align="center">property_identifier-media_query-value</h2>
 
 1. **Property identifier**
 2. **Media query part**
