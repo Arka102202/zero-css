@@ -395,10 +395,18 @@ Most class has exactly three parts each separated by `-`.
 > <h2 align="center">property_identifier-media_query-value</h2>
 
 1. **Property identifier**
-2. **Media query part**
+2. **Media query part**<br>
+This one has only two parts - `[max/min]_[breakpoint]`. Now, the `min or max` part is `optional` and if you don't mention it then it will be a `max-width` media query by default.
 3. **Value part**
 
->Let's understand with an example: 
+>Let's understand with an example: `max_wd-xl-20rem`
+`max_wd` is the `property identifier part`.<br>
+`xl` is the `media query` which translate into a `'max-width` media query.
+`20rem` is the value part.
+
+>above example is a simple one, let's try with a complex one <br> `bg-size:cover&img:url@image1.jpg&pos:center+center&re:noRepeat,s:contain&img:url@image2.png&pos:bottom&re:repeatX,img:vLinGrad`
+
+
 
 ## List of possible class name and How to use them
 
