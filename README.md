@@ -422,9 +422,9 @@ It has multiple set of values separated by `,` and each value of each set is sep
 
 here,
 
-the value part is separated by `@` from the rest of the className and the `media query` part separated from the first part by `--`.
+the `value part` is separated by `@` from the rest of the className and the `media query` part separated from the first part by `--`.
 
-## List of possible class name and How to use them
+## List of Class names and how to implement them
 
 ### Class name for size
 

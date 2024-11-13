@@ -1,5 +1,5 @@
 import { createClass } from "../addDynamicClass.js";
-import { addClassToTransformClassTag, getCompleteClassDefinition } from "../createClass/_generic.js";
+import { addClassToTransformClassTag, getClassDefinition, getCompleteClassDefinition, processValuePart } from "../createClass/_generic.js";
 
 /**
  * Function to dynamically create CSS class selectors and add them to a provided <style> tag.
@@ -49,3 +49,15 @@ export const createSelectorClasses = (className = "") => {
 
     getCompleteClassDefinition(1, classToBuild, selectorNMediaQuery);
 };
+
+
+export const abContentClass = (classParts = [], className = "", returnOnlyPropNVal = false) => {
+
+    //content-[max/min]_[breakPoint]-value
+
+    const val = '"' + processValuePart(classParts.at(-1)) + '"';
+    const classToBuild = getClassDefinition(["content"], [val], className, returnOnlyPropNVal);
+    if (returnOnlyPropNVal) return classToBuild;
+    return getCompleteClassDefinition(2, classToBuild, classParts);
+
+}

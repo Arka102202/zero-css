@@ -1,3 +1,4 @@
+import { abContentClass } from "./combinators/_child.js";
 import { bgClasses } from "./createClass/_background.js";
 import { borderCLasses, ringClasses } from "./createClass/_border.js";
 import { backFaceClass, blendClasses, content_visibilityClass, filterClasses, opacityClasses, shadowClasses, textGradClasses } from "./createClass/_effects.js";
@@ -180,6 +181,10 @@ export const createClass = (className = "", returnOnlyPropNVal = false) => {
         .includes(firstPart)) {
         returnedString = interactionClasses(classParts, className, returnOnlyPropNVal);
     }
+    // Handle content for ::after and ::before elements.
+    else if (firstPart === "content") {
+        returnedString = abContentClass(classParts, className, returnOnlyPropNVal);
+    } 
 
     // If only CSS properties and values are requested, return them.
     if (returnOnlyPropNVal) return returnedString;
