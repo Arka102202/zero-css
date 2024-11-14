@@ -117,7 +117,7 @@ export const lineClasses = (classParts = [], className = "", returnOnlyPropNVal 
 
 export const textClasses = (classParts = [], className = "", returnOnlyPropNVal = false) => {
 
-  // txt_decor-[max/min]_{breakpoint}-type_color_style_thick
+  // txt_decor-[max/min]_{breakpoint}-type+color+style+thick
   // txt_decor_[type/color/style/thick]-[max/min]_{breakpoint}-value
   // txt_underline_offset-[max/min]_{breakpoint}-value
   // txt_transform-value

@@ -376,9 +376,9 @@ Don’t settle for “close enough”—*express your site’s personality in fu
 
 >Example: justify_content-spaceBetween or bg_repeat-noRepeat etc.
 
-- For `negative` values, start with `n`.
+- For `negative` values, start with `m` short for `minus`.
 
->Example: m-n20px.
+>Example: m-m20px.
 
 - For `CSS variables`, use `camelCase`.
 
@@ -435,21 +435,25 @@ the `value part` is separated by `@` from the rest of the className and the `med
 
 -- **Display Classes**:
 
-- `d-[max/min]_[breakpoint]-(block/inline/inline-block/flex/grid/none)`
-- `d-[max/min]_[breakpoint]-(flex/grid)&[flexDir:val&justify:val&align:val&gap:val]`
+- `d-[max/min]_[breakPoint]-[block/inline/inlineBlock/flex/grid/none]`
+- `d-[max/min]_[breakpoint]-(flex/grid)&[flexDir:val]&justify:val&align:val&gap:val`
 
 -- **FLex Classes**:
 
-- `flex-[max/min]_[breakpoint]-{grow_shrink_basis}`
-- `flex_(dir/grow/shrink/wrap)-[max/min]_[breakpoint]-value`
-- `flex_child-[max/min]_[breakpoint]-(even/fixed_wd/auto)`
+- `flex-[max/min]_{breakpoint}-[grow+shrink+basis]`
+- `flex_(dir/grow/shrink/wrap)-[max/min]_{breakpoint}-value`
+- `flex_child-[max/min]_{breakpoint}-(even/fixed_wd/auto)`
 
 -- **Grid Classes**:
 
-- `grid-[max/min]_[breakpoint]-(col/row):Width&re:count&[gap/cGap/rGap]:value`
-- `grid-[max/min]_[breakpoint]-(col/row):width1,width2,....`
-- `grid-[max/min]_[breakpoint]-(col/row)Span:(to,from/value)`
-- `grid-col_(auto-fit/auto-fill)_10(vw/vh/px/rem)`
+- `grid-[max/min]_[breakpoint]-re_(col/row):Width+count&[gap/cGap/rGap]:value`
+- `grid-[max/min]_[breakpoint]-(col/row):width1,width2,...`
+- `grid-[max/min]_[breakpoint]-(col/row)Span:to+from/span+2`
+
+- `grid_col-[max/min]_[breakpoint]-(autoFill/autoFit)+10(vw/vh/px/rem)`
+
+- `grid_auto-[max/min]_[breakpoint]-cols:val&flow:val&rows:val&[gap/cGap/rGap]:value`
+- `grid_auto_[columns/flow/rows]-[max/min]_[breakpoint]-value`
 
 -- **Justify Classes**:
 
@@ -461,7 +465,7 @@ the `value part` is separated by `@` from the rest of the className and the `med
 
 -- **Gap Classes**:
 
-- `[col/row]_gap_(content/items/self)-[max/min]_[breakpoint]-value`
+- `[col/row]_gap-[max/min]_[breakpoint]-value`
 
 -- **Order Classes**:
 
@@ -485,15 +489,14 @@ the `value part` is separated by `@` from the rest of the className and the `med
 
 -- **Center element Classes**:
 
-- `center_el-[max/min]_[breakpoint]-(c/t/r/b/l)_(abs/fix)`
-- `align_(left/right/top/bottom)-[max/min]_[breakpoint]-(abs/fix)_value`
+- `center_el-[max/min]_[breakpoint]-(c/t/r/b/l)+(abs/fix)`
+- `align_(left/right/top/bottom)-[max/min]_[breakpoint]-(abs/fix)+value`
 
 ### Spacing Classes
 
 -- **Padding and Margin Classes**
 
 - `(p/m)_[x/y/t/r/b/l]-[max/min]_[breakpoint]-value`
-- `(p/m)-[max/min]_[breakpoint]-valueX_valueY`
 
 ### Border Classes
 
