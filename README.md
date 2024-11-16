@@ -424,12 +424,12 @@ here,
 
 the `value part` is separated by `@` from the rest of the className and the `media query` part separated from the first part by `--`.
 
-## List of Class names and how to implement them
+## Different set of className and How to use them
 
 ### Class name for size
 
-- `[max/min]_(wd/ht/size)-[max/min]_[breakpoint]-value_[imp]`
-- `aspect_ratio-[max/min]_[breakpoint]-value_[imp]`
+- `[max/min]_(wd/ht/size)-[max/min]_[breakpoint]-value`
+- `aspect_ratio-[max/min]_[breakpoint]-value`
 
 ### Class name for layout
 
@@ -538,10 +538,19 @@ the `value part` is separated by `@` from the rest of the className and the `med
 
 -- **Text Classes**
 
-- `txt_decor-[max/min]_[breakpoint]-type_color_style_thick`
+- `txt_decor-[max/min]_[breakpoint]-value`
 - `txt_decor_[type/color/style/thick]-[max/min]_[breakpoint]-value`
+
 - `txt_underline_offset-[max/min]_[breakpoint]-value`
+
 - `txt_transform-value`
+
+- `txt_[overflow/wrap/indent/justify/align]-[max/min]_[breakpoint]-value`
+
+- `txt_orientation-[max/min]_[breakpoint]-value`
+
+- `txt_stroke-[max/min]_[breakpoint]-[width+color]`
+- `txt_stroke_[width/color]-[max/min]_[breakpoint]-value // add -webkit in front`
 
 -- **Font color Class**
 
@@ -562,7 +571,7 @@ the `value part` is separated by `@` from the rest of the className and the `med
 
 -- **Mix and Background Blend Classes**
 
-- `(mix/bg)_blend-[max/min]_[breakpoint]-value`
+- `(mix/bg)_blend-[max/min]_[breakpoint]-value1`
 
 -- **Opacity Classes**
 
@@ -570,8 +579,16 @@ the `value part` is separated by `@` from the rest of the className and the `med
 
 -- **Shadow Classes**
 
-- `shadow-[max/min]_[breakpoint]-value`
+- `shadow-[max/min]_[breakpoint]-value1,value2`
 
 -- **Text Gradient Classes**
 
 - `text_grad-[max/min]_[breakpoint]-value`
+
+-- **Backface visibility Classes**
+
+- `backface_visibility-[max/min]_[breakpoint]-value`
+
+-- **content visibility Classes**
+
+- `content_visibility-[max/min]_[breakpoint]-value`
