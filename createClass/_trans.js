@@ -9,6 +9,7 @@ export const transformClasses = (classParts = [], className = "", returnOnlyProp
   const vals = [];
   const class1stPart = classParts[0].split("_");
   const valPart = classParts.at(-1);
+  let isStyleBoxOrigin = false;
 
   if (class1stPart.length === 1) {
     const valParts = valPart.split("&");
@@ -23,14 +24,17 @@ export const transformClasses = (classParts = [], className = "", returnOnlyProp
 
   } else {
     const propType = class1stPart[1];
-    if (/^(?:origin|style|box)$/.test(propType)) addValueToPropNVals(properties, vals, ["transform-" + propType, processValuePart(valPart)]);
+    if (/^(?:origin|style|box)$/.test(propType)) {
+      isStyleBoxOrigin = true;
+      addValueToPropNVals(properties, vals, ["transform-" + propType, processValuePart(valPart, { preserve3d: "preserve-3d" })]);
+    }
     else addValueToPropNVals(properties, vals, ["--" + propType, processValuePart(valPart)]);
   }
 
   const classToBuild = getClassDefinition(properties, vals, className, returnOnlyPropNVal);
   if (returnOnlyPropNVal) return classToBuild;
 
-  addClassToTransformClassTag(className);
+  if (!isStyleBoxOrigin) addClassToTransformClassTag(className);
 
   return getCompleteClassDefinition(2, classToBuild, classParts);
 
@@ -46,7 +50,7 @@ export const transitionClasses = (classParts = [], className = "", returnOnlyPro
   const valPart = classParts.at(-1);
   let value = "";
 
-  value = processValuePart(valPart);
+  value = processValuePart(valPart, { preserve3d: "preserve-3d" });
 
   addValueToPropNVals(properties, vals, [classParts[0].replace("_", "-"), value]);
 

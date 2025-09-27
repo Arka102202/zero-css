@@ -25,7 +25,7 @@ export const borderCLasses = (classParts = [], className = "", returnOnlyPropNVa
   // border_[t/r/b/l]-[max/min]_{breakpoint}-{wd:val&st:va&clr:val}
   // border_[t/r/b/l]_[width/color/style]-[max/min]_{breakpoint}-value
 
-  // border_rad_[tr/br/bl/tl]_[max/min]_{breakpoint}-value
+  // border_rad_[tr/br/bl/tl]-[max/min]_{breakpoint}-value
 
   // outline_[t/r/b/l]-[max/min]_{breakpoint}-{wd:val&st:va&clr:val&off:val}
   // outline_[t/r/b/l]_[width/color/style/offset]-[max/min]_{breakpoint}-value
