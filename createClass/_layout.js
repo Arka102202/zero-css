@@ -702,6 +702,7 @@ export const columnClasses = (classParts = [], className = "", returnOnlyPropNVa
  *                                       mappings instead of the complete class definition.
  * @returns {string} - Returns a CSS class definition string or returns only the CSS property-value 
  *                                       mappings.
+ * 
  */
 
 export const objClasses = (classParts = [], className = "", returnOnlyPropNVal = false) => {
