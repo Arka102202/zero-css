@@ -592,3 +592,4 @@ the `value part` is separated by `@` from the rest of the className and the `med
 -- **content visibility Classes**
 
 - `content_visibility-[max/min]_[breakpoint]-value`
+
