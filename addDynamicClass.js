@@ -13,10 +13,10 @@ import { varClass } from "./createClass/_var.js";
 import { ZeroCSSConfig } from "./config.js";
 
 /**
- * Creates and applies CSS class rules based on the provided class name and its structure.
- * Supports various utility classes like size, layout, position, interaction, etc.
- * If `returnOnlyPropNVal` is true, it returns the CSS properties and values without applying them.
- *
+ * Generates and applies CSS rules dynamically based on the provided utility class name.
+ * Handles a wide range of utility classes including size, layout, position, interaction, effects, and more.
+ * If `returnOnlyPropNVal` is set to true, returns only the computed CSS properties and values instead of inserting rules into the style tag.
+ * 
  * @param {string} className - The class name to be processed and transformed into CSS rules.
  * @param {HTMLElement} styleTag - The <style> tag where the generated CSS rules will be appended.
  * @param {boolean} [returnOnlyPropNVal=false] - If true, returns only the CSS properties and values without adding to the style tag.

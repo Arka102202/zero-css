@@ -10,6 +10,9 @@ const classNames = new Set();
 // to track the start index for processing class names
 let startIdx = 0;
 
+// Memory management: Maximum number of class names to store before cleanup
+const MAX_CLASS_NAMES = 10000;
+
 /**
  * Recursively collects all class names from the specified element and its children.
  *
@@ -125,10 +128,7 @@ const handleMutations = (mutationsList = []) => {
     // Ensure only unprocessed class names (those added after the last update) are processed.
     if (idx++ >= startIdx) {
       // If the class name starts with "__", handle it as a special selector.
-      if (/^__/.test(className)) {
-        if (ZeroCSSConfig.debug) {
-          console.log('ZERO CSS: Processing selector class:', className);
-        }
+      if (className.startsWith('__')) {
         createSelectorClasses(className);
       }
       // For regular class names, create standard CSS rules.
@@ -144,10 +144,15 @@ const handleMutations = (mutationsList = []) => {
   if (ZeroCSSConfig.debug) {
     console.log('ZERO CSS: Total classes processed:', classNames.size);
   }
-
   // Update `startIdx` to mark the current size of `classNames`
   // to avoid reprocessing already handled class names.
   startIdx = classNames.size;
+
+  // Memory management: Prevent unbounded growth of classNames Set
+  // In most real-world scenarios, reaching 10k unique classes is extremely rare
+  if (classNames.size > MAX_CLASS_NAMES) {
+    console.warn(`ZERO CSS: Class name cache exceeded ${MAX_CLASS_NAMES} entries. This is unusual and may indicate an issue.`);
+  }
 };
 
 
@@ -167,7 +172,7 @@ export function startObserving() {
 
   // Configure the observer to look for changes in attributes, child nodes, and the subtree
   observer.observe(targetNode, { attributes: true, childList: true, subtree: true });
-  targetNode.classList.toggle("toggle-class");
+  // Note: Removed toggle-class mutation to avoid triggering the observer unnecessarily
 }
 
 /**

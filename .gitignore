@@ -4,3 +4,6 @@
 package-lock.json
 package.json
 .mcp.json
+
+# Secrets and credentials
+.claude/config/clickup-secrets.json
