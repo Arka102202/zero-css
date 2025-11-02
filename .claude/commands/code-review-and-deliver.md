@@ -490,7 +490,7 @@ curl -X POST "https://api.clickup.com/api/v2/task/{taskId}/comment" \
   -H "Authorization: {apiKey}" \
   -H "Content-Type: application/json" \
   -d '{
-    "comment_text": [
+    "comment": [
         {
             "text": "PR: ",
             "attributes": {}
