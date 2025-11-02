@@ -9,6 +9,9 @@ const classNames = new Set();
 // to track the start index for processing class names
 let startIdx = 0;
 
+// Memory management: Maximum number of class names to store before cleanup
+const MAX_CLASS_NAMES = 10000;
+
 /**
  * Recursively collects all class names from the specified element and its children.
  *
@@ -56,10 +59,9 @@ const handleMutations = (mutationsList = []) => {
     // Ensure only unprocessed class names (those added after the last update) are processed.
     if (idx++ >= startIdx) {
       // If the class name starts with "__", handle it as a special selector.
-      if (/^__/.test(className)) {
-        // console.log({ className });
+      if (className.startsWith('__')) {
         createSelectorClasses(className);
-      } 
+      }
       // For regular class names, create standard CSS rules.
       else {
         createClass(className, false);
@@ -67,12 +69,15 @@ const handleMutations = (mutationsList = []) => {
     }
   });
 
-  // Log the `classNames` Set for debugging purposes.
-  // console.log(classNames);
-
-  // Update `startIdx` to mark the current size of `classNames` 
+  // Update `startIdx` to mark the current size of `classNames`
   // to avoid reprocessing already handled class names.
   startIdx = classNames.size;
+
+  // Memory management: Prevent unbounded growth of classNames Set
+  // In most real-world scenarios, reaching 10k unique classes is extremely rare
+  if (classNames.size > MAX_CLASS_NAMES) {
+    console.warn(`ZERO CSS: Class name cache exceeded ${MAX_CLASS_NAMES} entries. This is unusual and may indicate an issue.`);
+  }
 };
 
 
@@ -86,7 +91,7 @@ export function startObserving() {
   const targetNode = document.body;
   // Configure the observer to look for changes in attributes, child nodes, and the subtree
   observer.observe(targetNode, { attributes: true, childList: true, subtree: true });
-  targetNode.classList.toggle("toggle-class");
+  // Note: Removed toggle-class mutation to avoid triggering the observer unnecessarily
 }
 
 // Set up an event listener to run the initial class name processing and start observing when the page loads

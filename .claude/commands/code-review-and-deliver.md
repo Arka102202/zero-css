@@ -61,6 +61,7 @@ cat .claude/config/clickup-secrets.json
 
 Parse the JSON to extract:
 - `apiKey` - ClickUp API key for direct API calls
+- `workspaceId` - ClickUp workspace ID for v3 API calls
 - `channelId` - ClickUp channel ID for notifications
 - `defaultUser` - User details object containing:
   - `id` - User ID
@@ -429,16 +430,6 @@ Wait for user selection or custom message.
 - Commit with selected message format:
   ```
   [First line from selected message]
-
-  Fixes implemented:
-  • [List key fixes]
-  • [Group similar fixes]
-
-  Resolves ClickUp tasks: [task-id-1], [task-id-2]
-
-  🤖 Generated with [Claude Code](https://claude.com/claude-code)
-
-  Co-Authored-By: Claude <noreply@anthropic.com>
   ```
 
 **D. Push to Remote**
@@ -481,14 +472,24 @@ Capture PR URL from output.
 
 For each task ID:
 
-**A. Add Comment with PR and Loom Links**
+**A. Update Task Status to PEER REVIEW**
+
+Use `mcp__clickup__update_task` for EACH task:
+```
+mcp__clickup__update_task(taskId, status="peer review")
+```
+
+**B. Add Comment with PR and Loom Links**
 
 **CRITICAL**: Every task must receive the SAME comment with PR and Loom links. Loop through all task IDs and add this comment to each one.
 
-Use `mcp__clickup__create_task_comment` for EACH task with the following structure:
+**Use direct ClickUp API** (MCP server doesn't support rich text comments yet):
 
-```json
-{
+```bash
+curl -X POST "https://api.clickup.com/api/v2/task/{taskId}/comment" \
+  -H "Authorization: {apiKey}" \
+  -H "Content-Type: application/json" \
+  -d '{
     "comment": [
         {
             "text": "PR: ",
@@ -526,64 +527,99 @@ Use `mcp__clickup__create_task_comment` for EACH task with the following structu
             "text": " ",
             "attributes": {}
         }
-    ],
-    "send_reply_to_channel": false,
-    "attachment": []
-}
+    ]
+}'
 ```
 
 **IMPORTANT**:
+- Replace `{taskId}` with actual task ID
+- Replace `{apiKey}` with API key from secrets file
 - Replace PR URL with actual PR URL
 - Replace Loom URL with provided Loom URL
 - Use unique block-id for newline (generate random UUID)
 - Keep structure exactly as shown
 
-**B. Add Time Tracking (with ClickUp Estimate Fallback)**
+**NOTE**: MCP server enhancement needed - `mcp__clickup__create_task_comment` should support rich text format with link_mention objects
+
+**C. Add Time Tracking (with ClickUp Estimate Fallback)**
+
+**Use direct ClickUp API** (MCP server has authorization issues with time tracking):
 
 **For each task, follow this priority order:**
 
 1. **If the task has an explicit timestamp value** (from --timestamp, not `__`):
-   - Use `mcp__clickup__add_time_entry` for this task
    - Parse the timestamp: `dd/mm/yyyy-hh:mm-hh:mm`
-   - Calculate duration from start and end times
-   - Add description: "Code review and fixes implementation"
+   - Calculate start and end times in milliseconds
+   - Add time entry using API:
+   ```bash
+   curl -X POST "https://api.clickup.com/api/v2/task/{taskId}/time" \
+     -H "Authorization: {apiKey}" \
+     -H "Content-Type: application/json" \
+     -d '{
+       "start": {startTimeInMs},
+       "end": {endTimeInMs},
+       "description": "Code review and fixes implementation"
+     }'
+   ```
 
 2. **Else if the task has an explicit time value** (from --time, not `__`):
-   - Use `mcp__clickup__add_time_entry` for this task
    - Use the minutes value mapped to this task
-   - Use current time as end, calculate start based on minutes
-   - Add description: "Code review and fixes implementation"
+   - Calculate: end = current time, start = current time - (minutes * 60000)
+   - Add time entry using API:
+   ```bash
+   curl -X POST "https://api.clickup.com/api/v2/task/{taskId}/time" \
+     -H "Authorization: {apiKey}" \
+     -H "Content-Type: application/json" \
+     -d '{
+       "start": {calculatedStartTimeInMs},
+       "end": {currentTimeInMs},
+       "description": "Code review and fixes implementation"
+     }'
+   ```
 
 3. **Else if no time/timestamp provided OR marked with `__`**:
    - Check if task has `time_estimate` from ClickUp (fetched in Step 2)
    - If time_estimate exists and is > 0:
-     - Use `mcp__clickup__add_time_entry` for this task
-     - Use the estimated minutes from ClickUp
-     - Use current time as end, calculate start based on estimate
-     - Add description: "Code review and fixes implementation (estimated time)"
+     - Convert time_estimate from milliseconds to minutes
+     - Calculate: end = current time, start = current time - time_estimate
+     - Add time entry using API:
+     ```bash
+     curl -X POST "https://api.clickup.com/api/v2/task/{taskId}/time" \
+       -H "Authorization: {apiKey}" \
+       -H "Content-Type: application/json" \
+       -d '{
+         "start": {calculatedStartTimeInMs},
+         "end": {currentTimeInMs},
+         "description": "Code review and fixes implementation (estimated time)"
+       }'
+     ```
    - If no time_estimate or time_estimate is 0:
      - Skip time tracking for this task
      - Log: "No time tracking: no explicit time and no estimate in ClickUp"
+
+**IMPORTANT**:
+- Replace `{taskId}` with actual task ID
+- Replace `{apiKey}` with API key from secrets file
+- Replace `{startTimeInMs}` and `{endTimeInMs}` with calculated Unix timestamps in milliseconds
+- Times must be in milliseconds (JavaScript: `Date.now()` or Python: `int(time.time() * 1000)`)
 
 **Priority Summary**:
 ```
 Timestamp (explicit) > Time (explicit) > ClickUp Estimate > Skip
 ```
 
-**C. Update Task Status**
-
-- Update status to "PEER REVIEW" using `mcp__clickup__update_task`
-- Add tag "adom-assisted" if not present
+**NOTE**: MCP server's `mcp__clickup__add_time_entry` has authorization issues - use direct API instead
 
 ### 13. SEND CHANNEL NOTIFICATION
 
 **Use credentials loaded from Step 0:**
+- Workspace ID: Use `workspaceId` from secrets file
 - Channel ID: Use `channelId` from secrets file
 - API Key: Use `apiKey` from secrets file
 - User details: Use `defaultUser` object from secrets file
 
 Send message to ClickUp channel using:
-`POST https://api.clickup.com/api/v2/chat/{channelId}/message`
+`POST https://api.clickup.com/api/v3/workspaces/{workspaceId}/chat/channels/{channelId}/messages`
 
 Headers:
 ```
@@ -591,132 +627,173 @@ Authorization: {apiKey}
 Content-Type: application/json
 ```
 
-Message structure:
+**CRITICAL**: The request body must use `comment_parts` field (NOT `content`):
+
 ```json
-[
-    {
-        "text": "Hello ",
-        "attributes": {}
-    },
-    {
-        "type": "tag",
-        "user": {
-            "id": {defaultUser.id},
-            "color": "{defaultUser.color}",
-            "email": "{defaultUser.email}",
-            "initials": "{defaultUser.initials}",
-            "username": "{defaultUser.username}",
-            "timezone": "{defaultUser.timezone}",
-            "profileInfo": {
-                "status": {}
+{
+    "comment_parts": [
+        {
+            "text": "Hello ",
+            "attributes": {}
+        },
+        {
+            "type": "tag",
+            "user": {
+                "id": {defaultUser.id},
+                "color": "{defaultUser.color}",
+                "email": "{defaultUser.email}",
+                "initials": "{defaultUser.initials}",
+                "username": "{defaultUser.username}",
+                "timezone": "{defaultUser.timezone}",
+                "profileInfo": {
+                    "status": {}
+                },
+                "isDeactivated": false
             },
-            "isDeactivated": false
+            "text": "@{defaultUser.username}"
         },
-        "text": "@{defaultUser.username}"
-    },
-    {
-        "text": " ",
-        "attributes": {}
-    },
-    {
-        "text": "\n",
-        "attributes": {
-            "block-id": "block-f9ee3acc-025a-475e-b72d-a52974b97354"
-        }
-    },
-    {
-        "text": "I have completed a comprehensive code review and implemented the approved fixes.",
-        "attributes": {}
-    },
-    {
-        "text": "\n",
-        "attributes": {
-            "block-id": "block-c89f16e1-a9cc-4e4b-bb99-5d58225f8765"
-        }
-    },
-    {
-        "text": "Could you please review my PR and merge it?",
-        "attributes": {}
-    },
-    {
-        "text": "\n",
-        "attributes": {
-            "block-id": "block-da4f1b99-4c0a-463e-8d5b-177ba4b5e0ed"
-        }
-    },
-    {
-        "text": "\n",
-        "attributes": {
-            "block-id": "block-17ac1015-e8ea-41cc-a169-c0e4609be980"
-        }
-    },
-    {
-        "text": "PR: ",
-        "attributes": {}
-    },
-    {
-        "type": "link_mention",
-        "link_mention": {
-            "width": "19",
-            "url": "https://github.com/Arka102202/zero-css/pull/8"
+        {
+            "text": " ",
+            "attributes": {}
         },
-        "text": ""
-    },
-    {
-        "text": " ",
-        "attributes": {}
-    },
-    {
-        "text": "\n",
-        "attributes": {
-            "block-id": "block-3b003720-a3d4-4abb-8491-3b1f7477f096"
-        }
-    },
-    {
-        "text": "Task: ",
-        "attributes": {}
-    },
-    {
-        "type": "task_mention",
-        "task_mention": {
-            "task_id": "86d0ubdn3"
+        {
+            "text": "\n",
+            "attributes": {
+                "block-id": "block-f9ee3acc-025a-475e-b72d-a52974b97354"
+            }
         },
-        "text": "86d0ubdn3"
-    },
-    {
-        "text": "\n",
-        "attributes": {
-            "block-id": "block-4ee8a99f-2c60-48c3-b39e-da6e862f7a2b"
-        }
-    },
-    {
-        "text": "Loom: ",
-        "attributes": {}
-    },
-    {
-        "type": "link_mention",
-        "link_mention": {
-            "width": "67.57142857142857",
-            "url": "https://www.loom.com/share/1b1e31c22751462788551ff3859bd967"
+        {
+            "text": "I have completed a comprehensive code review and implemented the approved fixes.",
+            "attributes": {}
         },
-        "text": ""
-    },
-    {
-        "text": " ",
-        "attributes": {}
-    }
-]
+        {
+            "text": "\n",
+            "attributes": {
+                "block-id": "block-c89f16e1-a9cc-4e4b-bb99-5d58225f8765"
+            }
+        },
+        {
+            "text": "Could you please review my PR and merge it?",
+            "attributes": {}
+        },
+        {
+            "text": "\n",
+            "attributes": {
+                "block-id": "block-da4f1b99-4c0a-463e-8d5b-177ba4b5e0ed"
+            }
+        },
+        {
+            "text": "\n",
+            "attributes": {
+                "block-id": "block-17ac1015-e8ea-41cc-a169-c0e4609be980"
+            }
+        },
+        {
+            "text": "PR: ",
+            "attributes": {}
+        },
+        {
+            "type": "link_mention",
+            "link_mention": {
+                "width": "19",
+                "url": "https://github.com/Arka102202/zero-css/pull/8"
+            },
+            "text": ""
+        },
+        {
+            "text": " ",
+            "attributes": {}
+        },
+        {
+            "text": "\n",
+            "attributes": {
+                "block-id": "block-3b003720-a3d4-4abb-8491-3b1f7477f096"
+            }
+        },
+        {
+            "text": "Task: ",
+            "attributes": {}
+        },
+        {
+            "type": "task_mention",
+            "task_mention": {
+                "task_id": "86d0ubdn3"
+            },
+            "text": "86d0ubdn3"
+        },
+        {
+            "text": "\n",
+            "attributes": {
+                "block-id": "block-4ee8a99f-2c60-48c3-b39e-da6e862f7a2b"
+            }
+        },
+        {
+            "text": "Loom: ",
+            "attributes": {}
+        },
+        {
+            "type": "link_mention",
+            "link_mention": {
+                "width": "67.57142857142857",
+                "url": "https://www.loom.com/share/1b1e31c22751462788551ff3859bd967"
+            },
+            "text": ""
+        },
+        {
+            "text": " ",
+            "attributes": {}
+        }
+    ]
+}
 ```
 
-**IMPORTANT Message Customization**:
-- User details: Populated from `defaultUser` in secrets file
-- Line 2 (block-f9ee...): Change message to describe the work done
-- Line 3 (block-c89f...): Keep review request or customize
-- PR URL: Update with actual PR URL
-- Task mentions: Add multiple task_mention blocks if multiple tasks (one per task)
-- Loom URL: Update with provided Loom URL
-- Generate unique block-id values (UUIDs) for each newline
-- All {placeholder} values should be replaced with actual values from secrets file
+**IMPORTANT API Requirements**:
+- Use v3 API endpoint with workspace ID in the path
+- Wrap the message array in `comment_parts` field
+- Using `content` field will result in error "content must be a string"
+
+**CRITICAL Message Customization**:
+
+1. **User Details**: Populate from `defaultUser` in secrets file
+   - Replace `{defaultUser.id}` with actual user ID
+   - Replace `{defaultUser.color}`, `{defaultUser.email}`, `{defaultUser.username}`, etc.
+
+2. **Main Message Text** (block-f9ee3acc...): **MUST BE DYNAMICALLY GENERATED**
+   - DO NOT use the hardcoded example text
+   - Generate based on actual work performed
+   - Examples:
+     - "I have removed 12 console.log statements and fixed 3 memory leaks in the observer module."
+     - "I have implemented a comprehensive configuration system for ZERO CSS with validation and presets."
+     - "I have optimized the class routing logic and cleaned up debug logging across 4 files."
+   - Format: Brief summary of what was actually implemented/fixed
+   - Should reflect the fixes selected and implemented in Step 7
+
+3. **Review Request** (block-c89f1e1...): Keep standard or customize
+   - Default: "Could you please review my PR and merge it?"
+   - Or customize based on urgency/context
+
+4. **PR URL**: Replace with actual PR URL from Step 11
+
+5. **Task Mentions**:
+   - Add multiple `task_mention` blocks if multiple tasks (one per task)
+   - Each should reference actual task IDs being delivered
+
+6. **Loom URL**: Replace with actual Loom URL from arguments
+
+7. **Block IDs**: Generate unique UUIDs for each newline's `block-id`
+   - Use format: `block-xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx`
+   - Each newline needs its own unique block ID
+
+**Example Dynamic Message Generation**:
+```
+Based on fixes implemented:
+- 12 console.log removals
+- 1 memory leak fix
+- 2 optimizations
+
+Generated message:
+"I have completed a comprehensive code review, removing 12 console.log statements, fixing a MutationObserver memory leak, and optimizing the class routing logic."
+```
 
 ---
 
@@ -732,6 +809,7 @@ Message structure:
 ───────────────────────────────────────────────────────────
    • Source: .claude/config/clickup-secrets.json
    • API Key: Loaded ✓
+   • Workspace ID: Loaded ✓
    • Channel ID: Loaded ✓
    • User details: Loaded ✓
 
@@ -785,35 +863,33 @@ Message structure:
 
    Task [task-id-1]:
    • Status updated: PEER REVIEW ✓
-   • Tag "adom-assisted" added: [yes/no/already-present]
    • PR link comment added: ✓
    • Loom link comment added: ✓
    • Time tracked: [N] minutes (explicit --time) ✓
 
    Task [task-id-2]:
    • Status updated: PEER REVIEW ✓
-   • Tag "adom-assisted" added: [yes/no/already-present]
    • PR link comment added: ✓
    • Loom link comment added: ✓
    • Time tracked: [N] minutes (ClickUp estimate) ✓
 
    Task [task-id-3]:
    • Status updated: PEER REVIEW ✓
-   • Tag "adom-assisted" added: [yes/no/already-present]
    • PR link comment added: ✓
    • Loom link comment added: ✓
    • Time tracked: [timestamp] (explicit --timestamp) ✓
 
    Task [task-id-4]:
    • Status updated: PEER REVIEW ✓
-   • Tag "adom-assisted" added: [yes/no/already-present]
    • PR link comment added: ✓
    • Loom link comment added: ✓
    • Time tracked: Skipped (no estimate in ClickUp)
 
 8. 💬 CHANNEL NOTIFICATION
 ───────────────────────────────────────────────────────────
+   • Workspace: [workspaceId from secrets]
    • Channel: [channelId from secrets]
+   • API: v3 with comment_parts ✓
    • Message sent: ✓
    • Tagged: @[username from secrets]
    • PR link included: ✓
