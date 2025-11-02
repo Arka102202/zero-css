@@ -472,15 +472,25 @@ Capture PR URL from output.
 
 For each task ID:
 
-**A. Add Comment with PR and Loom Links**
+**A. Update Task Status to PEER REVIEW**
+
+Use `mcp__clickup__update_task` for EACH task:
+```
+mcp__clickup__update_task(taskId, status="peer review")
+```
+
+**B. Add Comment with PR and Loom Links**
 
 **CRITICAL**: Every task must receive the SAME comment with PR and Loom links. Loop through all task IDs and add this comment to each one.
 
-Use `mcp__clickup__create_task_comment` for EACH task with the following structure:
+**Use direct ClickUp API** (MCP server doesn't support rich text comments yet):
 
-```json
-{
-    "comment": [
+```bash
+curl -X POST "https://api.clickup.com/api/v2/task/{taskId}/comment" \
+  -H "Authorization: {apiKey}" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "comment_text": [
         {
             "text": "PR: ",
             "attributes": {}
@@ -517,19 +527,21 @@ Use `mcp__clickup__create_task_comment` for EACH task with the following structu
             "text": " ",
             "attributes": {}
         }
-    ],
-    "send_reply_to_channel": false,
-    "attachment": []
-}
+    ]
+}'
 ```
 
 **IMPORTANT**:
+- Replace `{taskId}` with actual task ID
+- Replace `{apiKey}` with API key from secrets file
 - Replace PR URL with actual PR URL
 - Replace Loom URL with provided Loom URL
 - Use unique block-id for newline (generate random UUID)
 - Keep structure exactly as shown
 
-**B. Add Time Tracking (with ClickUp Estimate Fallback)**
+**NOTE**: MCP server enhancement needed - `mcp__clickup__create_task_comment` should support rich text format with link_mention objects
+
+**C. Add Time Tracking (with ClickUp Estimate Fallback)**
 
 **For each task, follow this priority order:**
 
@@ -814,28 +826,24 @@ Generated message:
 
    Task [task-id-1]:
    • Status updated: PEER REVIEW ✓
-   • Tag "adom-assisted" added: [yes/no/already-present]
    • PR link comment added: ✓
    • Loom link comment added: ✓
    • Time tracked: [N] minutes (explicit --time) ✓
 
    Task [task-id-2]:
    • Status updated: PEER REVIEW ✓
-   • Tag "adom-assisted" added: [yes/no/already-present]
    • PR link comment added: ✓
    • Loom link comment added: ✓
    • Time tracked: [N] minutes (ClickUp estimate) ✓
 
    Task [task-id-3]:
    • Status updated: PEER REVIEW ✓
-   • Tag "adom-assisted" added: [yes/no/already-present]
    • PR link comment added: ✓
    • Loom link comment added: ✓
    • Time tracked: [timestamp] (explicit --timestamp) ✓
 
    Task [task-id-4]:
    • Status updated: PEER REVIEW ✓
-   • Tag "adom-assisted" added: [yes/no/already-present]
    • PR link comment added: ✓
    • Loom link comment added: ✓
    • Time tracked: Skipped (no estimate in ClickUp)
