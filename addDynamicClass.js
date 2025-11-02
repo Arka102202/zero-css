@@ -10,6 +10,7 @@ import { spacingClasses } from "./createClass/_spacing.js";
 import { perspectiveOrgClasses, transformClasses, transitionClasses } from "./createClass/_trans.js";
 import { colorClass, fontClasses, fontImportClass, letterClass, lineClasses, textClasses } from "./createClass/_typography.js";
 import { varClass } from "./createClass/_var.js";
+import { ZeroCSSConfig } from "./config.js";
 
 /**
  * Generates and applies CSS rules dynamically based on the provided utility class name.
@@ -27,6 +28,10 @@ export const createClass = (className = "", returnOnlyPropNVal = false) => {
     const classParts = className.split("-");
     const firstPart = classParts[0];  // Extract the first part to determine the class type.
     let returnedString = "", varString = "";  // Initialize variables for CSS rules and variable definitions.
+
+    if (ZeroCSSConfig.debug && !returnOnlyPropNVal) {
+        console.log(`ZERO CSS: Generating class "${className}"`);
+    }
 
     // Handle size-related classes like width, height, and general size.
     if (/^(?:max_|min_)?(?:wd|ht|size)/.test(firstPart)) {
@@ -184,7 +189,13 @@ export const createClass = (className = "", returnOnlyPropNVal = false) => {
     // Handle content for ::after and ::before elements.
     else if (firstPart === "content") {
         returnedString = abContentClass(classParts, className, returnOnlyPropNVal);
-    } 
+    }
+    // No handler found for this class
+    else {
+        if (ZeroCSSConfig.debug) {
+            console.warn(`ZERO CSS: No handler found for class "${className}"`);
+        }
+    }
 
     // If only CSS properties and values are requested, return them.
     if (returnOnlyPropNVal) return returnedString;
