@@ -420,11 +420,22 @@ Wait for user selection or custom message.
 - Run `git status` to see current branch and changes
 - Verify not on master/main branch directly
 
-**B. Create Branch**
-- Create new branch with selected name
-- Checkout the branch
+**B. Switch to Base Branch**
+- Checkout the base branch (from --base-branch argument or default: master)
+- Command: `git checkout [base-branch]`
+- This ensures we create the new branch from the correct base
 
-**C. Stage and Commit**
+**C. Pull Latest Changes**
+- Pull the latest changes from remote for the base branch
+- Command: `git pull origin [base-branch]`
+- This ensures our new branch starts from the most recent base
+
+**D. Create New Branch**
+- Create new branch with selected name from the updated base branch
+- Command: `git checkout -b [branch-name]`
+- The new branch will be based on the latest base branch
+
+**E. Stage and Commit**
 - Stage all modified files: `git add .`
 - Show files to be committed
 - Commit with selected message format:
@@ -432,7 +443,7 @@ Wait for user selection or custom message.
   [First line from selected message]
   ```
 
-**D. Push to Remote**
+**F. Push to Remote**
 - Push branch to origin: `git push -u origin [branch-name]`
 - Capture any errors
 
