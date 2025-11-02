@@ -15,15 +15,37 @@ $ARGUMENT
 Supported argument formats:
 1. Space-separated task IDs (first N arguments without flags)
 2. `--loom=<url>` - Loom video URL (REQUIRED)
-3. `--time=<minutes>` - Time spent in minutes (OPTIONAL)
-4. `--timestamp=<dd/mm/yyyy-hh:mm-hh:mm>` - Time tracking timestamp (OPTIONAL)
+3. `--time=<value1> <value2> ...` - Time spent in minutes for each task (OPTIONAL)
+   - Use `__` to skip time tracking for a specific task
+   - Values are mapped to tasks by position
+4. `--timestamp=<ts1> <ts2> ...` - Time tracking timestamps for each task (OPTIONAL)
+   - Format: `dd/mm/yyyy-hh:mm-hh:mm`
+   - Use `__` to skip timestamp for a specific task
+   - Values are mapped to tasks by position
 5. `--base-branch=<branch>` - Base branch for PR, default: master (OPTIONAL)
 
 **Examples:**
 ```
-/code-review-and-deliver 86d0ubdn3 --loom=https://loom.com/share/abc123
-/code-review-and-deliver 86d0ubdn3 86d0ubdn4 --loom=https://loom.com/share/abc123 --time=120
-/code-review-and-deliver 86d0ubdn3 --loom=https://loom.com/share/abc123 --timestamp=15/01/2025-10:00-12:00 --base-branch=dev
+# Fully automatic - uses ClickUp estimates for all tasks
+/code-review-and-deliver 86d0ubdn3 86d0ubdn4 --loom=https://loom.com/share/abc123
+
+# Single task with explicit time
+/code-review-and-deliver 86d0ubdn3 --loom=https://loom.com/share/abc123 --time=120
+
+# Multiple tasks, all with explicit time
+/code-review-and-deliver 86d0ubdn3 86d0ubdn4 --loom=https://loom.com/share/abc123 --time=60 90
+
+# Multiple tasks, skip for second task (falls back to ClickUp estimate)
+/code-review-and-deliver 86d0ubdn3 86d0ubdn4 86d0ubdn5 --loom=https://loom.com/share/abc123 --time=20 __ 30
+
+# With timestamps
+/code-review-and-deliver 86d0ubdn3 86d0ubdn4 --loom=https://loom.com/share/abc123 --timestamp=15/01/2025-10:00-12:00 15/01/2025-14:00-16:00
+
+# Skip timestamp for middle task (falls back to ClickUp estimate)
+/code-review-and-deliver task1 task2 task3 --loom=https://loom.com/share/abc123 --timestamp=15/01/2025-10:00-12:00 __ 15/01/2025-14:00-16:00
+
+# Mixed: explicit time for first, ClickUp estimate for rest
+/code-review-and-deliver task1 task2 task3 --loom=https://loom.com/share/abc123 --time=45
 ```
 
 ---
@@ -60,29 +82,73 @@ Parse the JSON to extract:
 Extract:
 - All task IDs (everything before first `--` flag)
 - Loom URL (required, fail if not provided)
-- Time tracking minutes (optional)
-- Timestamp (optional)
+- Time tracking values (optional):
+  - Split `--time` value by spaces to get array of values
+  - Each value corresponds to a task by position (index)
+  - `__` indicates "skip time tracking for this task"
+  - Example: `--time=20 __ 30` → [20, skip, 30]
+- Timestamp values (optional):
+  - Split `--timestamp` value by spaces to get array of timestamps
+  - Each timestamp corresponds to a task by position (index)
+  - `__` indicates "skip timestamp for this task"
+  - Example: `--timestamp=15/01/2025-10:00-12:00 __ 15/01/2025-14:00-16:00` → [ts1, skip, ts2]
 - Base branch (optional, default: master)
 
-Display parsed arguments to user for confirmation.
+**Create task-to-time mapping:**
+```
+📊 Parsed Arguments:
+• Loom URL: https://loom.com/share/abc123
+• Base Branch: master
+• Tasks: 3
+
+Task Time Tracking Plan:
+┌─────────────┬────────────┬──────────────────────────┬──────────────────┐
+│ Task ID     │ Time       │ Timestamp                │ Fallback         │
+├─────────────┼────────────┼──────────────────────────┼──────────────────┤
+│ 86d0ubdn3   │ 20 min     │ 15/01/2025-10:00-12:00   │ N/A              │
+│ 86d0ubdn4   │ -- (skip)  │ -- (skip)                │ Use estimate: 60m│
+│ 86d0ubdn5   │ 30 min     │ 15/01/2025-14:00-16:00   │ N/A              │
+└─────────────┴────────────┴──────────────────────────┴──────────────────┘
+
+Legend:
+• Explicit time/timestamp: Will be used
+• -- (skip): Will use ClickUp estimated time if available
+• Not provided at all: Will use ClickUp estimated time if available
+```
+
+Display parsed arguments to user for confirmation showing which tasks get time tracking.
+
+**Fallback behavior**:
+- If no --time or --timestamp provided for a task (or marked with `__`)
+- AND the task has a time_estimate in ClickUp
+- Use the estimated time from ClickUp for time tracking
+
+**Validate:**
+- Number of time values (excluding `__`) should make sense
+- Number of timestamp values (excluding `__`) should make sense
+- If mismatch detected, warn user and show mapping
 
 ### 2. FETCH ALL CLICKUP TASKS
 
 For each task ID:
 - Use `mcp__clickup__get_task` to fetch task details
-- Extract: task ID, name, description, status, assignees
-- Store all task information
+- Extract: task ID, name, description, status, assignees, **time_estimate** (in milliseconds)
+- Store all task information including estimated time
+- Convert time_estimate from milliseconds to minutes: `time_estimate / 60000`
 
 Display all fetched tasks in a summary table:
 ```
 📋 Tasks to Review:
-┌─────────────┬──────────────────────────────┬────────────┐
-│ Task ID     │ Task Name                    │ Status     │
-├─────────────┼──────────────────────────────┼────────────┤
-│ 86d0ubdn3   │ Add configuration system     │ In Progress│
-│ 86d0ubdn4   │ Fix memory leak in observer  │ To Do      │
-└─────────────┴──────────────────────────────┴────────────┘
+┌─────────────┬──────────────────────────────┬────────────┬──────────────┐
+│ Task ID     │ Task Name                    │ Status     │ Estimated    │
+├─────────────┼──────────────────────────────┼────────────┼──────────────┤
+│ 86d0ubdn3   │ Add configuration system     │ In Progress│ 120 min      │
+│ 86d0ubdn4   │ Fix memory leak in observer  │ To Do      │ 60 min       │
+│ 86d0ubdn5   │ Optimize routing logic       │ To Do      │ Not set      │
+└─────────────┴──────────────────────────────┴────────────┴──────────────┘
 ```
+
+**Store estimated time for fallback**: If no --time or --timestamp provided for a task, use its estimated time from ClickUp.
 
 ### 3. IDENTIFY CHANGED FILES
 
@@ -411,11 +477,15 @@ Capture PR URL from output.
 
 ### 12. UPDATE CLICKUP TASKS
 
+**IMPORTANT**: Loop through ALL task IDs and apply the following updates to EACH task individually.
+
 For each task ID:
 
 **A. Add Comment with PR and Loom Links**
 
-Use `mcp__clickup__create_task_comment` with the following structure:
+**CRITICAL**: Every task must receive the SAME comment with PR and Loom links. Loop through all task IDs and add this comment to each one.
+
+Use `mcp__clickup__create_task_comment` for EACH task with the following structure:
 
 ```json
 {
@@ -468,13 +538,37 @@ Use `mcp__clickup__create_task_comment` with the following structure:
 - Use unique block-id for newline (generate random UUID)
 - Keep structure exactly as shown
 
-**B. Add Time Tracking (if provided)**
+**B. Add Time Tracking (with ClickUp Estimate Fallback)**
 
-If `--time` or `--timestamp` was provided:
-- Use `mcp__clickup__add_time_entry` for each task
-- If timestamp provided: parse start/end times and calculate duration
-- If only minutes provided: use current time as end, calculate start
-- Add description: "Code review and fixes implementation"
+**For each task, follow this priority order:**
+
+1. **If the task has an explicit timestamp value** (from --timestamp, not `__`):
+   - Use `mcp__clickup__add_time_entry` for this task
+   - Parse the timestamp: `dd/mm/yyyy-hh:mm-hh:mm`
+   - Calculate duration from start and end times
+   - Add description: "Code review and fixes implementation"
+
+2. **Else if the task has an explicit time value** (from --time, not `__`):
+   - Use `mcp__clickup__add_time_entry` for this task
+   - Use the minutes value mapped to this task
+   - Use current time as end, calculate start based on minutes
+   - Add description: "Code review and fixes implementation"
+
+3. **Else if no time/timestamp provided OR marked with `__`**:
+   - Check if task has `time_estimate` from ClickUp (fetched in Step 2)
+   - If time_estimate exists and is > 0:
+     - Use `mcp__clickup__add_time_entry` for this task
+     - Use the estimated minutes from ClickUp
+     - Use current time as end, calculate start based on estimate
+     - Add description: "Code review and fixes implementation (estimated time)"
+   - If no time_estimate or time_estimate is 0:
+     - Skip time tracking for this task
+     - Log: "No time tracking: no explicit time and no estimate in ClickUp"
+
+**Priority Summary**:
+```
+Timestamp (explicit) > Time (explicit) > ClickUp Estimate > Skip
+```
 
 **C. Update Task Status**
 
@@ -689,14 +783,33 @@ Message structure:
 ───────────────────────────────────────────────────────────
    For each task:
 
-   Task [task-id]:
+   Task [task-id-1]:
    • Status updated: PEER REVIEW ✓
    • Tag "adom-assisted" added: [yes/no/already-present]
    • PR link comment added: ✓
    • Loom link comment added: ✓
-   [if time tracking]
-   • Time tracked: [N] minutes ✓
-   • Timestamp: [timestamp] ✓
+   • Time tracked: [N] minutes (explicit --time) ✓
+
+   Task [task-id-2]:
+   • Status updated: PEER REVIEW ✓
+   • Tag "adom-assisted" added: [yes/no/already-present]
+   • PR link comment added: ✓
+   • Loom link comment added: ✓
+   • Time tracked: [N] minutes (ClickUp estimate) ✓
+
+   Task [task-id-3]:
+   • Status updated: PEER REVIEW ✓
+   • Tag "adom-assisted" added: [yes/no/already-present]
+   • PR link comment added: ✓
+   • Loom link comment added: ✓
+   • Time tracked: [timestamp] (explicit --timestamp) ✓
+
+   Task [task-id-4]:
+   • Status updated: PEER REVIEW ✓
+   • Tag "adom-assisted" added: [yes/no/already-present]
+   • PR link comment added: ✓
+   • Loom link comment added: ✓
+   • Time tracked: Skipped (no estimate in ClickUp)
 
 8. 💬 CHANNEL NOTIFICATION
 ───────────────────────────────────────────────────────────
@@ -715,6 +828,7 @@ Message structure:
 • [N] fixes implemented across [N] files
 • Branch pushed and PR created
 • [N] ClickUp tasks updated to PEER REVIEW
+• Time tracked: [N] explicit, [N] from estimates, [N] skipped
 • Team notified via channel
 
 🎯 NEXT STEPS
@@ -723,6 +837,12 @@ Message structure:
 2. Address any review comments if needed
 3. Merge PR once approved
 4. ClickUp tasks will auto-close on merge
+
+💡 TIP
+───────────────────────────────────────────────────────────
+For fastest workflow, set estimated time on tasks in ClickUp
+and run command with just task IDs and --loom URL.
+Time tracking will be automatic!
 
 ═══════════════════════════════════════════════════════════
 </output>
@@ -737,11 +857,17 @@ Message structure:
 - If Loom URL not provided: Exit with error message
 - If no task IDs provided: Exit with error message
 - If no changed files found: Exit with message
-- If ClickUp task fetch fails: Skip that task, continue with others
-- If git push fails: Do not create PR or update ClickUp
-- If PR creation fails: Still update ClickUp with note about manual PR needed
+- If time/timestamp array length doesn't match task count: Warn user and ask for correction
+  - Example: 3 tasks but only 2 time values provided
+  - Show mapping to user for verification
+- If `__` used incorrectly: Treat as skip and fall back to ClickUp estimate
+- If task has no time_estimate (0 or null) and no explicit time/timestamp: Skip time tracking, log warning
+- If ClickUp task fetch fails: Exit with error message
+- If git push fails: Do not create PR or update ClickUp and try to push again.
+- If PR creation fails: try again.
 - If ClickUp update fails: Log error but continue (non-blocking)
 - If channel message fails: Log error but continue (non-blocking)
+- If time entry fails for a task: Log error but continue with other tasks
 
 ## IMPORTANT NOTES
 
@@ -754,9 +880,20 @@ Message structure:
 - Use exact JSON structure for ClickUp comments and channel messages
 - **Replace all {placeholder} values with actual values from secrets file**
 - **PR body must be simple: only Task URLs and Loom URL**
+- **All tasks receive the SAME PR and Loom comment**
 - Verify all URLs before sending to ClickUp
 - Handle multiple tasks gracefully (loop through each)
-- Time tracking is optional - only add if provided
+
+**Time Tracking Behavior**:
+- **Per-task tracking**: Each task can have its own time/timestamp or use fallback
+- **Priority**: Timestamp (explicit) > Time (explicit) > ClickUp Estimate > Skip
+- **Parse --time and --timestamp as space-separated values** mapped to tasks by index
+- **Use `__` to explicitly skip** (will fall back to ClickUp estimate if available)
+- **Automatic fallback**: If no time/timestamp provided, use task's estimated time from ClickUp
+- **Extract time_estimate from ClickUp** when fetching tasks (in milliseconds, convert to minutes)
+- **Fully automatic mode**: Run command with just --loom, all tasks use their ClickUp estimates
+
+**Security**:
 - Never log or display full API keys (mask them)
 
 Ensure that your final output contains only the information specified in the <output> format above. Do not include any additional explanations or steps in your final output.
