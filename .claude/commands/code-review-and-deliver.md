@@ -543,35 +543,72 @@ curl -X POST "https://api.clickup.com/api/v2/task/{taskId}/comment" \
 
 **C. Add Time Tracking (with ClickUp Estimate Fallback)**
 
+**Use direct ClickUp API** (MCP server has authorization issues with time tracking):
+
 **For each task, follow this priority order:**
 
 1. **If the task has an explicit timestamp value** (from --timestamp, not `__`):
-   - Use `mcp__clickup__add_time_entry` for this task
    - Parse the timestamp: `dd/mm/yyyy-hh:mm-hh:mm`
-   - Calculate duration from start and end times
-   - Add description: "Code review and fixes implementation"
+   - Calculate start and end times in milliseconds
+   - Add time entry using API:
+   ```bash
+   curl -X POST "https://api.clickup.com/api/v2/task/{taskId}/time" \
+     -H "Authorization: {apiKey}" \
+     -H "Content-Type: application/json" \
+     -d '{
+       "start": {startTimeInMs},
+       "end": {endTimeInMs},
+       "description": "Code review and fixes implementation"
+     }'
+   ```
 
 2. **Else if the task has an explicit time value** (from --time, not `__`):
-   - Use `mcp__clickup__add_time_entry` for this task
    - Use the minutes value mapped to this task
-   - Use current time as end, calculate start based on minutes
-   - Add description: "Code review and fixes implementation"
+   - Calculate: end = current time, start = current time - (minutes * 60000)
+   - Add time entry using API:
+   ```bash
+   curl -X POST "https://api.clickup.com/api/v2/task/{taskId}/time" \
+     -H "Authorization: {apiKey}" \
+     -H "Content-Type: application/json" \
+     -d '{
+       "start": {calculatedStartTimeInMs},
+       "end": {currentTimeInMs},
+       "description": "Code review and fixes implementation"
+     }'
+   ```
 
 3. **Else if no time/timestamp provided OR marked with `__`**:
    - Check if task has `time_estimate` from ClickUp (fetched in Step 2)
    - If time_estimate exists and is > 0:
-     - Use `mcp__clickup__add_time_entry` for this task
-     - Use the estimated minutes from ClickUp
-     - Use current time as end, calculate start based on estimate
-     - Add description: "Code review and fixes implementation (estimated time)"
+     - Convert time_estimate from milliseconds to minutes
+     - Calculate: end = current time, start = current time - time_estimate
+     - Add time entry using API:
+     ```bash
+     curl -X POST "https://api.clickup.com/api/v2/task/{taskId}/time" \
+       -H "Authorization: {apiKey}" \
+       -H "Content-Type: application/json" \
+       -d '{
+         "start": {calculatedStartTimeInMs},
+         "end": {currentTimeInMs},
+         "description": "Code review and fixes implementation (estimated time)"
+       }'
+     ```
    - If no time_estimate or time_estimate is 0:
      - Skip time tracking for this task
      - Log: "No time tracking: no explicit time and no estimate in ClickUp"
+
+**IMPORTANT**:
+- Replace `{taskId}` with actual task ID
+- Replace `{apiKey}` with API key from secrets file
+- Replace `{startTimeInMs}` and `{endTimeInMs}` with calculated Unix timestamps in milliseconds
+- Times must be in milliseconds (JavaScript: `Date.now()` or Python: `int(time.time() * 1000)`)
 
 **Priority Summary**:
 ```
 Timestamp (explicit) > Time (explicit) > ClickUp Estimate > Skip
 ```
+
+**NOTE**: MCP server's `mcp__clickup__add_time_entry` has authorization issues - use direct API instead
 
 ### 13. SEND CHANNEL NOTIFICATION
 
