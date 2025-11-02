@@ -61,6 +61,7 @@ cat .claude/config/clickup-secrets.json
 
 Parse the JSON to extract:
 - `apiKey` - ClickUp API key for direct API calls
+- `workspaceId` - ClickUp workspace ID for v3 API calls
 - `channelId` - ClickUp channel ID for notifications
 - `defaultUser` - User details object containing:
   - `id` - User ID
@@ -429,16 +430,6 @@ Wait for user selection or custom message.
 - Commit with selected message format:
   ```
   [First line from selected message]
-
-  Fixes implemented:
-  • [List key fixes]
-  • [Group similar fixes]
-
-  Resolves ClickUp tasks: [task-id-1], [task-id-2]
-
-  🤖 Generated with [Claude Code](https://claude.com/claude-code)
-
-  Co-Authored-By: Claude <noreply@anthropic.com>
   ```
 
 **D. Push to Remote**
@@ -570,20 +561,16 @@ Use `mcp__clickup__create_task_comment` for EACH task with the following structu
 Timestamp (explicit) > Time (explicit) > ClickUp Estimate > Skip
 ```
 
-**C. Update Task Status**
-
-- Update status to "PEER REVIEW" using `mcp__clickup__update_task`
-- Add tag "adom-assisted" if not present
-
 ### 13. SEND CHANNEL NOTIFICATION
 
 **Use credentials loaded from Step 0:**
+- Workspace ID: Use `workspaceId` from secrets file
 - Channel ID: Use `channelId` from secrets file
 - API Key: Use `apiKey` from secrets file
 - User details: Use `defaultUser` object from secrets file
 
 Send message to ClickUp channel using:
-`POST https://api.clickup.com/api/v2/chat/{channelId}/message`
+`POST https://api.clickup.com/api/v3/workspaces/{workspaceId}/chat/channels/{channelId}/messages`
 
 Headers:
 ```
@@ -591,132 +578,173 @@ Authorization: {apiKey}
 Content-Type: application/json
 ```
 
-Message structure:
+**CRITICAL**: The request body must use `comment_parts` field (NOT `content`):
+
 ```json
-[
-    {
-        "text": "Hello ",
-        "attributes": {}
-    },
-    {
-        "type": "tag",
-        "user": {
-            "id": {defaultUser.id},
-            "color": "{defaultUser.color}",
-            "email": "{defaultUser.email}",
-            "initials": "{defaultUser.initials}",
-            "username": "{defaultUser.username}",
-            "timezone": "{defaultUser.timezone}",
-            "profileInfo": {
-                "status": {}
+{
+    "comment_parts": [
+        {
+            "text": "Hello ",
+            "attributes": {}
+        },
+        {
+            "type": "tag",
+            "user": {
+                "id": {defaultUser.id},
+                "color": "{defaultUser.color}",
+                "email": "{defaultUser.email}",
+                "initials": "{defaultUser.initials}",
+                "username": "{defaultUser.username}",
+                "timezone": "{defaultUser.timezone}",
+                "profileInfo": {
+                    "status": {}
+                },
+                "isDeactivated": false
             },
-            "isDeactivated": false
+            "text": "@{defaultUser.username}"
         },
-        "text": "@{defaultUser.username}"
-    },
-    {
-        "text": " ",
-        "attributes": {}
-    },
-    {
-        "text": "\n",
-        "attributes": {
-            "block-id": "block-f9ee3acc-025a-475e-b72d-a52974b97354"
-        }
-    },
-    {
-        "text": "I have completed a comprehensive code review and implemented the approved fixes.",
-        "attributes": {}
-    },
-    {
-        "text": "\n",
-        "attributes": {
-            "block-id": "block-c89f16e1-a9cc-4e4b-bb99-5d58225f8765"
-        }
-    },
-    {
-        "text": "Could you please review my PR and merge it?",
-        "attributes": {}
-    },
-    {
-        "text": "\n",
-        "attributes": {
-            "block-id": "block-da4f1b99-4c0a-463e-8d5b-177ba4b5e0ed"
-        }
-    },
-    {
-        "text": "\n",
-        "attributes": {
-            "block-id": "block-17ac1015-e8ea-41cc-a169-c0e4609be980"
-        }
-    },
-    {
-        "text": "PR: ",
-        "attributes": {}
-    },
-    {
-        "type": "link_mention",
-        "link_mention": {
-            "width": "19",
-            "url": "https://github.com/Arka102202/zero-css/pull/8"
+        {
+            "text": " ",
+            "attributes": {}
         },
-        "text": ""
-    },
-    {
-        "text": " ",
-        "attributes": {}
-    },
-    {
-        "text": "\n",
-        "attributes": {
-            "block-id": "block-3b003720-a3d4-4abb-8491-3b1f7477f096"
-        }
-    },
-    {
-        "text": "Task: ",
-        "attributes": {}
-    },
-    {
-        "type": "task_mention",
-        "task_mention": {
-            "task_id": "86d0ubdn3"
+        {
+            "text": "\n",
+            "attributes": {
+                "block-id": "block-f9ee3acc-025a-475e-b72d-a52974b97354"
+            }
         },
-        "text": "86d0ubdn3"
-    },
-    {
-        "text": "\n",
-        "attributes": {
-            "block-id": "block-4ee8a99f-2c60-48c3-b39e-da6e862f7a2b"
-        }
-    },
-    {
-        "text": "Loom: ",
-        "attributes": {}
-    },
-    {
-        "type": "link_mention",
-        "link_mention": {
-            "width": "67.57142857142857",
-            "url": "https://www.loom.com/share/1b1e31c22751462788551ff3859bd967"
+        {
+            "text": "I have completed a comprehensive code review and implemented the approved fixes.",
+            "attributes": {}
         },
-        "text": ""
-    },
-    {
-        "text": " ",
-        "attributes": {}
-    }
-]
+        {
+            "text": "\n",
+            "attributes": {
+                "block-id": "block-c89f16e1-a9cc-4e4b-bb99-5d58225f8765"
+            }
+        },
+        {
+            "text": "Could you please review my PR and merge it?",
+            "attributes": {}
+        },
+        {
+            "text": "\n",
+            "attributes": {
+                "block-id": "block-da4f1b99-4c0a-463e-8d5b-177ba4b5e0ed"
+            }
+        },
+        {
+            "text": "\n",
+            "attributes": {
+                "block-id": "block-17ac1015-e8ea-41cc-a169-c0e4609be980"
+            }
+        },
+        {
+            "text": "PR: ",
+            "attributes": {}
+        },
+        {
+            "type": "link_mention",
+            "link_mention": {
+                "width": "19",
+                "url": "https://github.com/Arka102202/zero-css/pull/8"
+            },
+            "text": ""
+        },
+        {
+            "text": " ",
+            "attributes": {}
+        },
+        {
+            "text": "\n",
+            "attributes": {
+                "block-id": "block-3b003720-a3d4-4abb-8491-3b1f7477f096"
+            }
+        },
+        {
+            "text": "Task: ",
+            "attributes": {}
+        },
+        {
+            "type": "task_mention",
+            "task_mention": {
+                "task_id": "86d0ubdn3"
+            },
+            "text": "86d0ubdn3"
+        },
+        {
+            "text": "\n",
+            "attributes": {
+                "block-id": "block-4ee8a99f-2c60-48c3-b39e-da6e862f7a2b"
+            }
+        },
+        {
+            "text": "Loom: ",
+            "attributes": {}
+        },
+        {
+            "type": "link_mention",
+            "link_mention": {
+                "width": "67.57142857142857",
+                "url": "https://www.loom.com/share/1b1e31c22751462788551ff3859bd967"
+            },
+            "text": ""
+        },
+        {
+            "text": " ",
+            "attributes": {}
+        }
+    ]
+}
 ```
 
-**IMPORTANT Message Customization**:
-- User details: Populated from `defaultUser` in secrets file
-- Line 2 (block-f9ee...): Change message to describe the work done
-- Line 3 (block-c89f...): Keep review request or customize
-- PR URL: Update with actual PR URL
-- Task mentions: Add multiple task_mention blocks if multiple tasks (one per task)
-- Loom URL: Update with provided Loom URL
-- Generate unique block-id values (UUIDs) for each newline
-- All {placeholder} values should be replaced with actual values from secrets file
+**IMPORTANT API Requirements**:
+- Use v3 API endpoint with workspace ID in the path
+- Wrap the message array in `comment_parts` field
+- Using `content` field will result in error "content must be a string"
+
+**CRITICAL Message Customization**:
+
+1. **User Details**: Populate from `defaultUser` in secrets file
+   - Replace `{defaultUser.id}` with actual user ID
+   - Replace `{defaultUser.color}`, `{defaultUser.email}`, `{defaultUser.username}`, etc.
+
+2. **Main Message Text** (block-f9ee3acc...): **MUST BE DYNAMICALLY GENERATED**
+   - DO NOT use the hardcoded example text
+   - Generate based on actual work performed
+   - Examples:
+     - "I have removed 12 console.log statements and fixed 3 memory leaks in the observer module."
+     - "I have implemented a comprehensive configuration system for ZERO CSS with validation and presets."
+     - "I have optimized the class routing logic and cleaned up debug logging across 4 files."
+   - Format: Brief summary of what was actually implemented/fixed
+   - Should reflect the fixes selected and implemented in Step 7
+
+3. **Review Request** (block-c89f1e1...): Keep standard or customize
+   - Default: "Could you please review my PR and merge it?"
+   - Or customize based on urgency/context
+
+4. **PR URL**: Replace with actual PR URL from Step 11
+
+5. **Task Mentions**:
+   - Add multiple `task_mention` blocks if multiple tasks (one per task)
+   - Each should reference actual task IDs being delivered
+
+6. **Loom URL**: Replace with actual Loom URL from arguments
+
+7. **Block IDs**: Generate unique UUIDs for each newline's `block-id`
+   - Use format: `block-xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx`
+   - Each newline needs its own unique block ID
+
+**Example Dynamic Message Generation**:
+```
+Based on fixes implemented:
+- 12 console.log removals
+- 1 memory leak fix
+- 2 optimizations
+
+Generated message:
+"I have completed a comprehensive code review, removing 12 console.log statements, fixing a MutationObserver memory leak, and optimizing the class routing logic."
+```
 
 ---
 
@@ -732,6 +760,7 @@ Message structure:
 ───────────────────────────────────────────────────────────
    • Source: .claude/config/clickup-secrets.json
    • API Key: Loaded ✓
+   • Workspace ID: Loaded ✓
    • Channel ID: Loaded ✓
    • User details: Loaded ✓
 
@@ -813,7 +842,9 @@ Message structure:
 
 8. 💬 CHANNEL NOTIFICATION
 ───────────────────────────────────────────────────────────
+   • Workspace: [workspaceId from secrets]
    • Channel: [channelId from secrets]
+   • API: v3 with comment_parts ✓
    • Message sent: ✓
    • Tagged: @[username from secrets]
    • PR link included: ✓
