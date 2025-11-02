@@ -16,6 +16,7 @@ import { varClass } from "./createClass/_var.js";
  * Supports various utility classes like size, layout, position, interaction, etc.
  * If `returnOnlyPropNVal` is true, it returns the CSS properties and values without applying them.
  *
+ * 
  * @param {string} className - The class name to be processed and transformed into CSS rules.
  * @param {HTMLElement} styleTag - The <style> tag where the generated CSS rules will be appended.
  * @param {boolean} [returnOnlyPropNVal=false] - If true, returns only the CSS properties and values without adding to the style tag.
